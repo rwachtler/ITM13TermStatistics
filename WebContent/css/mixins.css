@@ -1,0 +1,65 @@
+/* (c) 2015 Ramis Wachtler */
+/*
+ * Applies a text-shadow
+ * @property color - shadow color
+ * @property offsetX - horizontal shadow offset
+ * @property offsetY - vertical shadow offset
+ * @property blurRadius - radius of the shadow blur effect
+ */
+/*
+ * Applies a box-shadow
+ * @property color - shadow color
+ * @property offsetX - horizontal shadow offset
+ * @property offsetY - vertical shadow offset
+ * @property blurRadius - radius of the shadow blur effect
+ */
+/*
+ * Applies a transition to a given property, with a given duration
+ * @property property - property of transition
+ * @property duration - the time value for the transition execution
+ */
+/*
+ * Applies a transform operation to an element
+ * @property string - represents a transform string (e.g. translate3d(x,y,z);)
+ */
+/* Resets */
+.no-boxshadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.no-textshadow {
+  text-shadow: none;
+}
+.reset-anchor {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+.reset-anchor:focus,
+.reset-anchor:hover,
+.reset-anchor:active {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+.reset-button {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+.reset-button:focus,
+.reset-button:hover,
+.reset-button:active {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}

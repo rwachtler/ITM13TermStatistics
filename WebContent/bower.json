@@ -1,0 +1,25 @@
+{
+  "name": "ITM13TermStatistics",
+  "version": "1.0.0",
+  "authors": [
+    "ITM13"
+  ],
+  "description": "This is a project for the Practical Software Engineering course of ITM13",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.4",
+    "bootstrap": "~3.3.5",
+    "datatables": "DataTables#~1.10.9",
+    "Chart.js": "chartjs#~1.0.2"
+  }
+}

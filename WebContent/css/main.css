@@ -1,0 +1,237 @@
+/* imports */
+@import url(https://fonts.googleapis.com/css?family=Roboto:300,400,700,400italic);
+/* (c) 2015 Ramis Wachtler */
+/*
+ * Applies a text-shadow
+ * @property color - shadow color
+ * @property offsetX - horizontal shadow offset
+ * @property offsetY - vertical shadow offset
+ * @property blurRadius - radius of the shadow blur effect
+ */
+/*
+ * Applies a box-shadow
+ * @property color - shadow color
+ * @property offsetX - horizontal shadow offset
+ * @property offsetY - vertical shadow offset
+ * @property blurRadius - radius of the shadow blur effect
+ */
+/*
+ * Applies a transition to a given property, with a given duration
+ * @property property - property of transition
+ * @property duration - the time value for the transition execution
+ */
+/*
+ * Applies a transform operation to an element
+ * @property string - represents a transform string (e.g. translate3d(x,y,z);)
+ */
+/* Resets */
+.no-boxshadow {
+  -webkit-box-shadow: none;
+  -moz-box-shadow: none;
+  box-shadow: none;
+}
+.no-textshadow {
+  text-shadow: none;
+}
+.reset-anchor {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+.reset-anchor:focus,
+.reset-anchor:hover,
+.reset-anchor:active {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+.reset-button {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+.reset-button:focus,
+.reset-button:hover,
+.reset-button:active {
+  border: none;
+  text-decoration: none;
+  outline: none;
+  text-shadow: none;
+  box-shadow: none;
+}
+/* fonts */
+/* colors */
+/* shorthand mixins */
+.link {
+  color: #6C7A89;
+  -webkit-transition: color 0.8s;
+  -moz-transition: color 0.8s;
+  -ms-transition: color 0.8s;
+  -o-transition: color 0.8s;
+  transition: color 0.8s;
+}
+.link:hover,
+.link:focus {
+  color: #2574A9;
+}
+.navbar-link {
+  color: white;
+  font-weight: 300;
+  -webkit-transition: all 0.8s;
+  -moz-transition: all 0.8s;
+  -ms-transition: all 0.8s;
+  -o-transition: all 0.8s;
+  transition: all 0.8s;
+  text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px;
+}
+.navbar-link:not(.disabled):hover,
+.navbar-link:not(.disabled):focus {
+  background: #25a25a;
+}
+/* custom */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  font-family: 'Roboto', sans-serif;
+  font-size: 16px;
+  background: #ECECEC;
+}
+body {
+  padding-top: 50px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+}
+a {
+  color: #6C7A89;
+  -webkit-transition: color 0.8s;
+  -moz-transition: color 0.8s;
+  -ms-transition: color 0.8s;
+  -o-transition: color 0.8s;
+  transition: color 0.8s;
+}
+a:hover,
+a:focus {
+  color: #2574A9;
+}
+a#top-scroll {
+  display: none;
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  font-size: 3em;
+}
+nav.navbar-inverse {
+  background: #2ECC71;
+  border-bottom: none;
+  -webkit-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  -moz-box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.5);
+}
+nav.navbar-inverse .navbar-nav > li > a {
+  color: white;
+  font-weight: 300;
+  -webkit-transition: all 0.8s;
+  -moz-transition: all 0.8s;
+  -ms-transition: all 0.8s;
+  -o-transition: all 0.8s;
+  transition: all 0.8s;
+  text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px;
+}
+nav.navbar-inverse .navbar-nav > li > a:not(.disabled):hover,
+nav.navbar-inverse .navbar-nav > li > a:not(.disabled):focus {
+  background: #25a25a;
+}
+nav.navbar-inverse .navbar-toggle {
+  border-color: white;
+}
+nav.navbar-inverse .navbar-toggle:hover,
+nav.navbar-inverse .navbar-toggle:focus {
+  background: #1b7943;
+}
+nav .navbar-header > .navbar-brand {
+  color: white;
+  text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px;
+}
+div#main-content section.row {
+  height: 100vh;
+  padding: 0 15px 0 15px;
+  position: relative;
+}
+div#main-content section.row:nth-child(even) {
+  background: white;
+}
+div#main-content section.row a.next {
+  position: absolute;
+  bottom: 100px;
+  animation: float 1.5s;
+  animation-iteration-count: infinite;
+  left: 50%;
+}
+@keyframes float {
+  0% {
+    transform: translateY(0%);
+  }
+  50% {
+    transform: translateY(20%);
+  }
+  100% {
+    transform: translateY(0%);
+  }
+}
+/* element overrides */
+button.btn,
+a.btn {
+  -webkit-transition: background-color 0.8s;
+  -moz-transition: background-color 0.8s;
+  -ms-transition: background-color 0.8s;
+  -o-transition: background-color 0.8s;
+  transition: background-color 0.8s;
+  -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+  box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.2);
+}
+button.btn-primary,
+a.btn-primary,
+button.btn-success,
+a.btn-success,
+button.btn-default,
+a.btn-default {
+  background-image: none;
+  text-shadow: rgba(0, 0, 0, 0.5) 1px 1px 1px;
+}
+button.btn-default,
+a.btn-default {
+  background-color: #16A085;
+  color: white;
+}
+button.btn-default:hover,
+a.btn-default:hover,
+button.btn-default:focus,
+a.btn-default:focus {
+  background-color: #107360;
+  color: white;
+}
+button.btn-primary,
+a.btn-primary {
+  background-color: #2574A9;
+}
+button.btn-success,
+a.btn-success {
+  background-color: #26A65B;
+}
+.glyphicon {
+  top: 2px;
+}
