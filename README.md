@@ -17,3 +17,8 @@ This is a project for the Practical Software Engineering course of ITM13
   - Examples Would be DAO's, or Connection Classes.
 - Package **REST**: Like standard Wildflypackage, contains Endpoints
   - May contain Helper and Business Packages to format data
+
+## "Filename too long" problem under windows
+In case you get the "Filename too long" error message while cloning the repository on a windows system there is a git config command to fix it.
+
+- `git config --system core.longpaths true`
