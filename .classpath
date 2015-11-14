@@ -13,5 +13,8 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
+	<classpathentry kind="lib" path="libs/crawler4j-4.1-jar-with-dependencies.jar"/>
+	<classpathentry kind="lib" path="libs/jsoup-1.8.3-javadoc.jar"/>
+	<classpathentry kind="lib" path="libs/jsoup-1.8.3.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
