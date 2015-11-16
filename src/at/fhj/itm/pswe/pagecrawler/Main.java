@@ -19,6 +19,8 @@ public class Main {
 		Analyzer analyzer = new Analyzer();
 		
 		analyzer.analyzeResults();
+		
+		System.out.println("FINISHED ANALYZING");
 	}
 
 }

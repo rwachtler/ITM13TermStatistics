@@ -25,7 +25,6 @@ public class Analyzer {
 	private HashMap<String, Integer> wordMap;
 	
 	private DbConnection db;
-	private boolean dbConnected = false;
 	
 	private static String WEBSITE_NAME = "http://pswengi.bamb.at";
 	
@@ -89,6 +88,10 @@ public class Analyzer {
 		String[] inputWords = input.split(" ");
 		for(int i = 0; i<inputWords.length;i++){
 			String word = inputWords[i].toLowerCase();
+			
+			// remove punctuation from start and end of word
+			// according to: http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
+			word = word.replaceFirst("^[^a-zA-Z]+", "").replaceAll("[^a-zA-Z]+$", "").trim();
 			
 			if(wordmap.containsKey(word)){
 				wordmap.put(word,(Integer) wordmap.get(word)+1);
