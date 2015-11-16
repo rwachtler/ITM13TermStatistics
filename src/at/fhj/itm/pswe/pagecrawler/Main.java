@@ -1,5 +1,7 @@
 package at.fhj.itm.pswe.pagecrawler;
 
+import java.util.HashMap;
+
 import at.fhj.itm.pswe.pagecrawler.linkcrawler.Init_LinkCrawler;
 import at.fhj.itm.pswe.pagecrawler.wordanalyzer.Analyzer;
 
