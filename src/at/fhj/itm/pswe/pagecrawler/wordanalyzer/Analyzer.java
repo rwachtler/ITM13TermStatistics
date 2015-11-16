@@ -93,10 +93,12 @@ public class Analyzer {
 			// according to: http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
 			word = word.replaceFirst("^[^a-zA-Z]+", "").replaceAll("[^a-zA-Z]+$", "").trim();
 			
-			if(wordmap.containsKey(word)){
-				wordmap.put(word,(Integer) wordmap.get(word)+1);
-			}else{
-				wordmap.put(word, 1);
+			if (!word.isEmpty()) {
+				if (wordmap.containsKey(word)) {
+					wordmap.put(word,(Integer) wordmap.get(word)+1);
+				} else {
+					wordmap.put(word, 1);
+				}
 			}
 		}
 
