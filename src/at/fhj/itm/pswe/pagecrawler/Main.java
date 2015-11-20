@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import at.fhj.itm.pswe.pagecrawler.linkcrawler.Init_LinkCrawler;
 import at.fhj.itm.pswe.pagecrawler.wordanalyzer.Analyzer;
+import at.fhj.itm.pswe.view.Charts_db;
 
 public class Main {
 
@@ -18,9 +19,14 @@ public class Main {
 		// TODO Start Wordanalyzer and write Words in DB
 		Analyzer analyzer = new Analyzer();
 		
-		analyzer.analyzeResults();
+	//	analyzer.analyzeResults();
 		
 		System.out.println("FINISHED ANALYZING");
+		
+		Charts_db charts=new Charts_db();
+		charts.linechartOverPeriod();
+		charts.barchartfrequentWordofSide();
+		charts.barchartOneWordAllSides();
 	}
 
 }

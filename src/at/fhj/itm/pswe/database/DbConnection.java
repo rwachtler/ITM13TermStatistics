@@ -6,6 +6,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class DbConnection {
 	
@@ -148,5 +152,88 @@ public class DbConnection {
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Analyse the amount of a word over a certain period
+	 * @param word the word which should be counted
+	 * @param startdate the date as String when the analysis should start
+	 * @param enddate the date as String when the analysis should end
+	 * @return List<Integer> with the amount of the word
+	 */
+	public List<Integer> countWordOverPeriod(String word, String startdate, String enddate){
+		List<Integer> amountList=new ArrayList<Integer>();
+		try {
+			preparedStatement = connect.prepareStatement("SELECT amount FROM container WHERE fk_word = ? AND (log_date BETWEEN ? AND ?)");
+			preparedStatement.setString(1, word);
+			preparedStatement.setString(2, startdate);
+			preparedStatement.setString(3, enddate);
+			
+			ResultSet result = preparedStatement.executeQuery();
+		
+			while(result.next()){
+				amountList.add(result.getInt("amount"));
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return amountList;
+		
+	}
+	
+	/**
+	 * Reads the most frequent words of a page
+	 * @param domain the side from which the word should be read
+	 * @param max how much words should be read
+	 * @return  Map<String, Integer> with the words and their amount
+	 */
+	public Map<String, Integer> findFrequentWordsOfSide(String domain, int max){
+		Map<String, Integer> words=new HashMap<String, Integer>();
+		int entryamount=0;
+		try {
+			preparedStatement = connect.prepareStatement("SELECT fk_word, amount FROM container co INNER JOIN website we WHERE we.domain=? ORDER BY co.amount DESC;");
+			preparedStatement.setString(1, domain);
+			
+			ResultSet result = preparedStatement.executeQuery();
+		
+			while(result.next() && entryamount<max){
+				entryamount++;
+				words.put(result.getString("fk_word"), result.getInt("amount"));
+				System.out.println(result.getString("fk_word")+" "+result.getInt("amount"));
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return words;
+	}
+	
+	/**reads the amount of one word for all pages
+	 * @param word is the word which should be counted over all sides
+	 * @return Map<String, Integer> with the domain where the word was found and how often it wos found
+	 */
+	public Map<String, Integer> findOneWordAllSides(String word){
+		Map<String, Integer> words=new HashMap<String, Integer>();
+		try {
+			preparedStatement = connect.prepareStatement("SELECT co.amount, we.domain FROM container co INNER JOIN website we WHERE co.fk_word=?;");
+			preparedStatement.setString(1, word);
+			
+			ResultSet result = preparedStatement.executeQuery();
+		
+			while(result.next()){
+				words.put(result.getString("domain"), result.getInt("amount"));
+				System.out.println(result.getString("domain")+" "+result.getInt("amount"));
+				
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return words;
 	}
 }
