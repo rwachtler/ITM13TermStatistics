@@ -4,6 +4,9 @@
 		<description>PSE Persistence Unit</description>
 		<provider>org.hibernate.ejb.HibernatePersistence</provider>
 		<jta-data-source>java:jboss/mysql</jta-data-source>
+		<class>at.fhj.itm.pswe.model.Container</class>
+		<class>at.fhj.itm.pswe.model.Website</class>
+		<class>at.fhj.itm.pswe.model.Word</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
       	<properties>
 	         <!-- Properties for Hibernate -->
