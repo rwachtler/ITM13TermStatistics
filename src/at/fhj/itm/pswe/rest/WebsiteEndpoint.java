@@ -15,19 +15,19 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import at.fhj.itm.pswe.model.Word;
+import at.fhj.itm.pswe.model.Website;
 
 @Stateless
-@Path("/word")
-public class WordEndpoint{
+@Path("/website")
+public class WebsiteEndpoint{
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 	
 	@GET
 	@Produces("application/json")
-	public List<Word> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult)
+	public List<Website> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult)
 	{
-		TypedQuery<Word> findAllQuery = em.createQuery("SELECT DISTINCT w FROM Word w ORDER BY w.text", Word.class);
+		TypedQuery<Website> findAllQuery = em.createQuery("SELECT DISTINCT w FROM Website w ORDER BY w.id", Website.class);
 		
 		if (startPosition != null)
 	      {
@@ -38,18 +38,18 @@ public class WordEndpoint{
 	         findAllQuery.setMaxResults(maxResult);
 	      }
 
-		final List<Word> results = findAllQuery.getResultList();
+		final List<Website> results = findAllQuery.getResultList();
 		return results;
 	}
 	
 	@GET
-    @Path("/{id:[a-zA-Z][a-zA-Z]*}")
+    @Path("/{id:[0-9][0-9]*}")
     @Produces("application/json")
-    public Response findById(@PathParam("id") String id)
+    public Response findById(@PathParam("id") int id)
     {
-       TypedQuery<Word> findByIdQuery = em.createQuery("SELECT DISTINCT w FROM Word w WHERE w.text = :text", Word.class);
-       findByIdQuery.setParameter("text", id);
-       Word entity;
+       TypedQuery<Website> findByIdQuery = em.createQuery("SELECT DISTINCT w FROM Website w WHERE w.id = :id", Website.class);
+       findByIdQuery.setParameter("id", id);
+       Website entity;
        try
        {
           entity = findByIdQuery.getSingleResult();

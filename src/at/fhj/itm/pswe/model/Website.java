@@ -1,7 +1,9 @@
 package at.fhj.itm.pswe.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
+
 import java.util.List;
 
 
@@ -10,22 +12,21 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Website.findAll", query="SELECT w FROM Website w")
 public class Website implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(name="id")
 	private int id;
 
+	@Column(name="active")
 	private byte active;
 
+	@Column(name="description")
 	private String description;
 
+	@Column(name="domain")
 	private String domain;
-
-	//bi-directional many-to-one association to Container
-	@OneToMany(mappedBy="website")
-	private List<Container> containers;
 
 	public Website() {
 	}
@@ -60,28 +61,6 @@ public class Website implements Serializable {
 
 	public void setDomain(String domain) {
 		this.domain = domain;
-	}
-
-	public List<Container> getContainers() {
-		return this.containers;
-	}
-
-	public void setContainers(List<Container> containers) {
-		this.containers = containers;
-	}
-
-	public Container addContainer(Container container) {
-		getContainers().add(container);
-		container.setWebsite(this);
-
-		return container;
-	}
-
-	public Container removeContainer(Container container) {
-		getContainers().remove(container);
-		container.setWebsite(null);
-
-		return container;
 	}
 
 }

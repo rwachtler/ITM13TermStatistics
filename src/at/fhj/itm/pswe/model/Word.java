@@ -10,7 +10,6 @@ import java.util.List;
  * 
  */
 @Entity
-@NamedQuery(name="Word.findAll", query="SELECT w FROM Word w")
 public class Word implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -22,9 +21,9 @@ public class Word implements Serializable {
 	private byte active;
 
 	//bi-directional many-to-one association to Container
-	@OneToMany(mappedBy="word")
+	/*@OneToMany(mappedBy="word")
 	@Column(name="containers")
-	private List<Container> containers;
+	private List<Container> containers;*/
 
 	public Word() {
 	}
@@ -45,7 +44,7 @@ public class Word implements Serializable {
 		this.active = active;
 	}
 
-	public List<Container> getContainers() {
+	/*public List<Container> getContainers() {
 		return this.containers;
 	}
 
@@ -65,6 +64,6 @@ public class Word implements Serializable {
 		container.setWord(null);
 
 		return container;
-	}
+	}*/
 
 }

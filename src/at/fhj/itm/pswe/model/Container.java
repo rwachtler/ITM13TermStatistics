@@ -1,6 +1,7 @@
 package at.fhj.itm.pswe.model;
 
 import java.io.Serializable;
+
 import javax.persistence.*;
 
 
@@ -9,13 +10,14 @@ import javax.persistence.*;
  * 
  */
 @Entity
-@NamedQuery(name="Container.findAll", query="SELECT c FROM Container c")
 public class Container implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@Column(name="id")
 	private int id;
 
+	@Column(name="amount")
 	private int amount;
 
 	@Column(name="log_date")
