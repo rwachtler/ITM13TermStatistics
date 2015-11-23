@@ -7,15 +7,16 @@ import at.fhj.itm.pswe.view.Charts_db;
 public class MainCrawler implements Runnable{
 	
 	private String url;
-	
-	public MainCrawler(String url){
+	private int depth;
+	public MainCrawler(String url, int depth){
 		this.url = url;
+		this.depth=depth;
 	}
 
 	public void crawl() {
 		try {
 			// Writes all gathered Words from the given URL into <Project-Root>/result/crawl/result.txt
-			Init_LinkCrawler linkCrawler = new Init_LinkCrawler(url);
+			Init_LinkCrawler linkCrawler = new Init_LinkCrawler(url,depth);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

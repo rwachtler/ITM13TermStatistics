@@ -9,7 +9,7 @@ import edu.uci.ics.crawler4j.url.WebURL;
 
 public class Init_LinkCrawler {
 
-	public Init_LinkCrawler(String url) throws Exception{
+	public Init_LinkCrawler(String url, int depth) throws Exception{
 		
 		String startSeed=url;
 		WebURL startUrl=new WebURL();
@@ -17,11 +17,12 @@ public class Init_LinkCrawler {
 		
 		// Add to Project Root folders result/crawl where our result.txt is saved
 		String crawlStorageFolder = "./result/crawl/";
-		int numberOfCrawlers = 7;
+		int numberOfCrawlers = 10;
 
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(crawlStorageFolder);
-		config.setPolitenessDelay(100);
+		config.setPolitenessDelay(25);
+		config.setMaxDepthOfCrawling(depth);
 
 		/*
 		 * Instantiate the controller for this crawl.
