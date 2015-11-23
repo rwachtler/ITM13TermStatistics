@@ -22,9 +22,9 @@ public class DbConnection {
 
 	private static String DB_NAME = "itm13";
 	
-	private static String DB_HOST = "localhost";
-	private static String DB_USER = "root";
-	private static String DB_PASSWORD = "";
+	private static String DB_HOST = "itm13db.ccvogifhormq.eu-west-1.rds.amazonaws.com:3306";
+	private static String DB_USER = "itm13root";
+	private static String DB_PASSWORD = "iTm!3DbMySqL";
 	
 	public DbConnection() {
 		dbConnected = init();

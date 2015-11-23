@@ -10,6 +10,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="word")
 public class Word implements Serializable {
 	private static final long serialVersionUID = 1L;
 

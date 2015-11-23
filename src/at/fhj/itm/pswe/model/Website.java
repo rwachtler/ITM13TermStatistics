@@ -12,6 +12,7 @@ import java.util.List;
  * 
  */
 @Entity
+@Table(name="website")
 public class Website implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -27,6 +28,17 @@ public class Website implements Serializable {
 
 	@Column(name="domain")
 	private String domain;
+	
+	@Column(name="crawldepth")
+	private int crawldepth;
+
+	public int getCrawldepth() {
+		return crawldepth;
+	}
+
+	public void setCrawldepth(int crawldepth) {
+		this.crawldepth = crawldepth;
+	}
 
 	public Website() {
 	}

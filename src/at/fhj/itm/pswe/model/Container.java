@@ -10,6 +10,7 @@ import javax.persistence.*;
  * 
  */
 @Entity
+@Table(name="container")
 public class Container implements Serializable {
 	private static final long serialVersionUID = 1L;
 

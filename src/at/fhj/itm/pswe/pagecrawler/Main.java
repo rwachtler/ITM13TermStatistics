@@ -11,7 +11,7 @@ public class Main {
 	public static void main(String[] args) {
 		try {
 			// Writes all gathered Words from the given URL into <Project-Root>/result/crawl/result.txt
-			//Init_LinkCrawler linkCrawler = new Init_LinkCrawler("http://pswengi.bamb.at");
+			Init_LinkCrawler linkCrawler = new Init_LinkCrawler("http://pswengi.bamb.at");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -19,7 +19,7 @@ public class Main {
 		// TODO Start Wordanalyzer and write Words in DB
 		Analyzer analyzer = new Analyzer();
 		
-	//	analyzer.analyzeResults();
+		analyzer.analyzeResults();
 		
 		System.out.println("FINISHED ANALYZING");
 		
