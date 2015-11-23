@@ -21,3 +21,4 @@ jboss/server/minimal/work/**/*
 
 # OS X specific files #
 .DS_Store
+/target/
