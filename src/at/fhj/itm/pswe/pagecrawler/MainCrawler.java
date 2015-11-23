@@ -1,17 +1,21 @@
 package at.fhj.itm.pswe.pagecrawler;
 
-import java.util.HashMap;
-
 import at.fhj.itm.pswe.pagecrawler.linkcrawler.Init_LinkCrawler;
 import at.fhj.itm.pswe.pagecrawler.wordanalyzer.Analyzer;
 import at.fhj.itm.pswe.view.Charts_db;
 
-public class Main {
+public class MainCrawler {
+	
+	private String url;
+	
+	public MainCrawler(String url){
+		this.url = url;
+	}
 
-	public static void main(String[] args) {
+	public void crawl() {
 		try {
 			// Writes all gathered Words from the given URL into <Project-Root>/result/crawl/result.txt
-			Init_LinkCrawler linkCrawler = new Init_LinkCrawler("http://pswengi.bamb.at");
+			Init_LinkCrawler linkCrawler = new Init_LinkCrawler(url);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
