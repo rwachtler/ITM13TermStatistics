@@ -173,6 +173,9 @@ div#main-content section.row {
 div#main-content section.row:nth-child(even) {
   background: white;
 }
+div#main-content section.row div#website-add-wrap {
+  margin: 15px auto;
+}
 div#main-content section.row a.next-section {
   position: absolute;
   bottom: 100px;

@@ -1579,6 +1579,7 @@ wordList = [{
     "active": 1
 }];
 
+var siteListTable;
 
 $(document).ready(function () {
     $('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
@@ -1592,6 +1593,17 @@ $(document).ready(function () {
 
 });
 
+$('#add-site').click(function(){
+    var websiteAddr = $('#website-address-value').val();
+    var ID = siteListTable.rows(siteListTable.rows().length - 1).data()[0][0]+1;
+    var desc =  siteListTable.rows(siteListTable.rows().length - 1).data()[0][2];
+    siteListTable.row.add([
+        ID.toString(),
+        websiteAddr,
+        desc
+    ]).draw(false);
+});
+
 function generateSiteListTable() {
     var tableData = [];
     $(siteList).each(function (index) {
@@ -1603,7 +1615,7 @@ function generateSiteListTable() {
         tableData.push(tmp);
     });
     //console.log(tableData);
-    $('#site-list-table').DataTable({
+    siteListTable = $('#site-list-table').DataTable({
         data: tableData,
         columns: [
             {
