@@ -173,7 +173,7 @@ div#main-content section.row {
 div#main-content section.row:nth-child(even) {
   background: white;
 }
-div#main-content section.row a.next {
+div#main-content section.row a.next-section {
   position: absolute;
   bottom: 100px;
   animation: float 1.5s;
@@ -190,6 +190,9 @@ div#main-content section.row a.next {
   100% {
     transform: translateY(0%);
   }
+}
+div#main-content section#charts canvas {
+  max-width: 80%;
 }
 /* element overrides */
 button.btn,
