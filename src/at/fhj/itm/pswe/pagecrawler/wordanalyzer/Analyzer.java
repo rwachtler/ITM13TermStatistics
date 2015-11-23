@@ -28,7 +28,7 @@ public class Analyzer {
 	
 	private static String WEBSITE_NAME = "http://pswengi.bamb.at";
 	
-	private static String RESULT_FILE = "result/crawl/result.txt";
+	private static String RESULT_FILE = "./result/crawl/result.txt";
 
 	public Analyzer() {
 		// init database connection

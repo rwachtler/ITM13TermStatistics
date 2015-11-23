@@ -4,6 +4,8 @@ import javax.ejb.Stateless;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.core.Response;
+
 import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 
 @Stateless
@@ -12,10 +14,12 @@ public class ActionEndpoint {
 
 	@GET
 	@Path("/crawler/{url : .+}")
-	public void startCrawler(@PathParam("url") String url) {
+	public Response startCrawler(@PathParam("url") String url) {
 		System.out.println("URL: " + url);
-		MainCrawler crawler = new MainCrawler(url);
-		crawler.crawl();
+		Thread t = new Thread(new MainCrawler(url));
+		
+		t.start();
+		return Response.ok().build();
 	}
 
 }
