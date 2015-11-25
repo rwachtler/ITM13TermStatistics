@@ -18,10 +18,11 @@ public class Website implements Serializable {
 
 	@Id
 	@Column(name="id")
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private int id;
 
 	@Column(name="active")
-	private byte active;
+	private boolean active;
 
 	@Column(name="description")
 	private String description;
@@ -51,11 +52,11 @@ public class Website implements Serializable {
 		this.id = id;
 	}
 
-	public byte getActive() {
+	public boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(byte active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 

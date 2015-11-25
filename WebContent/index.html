@@ -16,6 +16,8 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="bower_components/datatables-editor/css/editor.dataTables.min.css">
+    <link rel="stylesheet" type="text/css" href="datatables-buttons/css/buttons.dataTables.css">
+	<link rel="stylesheet" type="text/css" href="datatables-select/css/select.dataTables.css">
     <link rel="stylesheet" href="css/main.min.css">
 </head>
 
@@ -48,12 +50,6 @@
             <h1>List of websites</h1>
             <a href="#word-table" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-down"></span> Let's talk about statistics <span class="glyphicon glyphicon-chevron-down"></span></a>
             <p class="lead">Those websites were included to the crawling process</p>
-            <div class="input-group col-xs-4" id="website-add-wrap">
-                <input type="text" class="form-control" placeholder="http://example.com" id="website-address-value">
-                <span class="input-group-btn">
-                    <button class="btn btn-default" id="add-site" type="button">Add to crawl list</button>
-                </span>
-            </div>
             <table class="table table-striped" id="site-list-table">
             	<thead>
         			<tr>
@@ -61,6 +57,7 @@
             			<th>Adresse</th>
             			<th>Description</th>
             			<th>Depth</th>
+            			<th>Active</th>
         			</tr>
     			</thead>
             </table>
@@ -85,6 +82,8 @@
     <script src="bower_components/Chart.js/Chart.min.js"></script>
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
     <script src="bower_components/datatables-editor/js/dataTables.editor.min.js"></script>
+    <script src="datatables-select/js/dataTables.select.min.js"></script>
+    <script src="datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="js/main.min.js"></script>
 </body>
 

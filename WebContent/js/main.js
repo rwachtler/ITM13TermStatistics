@@ -1623,31 +1623,33 @@ $('#add-site').click(function(){
 });
 
 function generateSiteListTable() {
-    /*var tableData = [];
-    $(siteList).each(function (index) {
-        var tmp = [];
-        tmp.push(siteList[index].id);
-        tmp.push(siteList[index].domain);
-        tmp.push(siteList[index].description);
-
-        tableData.push(tmp);
-    });*/
 	
 	 siteListEditor = new $.fn.dataTable.Editor( {
-	        ajax: {
-	            create: {
-	                type: 'POST',
-	                url:  './rest/website'
-	            },
-	            edit: {
-	                type: 'PUT',
-	                url:  './rest/website/_id_'
-	            },
-	            remove: {
-	                type: 'DELETE',
-	                url:  './rest/website/_id_'
+		 ajax: function ( method, url, d, successCallback, errorCallback ) {
+	            
+	 
+	            if ( d.action === 'create' ) {
+	            	console.log(JSON.stringify(d.data[0]))
+	            	var data = d.data[0];
+	            	$.ajax({
+	            		  type: "POST",
+	            		  url: "./rest/website",
+	            		  data: JSON.stringify(data),
+	            		  success: successCallback,
+	            		  error: errorCallback,
+	            		  contentType: "application/json",
+	            		});
 	            }
+	            else if ( d.action === 'edit' ) {
+	            	console.log(JSON.stringify(d))
+	            }
+	            else if ( d.action === 'remove' ) {
+	            	console.log(JSON.stringify(d.data))
+	            }
+	 
+	           
 	        },
+	        idSrc: "id",
 	        table: "#site-list-table",
 	        fields: [ {
 	                label: "Adress:",
@@ -1667,38 +1669,21 @@ function generateSiteListTable() {
     //console.log(tableData);
 	 siteListTable = $('#site-list-table').DataTable({
         dom: "Bfrtip",
-        ajax: "./rest/website",
+        ajax: "./rest/website", 
         columns: [
             { data: "id" },
             { data: "address" },
             { data: "description" },
-            { data: "depth" }
+            { data: "depth" },
+            { data: "active" }
         ],
-        select: true,
+        select: 'single',
         buttons: [
             { extend: "create", editor: siteListEditor },
             { extend: "edit",   editor: siteListEditor },
             { extend: "remove", editor: siteListEditor }
         ]
     } );
-	
-	
-	
-	/*
-    siteListTable = $('#site-list-table').DataTable({
-        data: tableData,
-        columns: [
-            { 
-                title: "ID"
-            },
-            {
-                title: "Address"
-            },
-            {
-                title: "Description"
-            }
-        ]
-    });*/
 }
 
 function generateWordsTable() {
