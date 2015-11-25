@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="bower_components/datatables/media/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="bower_components/datatables-editor/css/editor.dataTables.min.css">
     <link rel="stylesheet" href="css/main.min.css">
 </head>
 
@@ -53,7 +54,16 @@
                     <button class="btn btn-default" id="add-site" type="button">Add to crawl list</button>
                 </span>
             </div>
-            <table class="table table-striped" id="site-list-table"></table>
+            <table class="table table-striped" id="site-list-table">
+            	<thead>
+        			<tr>
+             			<th>ID</th>
+            			<th>Adresse</th>
+            			<th>Description</th>
+            			<th>Depth</th>
+        			</tr>
+    			</thead>
+            </table>
         </section>
         <section id="word-table" class="row">
             <h1>Statistics</h1>
@@ -74,6 +84,7 @@
     <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
     <script src="bower_components/Chart.js/Chart.min.js"></script>
     <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="bower_components/datatables-editor/js/dataTables.editor.min.js"></script>
     <script src="js/main.min.js"></script>
 </body>
 

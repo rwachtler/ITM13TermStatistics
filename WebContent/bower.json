@@ -20,6 +20,7 @@
     "jquery": "~2.1.4",
     "bootstrap": "~3.3.5",
     "datatables": "DataTables#~1.10.9",
+    "datatables-editor": "datatables-editor#~1.5.1",
     "Chart.js": "chartjs#~1.0.2"
   }
 }

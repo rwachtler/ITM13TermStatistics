@@ -1,4 +1,4 @@
-package at.fhj.pswe.beans;
+package at.fhj.itm.pswe.beans;
 
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;

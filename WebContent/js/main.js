@@ -1580,6 +1580,7 @@ wordList = [{
 }];
 
 var siteListTable;
+var siteListEditor;
 
 $(document).ready(function () {
     $('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
@@ -1597,15 +1598,32 @@ $('#add-site').click(function(){
     var websiteAddr = $('#website-address-value').val();
     var ID = siteListTable.rows(siteListTable.rows().length - 1).data()[0][0]+1;
     var desc =  siteListTable.rows(siteListTable.rows().length - 1).data()[0][2];
-    siteListTable.row.add([
+   /* siteListTable.row.add([
         ID.toString(),
         websiteAddr,
         desc
-    ]).draw(false);
+    ]).draw(false);*/ 
+    
+    $.ajax({
+        url : "./rest/website",
+        type: "POST",
+        data : JSON.stringify({"addr": websiteAddr}),
+        contentType: "application/json",
+        success: function(data, textStatus, jqXHR)
+        {
+            console.log("Success");
+        },
+        error: function (jqXHR, textStatus, errorThrown)
+        {
+        	console.log("Error");
+        }
+    });
+    
+    
 });
 
 function generateSiteListTable() {
-    var tableData = [];
+    /*var tableData = [];
     $(siteList).each(function (index) {
         var tmp = [];
         tmp.push(siteList[index].id);
@@ -1613,12 +1631,64 @@ function generateSiteListTable() {
         tmp.push(siteList[index].description);
 
         tableData.push(tmp);
-    });
+    });*/
+	
+	 siteListEditor = new $.fn.dataTable.Editor( {
+	        ajax: {
+	            create: {
+	                type: 'POST',
+	                url:  './rest/website'
+	            },
+	            edit: {
+	                type: 'PUT',
+	                url:  './rest/website/_id_'
+	            },
+	            remove: {
+	                type: 'DELETE',
+	                url:  './rest/website/_id_'
+	            }
+	        },
+	        table: "#site-list-table",
+	        fields: [ {
+	                label: "Adress:",
+	                name: "address"
+	            }, {
+	                label: "Description",
+	                name: "description"
+	            }, {
+	                label: "Crawldepth",
+	                name: "depth"
+	            }
+	        ]
+	    } );
+	
+	
+	
     //console.log(tableData);
+	 siteListTable = $('#site-list-table').DataTable({
+        dom: "Bfrtip",
+        ajax: "./rest/website",
+        columns: [
+            { data: "id" },
+            { data: "address" },
+            { data: "description" },
+            { data: "depth" }
+        ],
+        select: true,
+        buttons: [
+            { extend: "create", editor: siteListEditor },
+            { extend: "edit",   editor: siteListEditor },
+            { extend: "remove", editor: siteListEditor }
+        ]
+    } );
+	
+	
+	
+	/*
     siteListTable = $('#site-list-table').DataTable({
         data: tableData,
         columns: [
-            {
+            { 
                 title: "ID"
             },
             {
@@ -1628,7 +1698,7 @@ function generateSiteListTable() {
                 title: "Description"
             }
         ]
-    });
+    });*/
 }
 
 function generateWordsTable() {
