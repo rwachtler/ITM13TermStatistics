@@ -12,6 +12,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
@@ -116,6 +117,30 @@ public class WebsiteEndpoint{
 		return Response.ok(new JSONObject().put("data", json).toString()).build();
 	}
 
+	@DELETE
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response deleteSite(String incoming)
+	{
+		System.out.println("Received DELETE");
+		JSONObject json= new JSONObject(incoming);
+		System.out.println("JSON: "+json.toString());
+		
+		//Get KEY and
+		Iterator<String> keys = json.keys();
+		String id="";
+		if( keys.hasNext() ){
+		   id = (String)keys.next(); // First key in your json object
+		}
+		Website ws = em.find(Website.class, Integer.parseInt(id));
+		em.remove(ws);
+		
+		
+		//Send empty object on success
+			
+		return Response.ok("{}").build();
+	}
+	
 	@PUT
 	@Produces("application/json")
 	@Consumes("application/json")
@@ -142,9 +167,6 @@ public class WebsiteEndpoint{
 			ws.setActive(false);
 		else
 			ws.setActive(true);
-		
-			
-		System.out.println("ID:" +ws.getId());
 		
 		JSONObject output= new JSONObject();
 		output.put("data", new JSONArray().put(

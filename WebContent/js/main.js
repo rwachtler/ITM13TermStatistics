@@ -1654,6 +1654,14 @@ function generateSiteListTable() {
 			}
 			else if ( d.action === 'remove' ) {
 				console.log(JSON.stringify(d.data))
+				$.ajax({
+					type: "DELETE", 
+					url: "./rest/website",
+					data: JSON.stringify(d.data),
+					success: successCallback,
+					error: errorCallback,
+					contentType: "application/json",
+				});
 			}
 
 
