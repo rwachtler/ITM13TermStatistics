@@ -3,6 +3,7 @@ package at.fhj.itm.pswe.rest;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -13,6 +14,7 @@ import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -114,6 +116,51 @@ public class WebsiteEndpoint{
 		return Response.ok(new JSONObject().put("data", json).toString()).build();
 	}
 
+	@PUT
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response editSite(String incoming)
+	{
+		System.out.println("Received PUT");
+		JSONObject json= new JSONObject(incoming);
+		System.out.println("JSON: "+json.toString());
+		
+		//Get KEY and
+		Iterator<String> keys = json.keys();
+		String id="";
+		if( keys.hasNext() ){
+		   id = (String)keys.next(); // First key in your json object
+		}
+				
+		//CUpdate and Save object
+		Website ws = em.find(Website.class, Integer.parseInt(id));
+		ws.setDomain(json.getJSONObject(id).getString("address"));
+		ws.setDescription(json.getJSONObject(id).getString("description"));
+		ws.setCrawldepth(json.getJSONObject(id).getInt("depth"));
+		
+		if(json.getJSONObject(id).getJSONArray("active").length() == 0)
+			ws.setActive(false);
+		else
+			ws.setActive(true);
+		
+			
+		System.out.println("ID:" +ws.getId());
+		
+		JSONObject output= new JSONObject();
+		output.put("data", new JSONArray().put(
+				new JSONObject().put("id", ws.getId())
+				.put("address", ws.getDomain())
+				.put("description", ws.getDescription())
+				.put("depth",ws.getCrawldepth())
+				.put("active", ws.getActive())
+				));
+		
+		
+		//Add info for Return object
+		System.out.println("JSON: "+output.toString());		
+		return Response.ok(output.toString()).build();
+	}
+	
 
 
 
