@@ -1583,8 +1583,9 @@ var siteListTable;
 var siteListEditor;
 
 $(document).ready(function () {
-	$('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
-
+    
+    calcCenter();
+    
 	// First
 	generateSiteListTable();
 	// Second
@@ -1593,6 +1594,14 @@ $(document).ready(function () {
 	generateCharts();
 
 });
+
+$(window).resize(function(){
+   calcCenter(); 
+});
+
+var calcCenter = function(){
+    $('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
+}
 
 $('#add-site').click(function(){
 	var websiteAddr = $('#website-address-value').val();
