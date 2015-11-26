@@ -1596,7 +1596,8 @@ $(document).ready(function () {
 });
 
 $(window).resize(function(){
-   calcCenter(); 
+   calcCenter();
+    
 });
 
 var calcCenter = function(){
