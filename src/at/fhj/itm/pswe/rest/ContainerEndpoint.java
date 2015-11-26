@@ -1,6 +1,8 @@
 package at.fhj.itm.pswe.rest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -14,6 +16,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import com.sleepycat.je.rep.elections.Protocol.Result;
 
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
@@ -88,4 +95,86 @@ public class ContainerEndpoint{
       
       return Response.ok(entities).build();
    }
+	
+	/**ein Wort auf allen Seiten
+	 * reads the amount of one word for all pages
+	 * @param word is the word which should be counted over all sides
+	 * @return Map<String, Integer> with the domain where the word was found and how often it wos found
+	 */
+	@GET
+    @Path("/wordSides/{word:[a-zA-Z][a-zA-Z]*}")
+    @Produces("application/json")
+	public Response findOneWordAllSides(@PathParam("word") String word){
+		TypedQuery<Container> findWordAllSides =em.createQuery("SELECT co FROM Container co WHERE co.word.text= :word GROUP BY co.word",Container.class);
+		findWordAllSides.setParameter("word", word);
+		final List<Container> results = findWordAllSides.getResultList();		
+		JSONArray returnResult=new JSONArray();
+
+		for(Container c: results){
+			JSONObject temp= new JSONObject();
+			temp.put("domain", c.getWebsite().getDomain());
+			temp.put("amount", c.getAmount());
+			returnResult.put(temp);
+		}
+
+		JSONObject my=new JSONObject();
+		my.put("data", returnResult);
+
+		return Response.ok(my.toString()).build();
+	}
+	
+	/**Fuer eine Seite haeufigsten Woerter
+	 * Reads the most frequent words of a page
+	 * @param domain the side from which the word should be read
+	 * @param max how much words should be read
+	 * @return  Map<String, Integer> with the words and their amount
+	 */
+	@GET
+    @Path("/frequency/{domain:[a-zA-Z.][a-zA-Z.]*}/{max:[0-9]*}")
+    @Produces("application/json")
+	public Response findFrequentWordsOfSide(@PathParam("domain") String domain, @PathParam("max") int max){
+		TypedQuery<Container> frequentwords = em.createQuery("SELECT co FROM Container co JOIN co.website we WHERE we.domain= :domain ORDER BY SUM(co.amount) DESC ", Container.class);
+		frequentwords.setParameter("domain", "http://"+domain);
+		frequentwords.setMaxResults(max);
+		
+		final List<Container> results = frequentwords.getResultList();		
+		JSONArray returnResult=new JSONArray();
+
+		for(Container c: results){
+			JSONObject temp= new JSONObject();
+			temp.put("word", c.getWord().getText());
+			temp.put("amount", c.getAmount());
+			returnResult.put(temp);
+		}
+
+		JSONObject my=new JSONObject();
+		my.put("data", returnResult);
+
+		return Response.ok(my.toString()).build();
+	}
+	
+	
+	/**Pro Wort auf vorkommenden Seiten mit Anzahl und Datum mit Zeituebergabe Einschraenkung
+	 * Analyse the amount of a word over a certain period
+	 * @param word the word which should be counted
+	 * @param startdate the date as String when the analysis should start
+	 * @param enddate the date as String when the analysis should end
+	 * @return List<Integer> with the amount of the word
+	 */
+	@GET
+    @Path("/period/{word:[a-zA-Z][a-zA-Z]*}/{startdate:[a-zA-Z0-9][a-zA-Z0-9.]*}/{enddate:[a-zA-Z0-9][a-zA-Z0-9.]*}")
+    @Produces("application/json")
+	public List<Container> countWordOverPeriod(@PathParam("word") String word ,@PathParam("startdate") String startdate, @PathParam("enddate") String enddate){
+		TypedQuery<Container> countWordPeriod = em.createQuery("SELECT co FROM Container co WHERE co.word.text = :word AND (co.logDate BETWEEN :startdate AND :enddate)",Container.class);
+		countWordPeriod.setParameter("word", word);
+		countWordPeriod.setParameter("startdate", startdate);
+		countWordPeriod.setParameter("enddate", enddate);
+		
+		final List<Container> results = countWordPeriod.getResultList();
+		return results;
+		
+	}
+	
+	
+	
 }
