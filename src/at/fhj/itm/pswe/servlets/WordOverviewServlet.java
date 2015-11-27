@@ -14,12 +14,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import at.fhj.itm.pswe.model.Website;
+import at.fhj.itm.pswe.model.Word;
 
 /**
  * Servlet implementation class SiteOverviewServlet
  */
-@WebServlet("/SiteOverview/*")
-public class SiteOverviewServlet extends HttpServlet {
+@WebServlet("/WordOverview/*")
+public class WordOverviewServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	@PersistenceUnit(unitName="TermStatistics")
@@ -29,7 +30,7 @@ public class SiteOverviewServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#HttpServlet()
 	 */
-	public SiteOverviewServlet() {
+	public WordOverviewServlet() {
 		super();
 		// TODO Auto-generated constructor stub
 	}
@@ -42,8 +43,6 @@ public class SiteOverviewServlet extends HttpServlet {
 		System.out.println("PATHt: "+request.getPathInfo());
 		
 		
-		
-		
 		String path=request.getPathInfo();
 		int id;
 		try{
@@ -52,13 +51,12 @@ public class SiteOverviewServlet extends HttpServlet {
 				System.out.println("ID: "+id);
 				//Check if id is valid
 				EntityManager em = emf.createEntityManager();
-				Website ws = em.find(Website.class,id);
-				System.out.println("WS: "+ws);
-				if(!(ws==null)){
-					System.out.println(ws.getDomain());
-					request.setAttribute("siteID",id);
-					request.setAttribute("domain", ws.getDomain());
-					RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/sites/site-overview.jsp");
+				Word wo = em.find(Word.class,id);
+				
+				if(!(wo==null)){
+					request.setAttribute("wordID",id);
+					request.setAttribute("word", wo.getText());
+					RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/sites/word-overview.jsp");
 					view.forward(request, response); 
 				}else{
 					response.sendError(404);

@@ -53,6 +53,11 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 	
 `3 Line and forward:` Gathered Text from Pages. Each new line is a new Page
 
+##Subsites
+- Subsites( Word/Site Overview) are called via Servlet
+-url: TermStatistics/SiteOverviewServlet/{idOfSite}
+
+
 ## REST-Calls
 
 ### Start a Crawler with given URL

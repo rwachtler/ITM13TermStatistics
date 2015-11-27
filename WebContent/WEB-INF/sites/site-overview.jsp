@@ -16,6 +16,8 @@
 </head>
 
 <body>
+	<input type="hidden" name="siteID" id="siteID" value="${siteID}">
+	
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -42,7 +44,7 @@
     </nav>
     <div id="main-content" class="container-fluid">
         <section id="website-list" class="row">
-            <h1>Site Overview</h1>
+            <h1>Site Overview ${domain}</h1>
             <a href="#word-table" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-down"></span> Let's talk about statistics <span class="glyphicon glyphicon-chevron-down"></span></a>
             <p class="lead">Those websites were included to the crawling process</p>
             <table class="table table-striped" id="site-list-table">
