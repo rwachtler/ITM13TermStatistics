@@ -1,5 +1,8 @@
 package at.fhj.itm.pswe.rest;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -18,6 +21,7 @@ import javax.ws.rs.core.Response.Status;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.Word;
 
@@ -94,4 +98,21 @@ public class WordEndpoint{
 		}
 		return Response.ok(entity).build();
 	}
+	
+	@GET
+    @Path("/visibility/{word:[a-zA-Z][a-zA-Z]*}")
+	public void changeVisibility(@PathParam("word") String word){
+		TypedQuery<Word> visibility = em.createQuery("SELECT w FROM Word w WHERE w.text = :word", Word.class);
+		visibility.setParameter("word",word);
+		
+		List<Word> words=visibility.getResultList();
+		for(Word w : words){
+			if(w.getActive()==0){
+				w.setActive((byte) 1);
+			}else {
+				w.setActive((byte) 0);
+			}
+		}
+	}
+		
 }
