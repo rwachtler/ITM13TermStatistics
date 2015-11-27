@@ -1582,10 +1582,12 @@ wordList = [{
 var siteListTable;
 var siteListEditor;
 
+var wordListTable;
+
 $(document).ready(function () {
-    
-    calcCenter();
-    
+
+	calcCenter();
+
 	// First
 	generateSiteListTable();
 	// Second
@@ -1596,11 +1598,11 @@ $(document).ready(function () {
 });
 
 $(window).resize(function(){
-   calcCenter();
+	calcCenter();
 });
 
 var calcCenter = function(){
-    $('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
+	$('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
 }
 
 
@@ -1682,6 +1684,7 @@ function generateSiteListTable() {
 		          { data: "description" },
 		          { data: "depth" },
 		          { data: "active" }
+		          //add render function for button
 		          ],
 		          select: 'single',
 		          buttons: [
@@ -1693,22 +1696,18 @@ function generateSiteListTable() {
 }
 
 function generateWordsTable() {
-	var tableData = [];
-	$(wordList).each(function (index) {
-		var tmp = [];
-		tmp.push(wordList[index].text);
-
-		tableData.push(tmp);
-	});
-
-	$('#word-list-table').DataTable({
-		data: tableData,
+	wordListTable = $('#word-list-table').DataTable({
+		dom: "frtip",
+		ajax: "./rest/website", 
 		columns: [
-		          {
-		        	  title: "Word"
-		          }
-		          ]
-	});
+		          { data: "word" },
+		          { data: "amounnt" },
+		          { data: "active" },
+		          //add render function
+		          ],
+		          select: 'single'
+		         
+	} );
 }
 
 function generateCharts() {
