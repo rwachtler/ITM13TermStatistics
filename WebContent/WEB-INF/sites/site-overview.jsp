@@ -17,7 +17,6 @@
 
 <body>
 	<input type="hidden" name="siteID" id="siteID" value="${siteID}">
-	
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -45,7 +44,7 @@
     <div id="main-content" class="container-fluid">
         <section id="website-list" class="row">
             <h1>Site Overview ${domain}</h1>
-            <a href="#word-table" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-down"></span> Let's talk about statistics <span class="glyphicon glyphicon-chevron-down"></span></a>
+            <a href="#charts" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-down"></span> How about a pie?...Chart <span class="glyphicon glyphicon-chevron-down"></span></a>
             <p class="lead">Those websites were included to the crawling process</p>
             <table class="table table-striped" id="site-list-table">
             	<thead>
@@ -59,17 +58,14 @@
     			</thead>
             </table>
         </section>
-        <section id="word-table" class="row">
-            <h1>Statistics</h1>
-            <a href="#charts" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-down"></span> How about a pie?...Chart <span class="glyphicon glyphicon-chevron-down"></span></a>
-            <p class="lead">Crawled words</p>
-            <table class="table table-striped" id="word-list-table"></table>
-        </section>
-        <section id="charts" class="row">
+        <section id="charts" class="row overlay">
+            <div class="spinner">
+                <div class="inner-spinner"></div>
+            </div>
             <h1>Charts</h1>
             <a href="#website-list" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-up"></span> Add an additional resource <span class="glyphicon glyphicon-chevron-up"></span></a>
             <p class="lead">Barchart</p>
-            <canvas width="800" height="500" id="bar-chart"></canvas>
+            <canvas width="1200" height="800" id="bar-chart"></canvas>
         </section>
     </div>
     <!-- /container-fluid -->
@@ -81,6 +77,7 @@
     <script src="../bower_components/datatables-editor/js/dataTables.editor.min.js"></script>
     <script src="../datatables-select/js/dataTables.select.min.js"></script>
     <script src="../datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../js/ui-helper.min.js"></script>
     <script src="../js/site-overview.min.js"></script>
 </body>
 

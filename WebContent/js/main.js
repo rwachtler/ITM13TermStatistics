@@ -1586,8 +1586,6 @@ var wordListTable;
 
 $(document).ready(function () {
 
-	calcCenter();
-
 	// First
 	generateSiteListTable();
 	// Second
@@ -1596,15 +1594,6 @@ $(document).ready(function () {
 	generateCharts();
 
 });
-
-$(window).resize(function(){
-	calcCenter();
-});
-
-var calcCenter = function(){
-	$('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
-}
-
 
 function generateSiteListTable() {
 
@@ -1710,57 +1699,3 @@ function generateWordsTable() {
 		         
 	} );
 }
-
-function generateCharts() {
-	/* CHARTS */
-	var labels = [];
-	var amount = [];
-	$(barChartStats).each(function (index) {
-		labels.push(barChartStats[index].word.text);
-		amount.push(barChartStats[index].amount);
-	});
-	var data = {
-			labels: labels,
-			datasets: [{
-				label: "",
-				fillColor: "rgba(22, 160, 133, 0.6)",
-				strokeColor: "rgba(38, 166, 91, 0.4)",
-				pointColor: "rgba(220,220,220,1)",
-				pointStrokeColor: "#fff",
-				pointHighlightFill: "#fff",
-				pointHighlightStroke: "rgba(220,220,220,1)",
-				data: amount
-			}]
-	};
-	var options = {
-			scaleShowGridLines: true,
-			responsive: false
-	};
-	// Get context with jQuery - using jQuery's .get() method.
-	var $ctx = $("#bar-chart").get(0).getContext("2d");
-	// This will get the first returned node in the jQuery collection.
-	var barChart = new Chart($ctx).Bar(data, options);
-}
-
-$(window).scroll(function () {
-	if ($(this).scrollTop() > 400) {
-		$('#top-scroll').show(500);
-	} else {
-		$('#top-scroll').hide(500);
-	}
-});
-
-$('#top-scroll').click(function (e) {
-	e.preventDefault();
-	$("html, body").animate({
-		scrollTop: 0
-	}, 600);
-});
-
-$('.next-section').click(function (e) {
-	e.preventDefault();
-	var $targetOffset = $($(this).attr('href')).offset().top;
-	$("html, body").animate({
-		scrollTop: $targetOffset - 50
-	}, 600);
-});

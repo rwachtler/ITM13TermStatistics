@@ -107,11 +107,11 @@ public class ContainerEndpoint{
 	 * @return  Map<String, Integer> with the words and their amount
 	 */
 	@GET
-    @Path("/oneSite/{domain:[a-zA-Z.][a-zA-Z.]*}")
+    @Path("/oneSite/{id:[0-9][0-9]*}")
     @Produces("application/json")
-	public Response findFrequentWordsOfSide(@PathParam("domain") String domain){
-		TypedQuery<Container> wordsOneSite = em.createQuery("SELECT co FROM Container co WHERE co.website.domain = :domain order by co.amount desc", Container.class);
-		wordsOneSite.setParameter("domain", "http://"+domain);
+	public Response findFrequentWordsOfSide(@PathParam("id") int id){
+		TypedQuery<Container> wordsOneSite = em.createQuery("SELECT co FROM Container co WHERE co.website.id = :id order by co.amount desc", Container.class);
+		wordsOneSite.setParameter("id", id);
 		wordsOneSite.setMaxResults(200);
 		
 		final List<Container> results = wordsOneSite.getResultList();		

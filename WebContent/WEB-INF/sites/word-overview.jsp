@@ -80,6 +80,7 @@
     <script src="../bower_components/datatables-editor/js/dataTables.editor.min.js"></script>
     <script src="../datatables-select/js/dataTables.select.min.js"></script>
     <script src="../datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../js/ui-helper.min.js"></script>
     <script src="../js/word-overview.min.js"></script>
 </body>
 
