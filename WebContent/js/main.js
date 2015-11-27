@@ -1698,10 +1698,10 @@ function generateSiteListTable() {
 function generateWordsTable() {
 	wordListTable = $('#word-list-table').DataTable({
 		dom: "frtip",
-		ajax: "./rest/website", 
+		ajax: "./rest/word", 
 		columns: [
 		          { data: "word" },
-		          { data: "amounnt" },
+		          { data: "amount" },
 		          { data: "active" },
 		          //add render function
 		          ],
