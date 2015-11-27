@@ -1603,33 +1603,6 @@ var calcCenter = function(){
     $('.next-section').css('left', (window.innerWidth / 2) - $('.next-section').width() / 2);
 }
 
-$('#add-site').click(function(){
-	var websiteAddr = $('#website-address-value').val();
-	var ID = siteListTable.rows(siteListTable.rows().length - 1).data()[0][0]+1;
-	var desc =  siteListTable.rows(siteListTable.rows().length - 1).data()[0][2];
-	/* siteListTable.row.add([
-        ID.toString(),
-        websiteAddr,
-        desc
-    ]).draw(false);*/ 
-
-	$.ajax({
-		url : "./rest/website",
-		type: "POST",
-		data : JSON.stringify({"addr": websiteAddr}),
-		contentType: "application/json",
-		success: function(data, textStatus, jqXHR)
-		{
-			console.log("Success");
-		},
-		error: function (jqXHR, textStatus, errorThrown)
-		{
-			console.log("Error");
-		}
-	});
-
-
-});
 
 function generateSiteListTable() {
 

@@ -12,7 +12,7 @@
     <title>ITM13 TermStatistics - Word Overview</title>
     <meta name="description" content="ITM13 Term Statistics">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="css/main.min.css">
+    <link rel="stylesheet" href="../css/main.min.css">
 </head>
 
 <body>
@@ -73,14 +73,14 @@
     </div>
     <!-- /container-fluid -->
     <a href="#" id="top-scroll"><span class="glyphicon glyphicon-chevron-up"></span></a>
-    <script src="bower_components/jquery/dist/jquery.min.js"></script>
-    <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="bower_components/Chart.js/Chart.min.js"></script>
-    <script src="bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
-    <script src="bower_components/datatables-editor/js/dataTables.editor.min.js"></script>
-    <script src="datatables-select/js/dataTables.select.min.js"></script>
-    <script src="datatables-buttons/js/dataTables.buttons.min.js"></script>
-    <script src="js/word-overview.min.js"></script>
+    <script src="../bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="../bower_components/Chart.js/Chart.min.js"></script>
+    <script src="../bower_components/datatables/media/js/jquery.dataTables.min.js"></script>
+    <script src="../bower_components/datatables-editor/js/dataTables.editor.min.js"></script>
+    <script src="../datatables-select/js/dataTables.select.min.js"></script>
+    <script src="../datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../js/word-overview.min.js"></script>
 </body>
 
 </html>

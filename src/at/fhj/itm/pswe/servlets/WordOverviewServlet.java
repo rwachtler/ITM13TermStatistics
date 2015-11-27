@@ -44,17 +44,20 @@ public class WordOverviewServlet extends HttpServlet {
 		
 		
 		String path=request.getPathInfo();
-		int id;
+		String id;
 		try{
 			if(path != null && path.length()>1){
-				id = Integer.parseInt(path.substring(1));
+				id = path.substring(1);
 				System.out.println("ID: "+id);
 				//Check if id is valid
 				EntityManager em = emf.createEntityManager();
 				Word wo = em.find(Word.class,id);
 				
+				
+				
+				
 				if(!(wo==null)){
-					request.setAttribute("wordID",id);
+					request.setAttribute("wordID", wo.getText());
 					request.setAttribute("word", wo.getText());
 					RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/sites/word-overview.jsp");
 					view.forward(request, response); 
