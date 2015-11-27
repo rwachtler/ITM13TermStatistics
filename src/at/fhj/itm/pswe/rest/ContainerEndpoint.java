@@ -102,8 +102,7 @@ public class ContainerEndpoint{
 	
 	/**Fuer eine Seite haeufigsten Woerter
 	 * Reads the most frequent words of a page
-	 * @param domain the side from which the word should be read
-	 * @param max how much words should be read
+	 * @param id domain ID
 	 * @return  Map<String, Integer> with the words and their amount
 	 */
 	@GET
