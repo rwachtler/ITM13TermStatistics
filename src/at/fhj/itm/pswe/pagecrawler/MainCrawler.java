@@ -8,6 +8,8 @@ public class MainCrawler implements Runnable{
 	
 	private String url;
 	private int depth;
+	private Init_LinkCrawler linkCrawler;
+	
 	public MainCrawler(String url, int depth){
 		this.url = url;
 		this.depth=depth;
@@ -16,14 +18,16 @@ public class MainCrawler implements Runnable{
 	public void crawl() {
 		try {
 			// Writes all gathered Words from the given URL into <Project-Root>/result/crawl/result.txt
-			Init_LinkCrawler linkCrawler = new Init_LinkCrawler(url,depth);
+			linkCrawler = new Init_LinkCrawler(url,depth);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		
+		
+		
 		// TODO Start Wordanalyzer and write Words in DB
 		System.out.println("Analyzer created!");
-		Analyzer analyzer = new Analyzer();
+		Analyzer analyzer = new Analyzer(linkCrawler.getFileStoragePath());
 		
 		System.out.println("Analyzer started!");
 		analyzer.analyzeResults();

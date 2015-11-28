@@ -1,9 +1,6 @@
 package at.fhj.itm.pswe.view;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import at.fhj.itm.pswe.database.DbConnection;
 
 public class Charts_db {

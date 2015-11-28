@@ -16,10 +16,7 @@ public class DbConnection {
 	private boolean dbConnected = false;
 	
 	private Connection connect = null;
-	private Statement statement = null;
 	private PreparedStatement preparedStatement = null;
-	private ResultSet resultSet = null;
-
 	private static String DB_NAME = "itm13";
 	
 	private static String DB_HOST = "itm13db.ccvogifhormq.eu-west-1.rds.amazonaws.com:3306";

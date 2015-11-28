@@ -84,7 +84,7 @@ public class WordEndpoint{
 		Iterator<String> keys = json.keys();
 		String id="";
 		if( keys.hasNext() ){
-			id = (String)keys.next(); // First key in your json object
+			id = keys.next(); // First key in your json object
 		}
 
 		//CUpdate and Save object

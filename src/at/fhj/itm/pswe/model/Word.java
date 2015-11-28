@@ -2,7 +2,6 @@ package at.fhj.itm.pswe.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
