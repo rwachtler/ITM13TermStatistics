@@ -54,6 +54,7 @@ public class WordEndpoint{
 		List<Object[]> results = em
 				.createQuery("SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
 				.getResultList();
+		
 		JSONArray returnResult=new JSONArray();
 
 		for(Object[] wo: results){

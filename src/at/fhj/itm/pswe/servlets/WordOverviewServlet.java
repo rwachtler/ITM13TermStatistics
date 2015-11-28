@@ -51,12 +51,10 @@ public class WordOverviewServlet extends HttpServlet {
 				EntityManager em = emf.createEntityManager();
 				Word wo = em.find(Word.class,id);
 				
-				
-				
-				
 				if(!(wo==null)){
 					request.setAttribute("wordID", wo.getText());
 					request.setAttribute("word", wo.getText());
+					em.close();
 					RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/sites/word-overview.jsp");
 					view.forward(request, response); 
 				}else{

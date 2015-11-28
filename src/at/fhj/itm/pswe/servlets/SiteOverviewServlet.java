@@ -57,6 +57,7 @@ public class SiteOverviewServlet extends HttpServlet {
 					System.out.println(ws.getDomain());
 					request.setAttribute("siteID",id);
 					request.setAttribute("domain", ws.getDomain());
+					em.close();
 					RequestDispatcher view = request.getRequestDispatcher("/WEB-INF/sites/site-overview.jsp");
 					view.forward(request, response); 
 				}else{
