@@ -121,7 +121,10 @@ public class Analyzer {
 	public String readResultFile() {
 		try (BufferedReader br = new BufferedReader(new FileReader(RESULT_FILE))) {
 			StringBuilder sb = new StringBuilder();
+			// Skip first 2 Lines (URL and date of creation)
 			String line = br.readLine();
+			line = br.readLine();
+			line = br.readLine();
 
 			while (line != null) {
 				sb.append(line);
