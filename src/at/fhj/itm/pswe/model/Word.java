@@ -2,7 +2,6 @@ package at.fhj.itm.pswe.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.List;
 
 
 /**
@@ -19,7 +18,7 @@ public class Word implements Serializable {
 	private String text;
 
 	@Column(name="active")
-	private byte active;
+	private boolean active;
 
 	//bi-directional many-to-one association to Container
 	/*@OneToMany(mappedBy="word")
@@ -37,11 +36,11 @@ public class Word implements Serializable {
 		this.text = text;
 	}
 
-	public byte getActive() {
+	public boolean getActive() {
 		return this.active;
 	}
 
-	public void setActive(byte active) {
+	public void setActive(boolean active) {
 		this.active = active;
 	}
 

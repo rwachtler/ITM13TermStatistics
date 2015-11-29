@@ -17,79 +17,98 @@ public class Analyzer {
 
 	private String input;
 	private HashMap<String, Integer> wordMap;
-	
-	private DbConnection db;
-	
-	private static String WEBSITE_NAME = "http://pswengi.bamb.at";
-	
-	private static String RESULT_FILE = "./result/crawl/result.txt";
 
-	public Analyzer() {
+	private DbConnection db;
+
+	private static String WEBSITE_NAME;
+
+	private static String RESULT_FILE;
+
+	public Analyzer(String url) {
 		// init database connection
 		this.db = new DbConnection();
+		setRESULT_FILE(url);
+
+		BufferedReader br = null;
+
+		try {
+			br = new BufferedReader(new FileReader(RESULT_FILE));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		try {
+			WEBSITE_NAME = br.readLine();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
-	
+
 	public void analyzeResults() {
 		if (db.isConnected()) {
 			this.wordMap = this.calculateWordMap(this.readResultFile());
-			
+
 			// TODO remove hard-coded references
 			String website = WEBSITE_NAME;
 			String description = "";
-			
+
 			// get website id
 			int websiteId = db.websiteExists(website);
-			
+
 			// if website does not exist, add it
 			if (websiteId < 0) {
 				int active = 1;
-				
+
 				websiteId = db.addWebsite(website, description, active);
 			}
-			
+
 			Iterator it = this.wordMap.entrySet().iterator();
-			
-			while(it.hasNext()) {
+
+			while (it.hasNext()) {
 				// get key/value pair from hash map
-				Map.Entry pair = (Map.Entry)it.next();
-				
-				String word = (String)pair.getKey();
-				int count = (int)pair.getValue();
-				
+				Map.Entry pair = (Map.Entry) it.next();
+
+				String word = (String) pair.getKey();
+				int count = (int) pair.getValue();
+
 				// check if word exists in the database
 				if (!db.wordExists(word)) {
 					int active = 1;
-					
+
 					db.addWord(word, active);
 				}
-				
+
 				// format date string
 				DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 				Date date = new Date();
-				
+
 				String dateString = dateFormat.format(date);
-				
+
 				// add container entry to database
 				db.addContainer(word, count, websiteId, dateString);
-				
+
 				it.remove();
 			}
 		}
 	}
-	
-	public HashMap<String,Integer> calculateWordMap(String input) {
-		HashMap<String,Integer> wordmap = new HashMap<String,Integer>();
+
+	public HashMap<String, Integer> calculateWordMap(String input) {
+		HashMap<String, Integer> wordmap = new HashMap<String, Integer>();
 		String[] inputWords = input.split(" ");
-		for(int i = 0; i<inputWords.length;i++){
+		for (int i = 0; i < inputWords.length; i++) {
 			String word = inputWords[i].toLowerCase();
-			
+
 			// remove punctuation from start and end of word
-			// according to: http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
+			// according to:
+			// http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
 			word = word.replaceFirst("^[^a-zA-Z]+", "").replaceAll("[^a-zA-Z]+$", "").trim();
-			
+
 			if (!word.isEmpty()) {
 				if (wordmap.containsKey(word)) {
-					wordmap.put(word,(Integer) wordmap.get(word)+1);
+					wordmap.put(word, (Integer) wordmap.get(word) + 1);
 				} else {
 					wordmap.put(word, 1);
 				}
@@ -98,20 +117,23 @@ public class Analyzer {
 
 		return wordmap;
 	}
-	
-	public String readResultFile() {		
-		try(BufferedReader br = new BufferedReader(new FileReader(RESULT_FILE))) {
-		    StringBuilder sb = new StringBuilder();
-		    String line = br.readLine();
 
-		    while (line != null) {
-		        sb.append(line);
-		        sb.append(System.lineSeparator());
-		        line = br.readLine();
-		    }
-		    String everything = sb.toString();
-		    
-		    return everything;
+	public String readResultFile() {
+		try (BufferedReader br = new BufferedReader(new FileReader(RESULT_FILE))) {
+			StringBuilder sb = new StringBuilder();
+			// Skip first 2 Lines (URL and date of creation)
+			String line = br.readLine();
+			line = br.readLine();
+			line = br.readLine();
+
+			while (line != null) {
+				sb.append(line);
+				sb.append(System.lineSeparator());
+				line = br.readLine();
+			}
+			String everything = sb.toString();
+
+			return everything;
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -119,10 +141,18 @@ public class Analyzer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
-	
+
+	public static String getRESULT_FILE() {
+		return RESULT_FILE;
+	}
+
+	public static void setRESULT_FILE(String rESULT_FILE) {
+		RESULT_FILE = rESULT_FILE;
+	}
+
 	public String getInput() {
 		return input;
 	}
@@ -137,5 +167,5 @@ public class Analyzer {
 
 	public void setWordMap(HashMap<String, Integer> wordMap) {
 		this.wordMap = wordMap;
-	}	
+	}
 }

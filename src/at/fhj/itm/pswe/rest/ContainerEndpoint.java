@@ -1,13 +1,9 @@
 package at.fhj.itm.pswe.rest;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -24,11 +20,7 @@ import javax.ws.rs.core.Response.Status;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import com.sleepycat.je.rep.elections.Protocol.Result;
-
 import at.fhj.itm.pswe.model.Container;
-import at.fhj.itm.pswe.model.Website;
-import at.fhj.itm.pswe.model.Word;
 
 @Stateless
 @Path("/container")

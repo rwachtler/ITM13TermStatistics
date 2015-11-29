@@ -88,30 +88,91 @@ function generateSiteListTable() {
 		          { data: "address" },
 		          { data: "description" },
 		          { data: "depth" },
-		          { data: "active" }
+		          { data: "active" },
+		          { data: null }
 		          //add render function for button
 		          ],
-		          select: 'single',
-		          buttons: [
-		                    { extend: "create", editor: siteListEditor },
-		                    { extend: "edit",   editor: siteListEditor },
-		                    { extend: "remove", editor: siteListEditor }
-		                    ]
+		          columnDefs: 
+		        	  [
+		        	   {	render: function ( data, type, row ) {
+		        		   return "<a class='btn btn-primary' href='./SiteOverview/"+row.id+"'>Details</a>"
+		        	   },
+		        	   targets: 5 },
+		        	   { orderable: false, targets: 5 }
+		        	   ],
+		        	   select: 'single',
+		        	   buttons: [
+		        	             { extend: "create", editor: siteListEditor },
+		        	             { extend: "edit",   editor: siteListEditor },
+		        	             { extend: "remove", editor: siteListEditor }
+		        	             ]
 	} );
 }
 
 function generateWordsTable() {
+	wordListEditor = new $.fn.dataTable.Editor( {
+		ajax: function ( method, url, d, successCallback, errorCallback ) {
+
+
+			if ( d.action === 'create' ) {
+				//Not implemented
+			}
+			else if ( d.action === 'edit' ) {
+				console.log(JSON.stringify(d.data))
+				var data = d.data;
+				$.ajax({
+					type: "PUT", 
+					url: "./rest/word",
+					data: JSON.stringify(data),
+					success: successCallback,
+					error: errorCallback,
+					contentType: "application/json",
+				});
+			}
+			else if ( d.action === 'remove' ) {
+				//Not implemented
+			}
+
+
+		},
+		idSrc: "word",
+		table: "#word-list-table",
+		fields: [{
+			label: "Active",
+			name: "active",
+			type: "checkbox",
+			options:   [
+			            { label: '', value: 1 }
+			            ]
+		}
+		]
+	} );
+	
+	
+	
+	
+	
 	wordListTable = $('#word-list-table').DataTable({
-		dom: "frtip",
-		ajax: "./rest/word",
+		dom: "Bfrtip",
+		ajax: "./rest/word", 
 		order: [[ 1, "desc" ]],
 		columns: [
 		          { data: "word" },
 		          { data: "amount" },
 		          { data: "active" },
+		          { data: null}
 		          //add render function
 		          ],
-		          select: 'single'
-		         
+		          columnDefs: 
+		        	  [
+		        	   {	render: function ( data, type, row ) {
+		        		   				return "<a class='btn btn-primary' href='./WordOverview/"+row.word+"'>Details</a>"
+		        	   },
+		        	   targets: 3 },
+		        	   { orderable: false, targets: 3 }
+		        	   ],
+		          select: 'single',
+		          buttons: [{ extend: "edit",   editor: wordListEditor }]
+
 	} );
 }

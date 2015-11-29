@@ -14,17 +14,18 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import edu.uci.ics.crawler4j.url.WebURL;
 
 public class Init_LinkCrawler {
-	
-	private String filename;
 
-	public Init_LinkCrawler(String url, int depth) throws Exception{
-		
-		String startSeed=url;
-		WebURL startUrl=new WebURL();
+	private String filename, crawlStorageFolder;
+
+	public Init_LinkCrawler(String url, int depth) throws Exception {
+
+		String startSeed = url;
+		WebURL startUrl = new WebURL();
 		startUrl.setURL(startSeed);
-		
-		// Add to Project Root folders result/crawl where our result.txt is saved
-		String crawlStorageFolder = "./result/crawl/";
+
+		// Add to Project Root folders result/crawl where our result.txt is
+		// saved
+		crawlStorageFolder = "./result/crawl/";
 		int numberOfCrawlers = 10;
 
 		CrawlConfig config = new CrawlConfig();
@@ -46,7 +47,7 @@ public class Init_LinkCrawler {
 		 * which are found in these pages
 		 */
 		controller.addSeed(startSeed);
-		
+
 		controller.setCustomData(startUrl);
 
 		final Calendar cal = Calendar.getInstance();
@@ -66,7 +67,7 @@ public class Init_LinkCrawler {
 		if (out != null) {
 			out.close();
 		}
-		
+
 		/*
 		 * Start the crawl. This is a blocking operation, meaning that your code
 		 * will reach the line after this only when crawling is finished.
@@ -75,9 +76,9 @@ public class Init_LinkCrawler {
 		System.out.println("Finished");
 
 	}
-	
-	public String getFilename(){
-		return filename;
+
+	public String getFileStoragePath() {
+		return crawlStorageFolder + filename;
 	}
 
 }
