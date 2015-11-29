@@ -4,10 +4,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -27,94 +29,94 @@ import at.fhj.itm.pswe.model.Container;
 public class ContainerEndpoint{
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
-	
+
 	@GET
 	@Produces("application/json")
 	public List<Container> listAll(@QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult)
 	{
 		TypedQuery<Container> findAllQuery = em.createQuery("SELECT DISTINCT c FROM Container c ORDER BY c.id", Container.class);
-		
+
 		if (startPosition != null)
-	      {
-	         findAllQuery.setFirstResult(startPosition);
-	      }
-	      if (maxResult != null)
-	      {
-	         findAllQuery.setMaxResults(maxResult);
-	      }
+		{
+			findAllQuery.setFirstResult(startPosition);
+		}
+		if (maxResult != null)
+		{
+			findAllQuery.setMaxResults(maxResult);
+		}
 
 		final List<Container> results = findAllQuery.getResultList();
 		return results;
 	}
-	
+
 	@GET
-    @Path("/id/{id:[0-9][0-9]*}")
-    @Produces("application/json")
-    public Response findById(@PathParam("id") int id)
-    {
-       TypedQuery<Container> findByIdQuery = em.createQuery("SELECT DISTINCT c FROM Container c WHERE c.id = :id", Container.class);
-       findByIdQuery.setParameter("id", id);
-       Container entity;
-       try
-       {
-          entity = findByIdQuery.getSingleResult();
-       }
-       catch (NoResultException nre)
-       {
-          entity = null;
-       }
-       if (entity == null)
-       {
-          return Response.status(Status.NOT_FOUND).build();
-       }
-       return Response.ok(entity).build();
-   }
-	
+	@Path("/id/{id:[0-9][0-9]*}")
+	@Produces("application/json")
+	public Response findById(@PathParam("id") int id)
+	{
+		TypedQuery<Container> findByIdQuery = em.createQuery("SELECT DISTINCT c FROM Container c WHERE c.id = :id", Container.class);
+		findByIdQuery.setParameter("id", id);
+		Container entity;
+		try
+		{
+			entity = findByIdQuery.getSingleResult();
+		}
+		catch (NoResultException nre)
+		{
+			entity = null;
+		}
+		if (entity == null)
+		{
+			return Response.status(Status.NOT_FOUND).build();
+		}
+		return Response.ok(entity).build();
+	}
+
 	@GET
-    @Path("/date/{date:[a-zA-Z0-9][a-zA-Z0-9.]*}")
-    @Produces("application/json")
-    public Response findByDate(@PathParam("date") String date, @QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult)
-    {
-       TypedQuery<Container> findByDateQuery = em.createQuery("SELECT DISTINCT c FROM Container c WHERE c.logDate = :date ORDER BY c.amount DESC", Container.class);
-       findByDateQuery.setParameter("date", date);
-       List<Container> entities;
-       if (startPosition != null)
-      {
-         findByDateQuery.setFirstResult(startPosition);
-      }
-      if (maxResult != null)
-      {
-         findByDateQuery.setMaxResults(maxResult);
-      }
-      
-      entities = findByDateQuery.getResultList();
-      
-      return Response.ok(entities).build();
-   }
-	
+	@Path("/date/{date:[a-zA-Z0-9][a-zA-Z0-9.]*}")
+	@Produces("application/json")
+	public Response findByDate(@PathParam("date") String date, @QueryParam("start") Integer startPosition, @QueryParam("max") Integer maxResult)
+	{
+		TypedQuery<Container> findByDateQuery = em.createQuery("SELECT DISTINCT c FROM Container c WHERE c.logDate = :date ORDER BY c.amount DESC", Container.class);
+		findByDateQuery.setParameter("date", date);
+		List<Container> entities;
+		if (startPosition != null)
+		{
+			findByDateQuery.setFirstResult(startPosition);
+		}
+		if (maxResult != null)
+		{
+			findByDateQuery.setMaxResults(maxResult);
+		}
+
+		entities = findByDateQuery.getResultList();
+
+		return Response.ok(entities).build();
+	}
+
 	/**Fuer eine Seite haeufigsten Woerter
 	 * Reads the most frequent words of a page
 	 * @param id domain ID
 	 * @return  Map<String, Integer> with the words and their amount
 	 */
 	@GET
-    @Path("/oneSite/{id:[0-9][0-9]*}")
-    @Produces("application/json")
+	@Path("/oneSite/{id:[0-9][0-9]*}")
+	@Produces("application/json")
 	public Response findFrequentWordsOfSide(@PathParam("id") int id){
 		TypedQuery<Container> wordsOneSite = em.createQuery("SELECT co FROM Container co WHERE co.website.id = :id order by co.amount desc", Container.class);
 		wordsOneSite.setParameter("id", id);
 		wordsOneSite.setMaxResults(200);
-		
+
 		final List<Container> results = wordsOneSite.getResultList();		
-		
-	    Collections.sort(results, new Comparator<Container>() {
-	    	@Override
+
+		Collections.sort(results, new Comparator<Container>() {
+			@Override
 			public int compare(Container o1, Container o2) {
 				return o1.getWord().getText().compareTo(o2.getWord().getText());
 			}
-	    });
+		});
 		List<Container> words=new ArrayList<Container>();
-		
+
 		words.add(results.get(0));
 		int p = 0;
 		for(int i=1; i<results.size();i++){
@@ -125,7 +127,7 @@ public class ContainerEndpoint{
 				p++;
 			}
 		}
-		
+
 		JSONArray returnResult=new JSONArray();
 		for(Container c: words){
 			JSONObject temp= new JSONObject();
@@ -139,37 +141,44 @@ public class ContainerEndpoint{
 
 		return Response.ok(my.toString()).build();
 	}
-	
+
 	/**Ein Wort auf vorkommenden Seiten mit Anzahl und Datum mit Zeituebergabe Einschraenkung
 	 * Analyse the amount of a word over a certain period
 	 * @param word the word which should be counted
 	 * @param startdate the date as String when the analysis should start
 	 * @param enddate the date as String when the analysis should end
 	 * @return List<Integer> with the amount of the word
+	 * Example: http://localhost:8080/TermStatistics/rest/container/period/ab/10.11.2015/30.11.2015
 	 */
 	@GET
-    @Path("/period/{word:[a-zA-Z][a-zA-Z]*}/{startdate:[a-zA-Z0-9][a-zA-Z0-9.]*}/{enddate:[a-zA-Z0-9][a-zA-Z0-9.]*}")
-    @Produces("application/json")
+	@Path("/period/{word:[a-zA-Z][a-zA-Z]*}/{startdate:[a-zA-Z0-9][a-zA-Z0-9.]*}/{enddate:[a-zA-Z0-9][a-zA-Z0-9.]*}")
+	@Produces("application/json")
 	public Response countWordOverPeriod(@PathParam("word") String word ,@PathParam("startdate") String startdate, @PathParam("enddate") String enddate){
-		TypedQuery<Container> countWordPeriod = em.createQuery("SELECT co FROM Container co WHERE co.word.text = :word AND (co.logDate BETWEEN :startdate AND :enddate)",Container.class);
+		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) FROM Container co "
+				+ "WHERE co.word.text = :word AND (co.logDate BETWEEN :startdate AND :enddate) "
+				+ "GROUP BY co.logDate");
 		countWordPeriod.setParameter("word", word);
 		countWordPeriod.setParameter("startdate", startdate);
 		countWordPeriod.setParameter("enddate", enddate);
-		
-		final List<Container> results = countWordPeriod.getResultList();
-		
-		int amount = 0;
-		for(Container c: results) {
-			amount += c.getAmount();
+
+		final List<Object[]> results = countWordPeriod.getResultList();
+
+		JSONArray returnResult=new JSONArray();
+
+		for(Object[] wo: results){
+			System.out.println(wo[0]+" | "+wo[1]);
+
+			JSONObject temp= new JSONObject();
+			temp.put("date", wo[0]);
+			temp.put("amount", wo[1]);
+
+			returnResult.put(temp);
 		}
-		
-		JSONObject temp= new JSONObject();
-		temp.put("amount", amount);
-		temp.put("word", word);
-		
+
 
 		JSONObject my=new JSONObject();
-		my.put("data", temp);
+		my.put(word, returnResult);
+		System.out.println(my.toString());
 
 		return Response.ok(my.toString()).build();		
 	}
