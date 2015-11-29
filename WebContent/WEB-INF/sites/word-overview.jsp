@@ -51,11 +51,9 @@
 			<table class="table table-striped" id="site-list-table">
 				<thead>
 					<tr>
-						<th>ID</th>
+						<th>SeitenID</th>
 						<th>Adresse</th>
-						<th>Description</th>
-						<th>Depth</th>
-						<th>Active</th>
+						<th>Anzahl</th>
 					</tr>
 				</thead>
 			</table>

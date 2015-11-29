@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -19,6 +20,7 @@ import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
 import at.fhj.itm.pswe.model.Word;
 
 @Stateless
@@ -54,7 +56,7 @@ public class WordEndpoint{
 		List<Object[]> results = em
 				.createQuery("SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
 				.getResultList();
-		
+
 		JSONArray returnResult=new JSONArray();
 
 		for(Object[] wo: results){
@@ -62,6 +64,39 @@ public class WordEndpoint{
 			temp.put("word", wo[0]);
 			temp.put("amount", wo[2]);
 			temp.put("active",wo[1]);
+
+			returnResult.put(temp);
+		}
+
+		JSONObject my=new JSONObject();
+		my.put("data", returnResult);
+
+		return Response.ok(my.toString()).build();
+	}
+
+	//For Datatable on Subiste "Website"
+	@GET
+	@Path("/{word}/websites")
+	@Produces("application/json")
+	public Response sitesOfWord(@PathParam("word") String word)
+	{
+		Query q = em
+				.createQuery("SELECT c.website.id, c.website.domain, sum(c.amount)  "
+						+ "FROM Container c WHERE c.word.text LIKE :word AND c.word.active = TRUE "
+						+ "GROUP BY c.website ORDER BY sum(c.amount) DESC")
+						.setParameter("word", word);
+
+		List<Object[]> results	= q.getResultList();
+
+		JSONArray returnResult=new JSONArray();
+
+		for(Object[] wo: results){
+			System.out.println(wo[0]+" | "+wo[1]);
+
+			JSONObject temp= new JSONObject();
+			temp.put("id", wo[0]);
+			temp.put("adresse", wo[1]);
+			temp.put("amount", wo[2]);
 
 			returnResult.put(temp);
 		}
@@ -111,7 +146,7 @@ public class WordEndpoint{
 		JSONObject temp= new JSONObject();
 
 		if(!results.isEmpty()){
-			
+
 			temp.put("word", results.get(0)[0]);
 			temp.put("amount", results.get(0)[2]);
 			temp.put("active",results.get(0)[1]);
