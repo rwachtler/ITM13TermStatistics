@@ -61,7 +61,7 @@
 					<!-- Add a data source -->
 					<execution>
 						<id>add_datasource</id>
-						<phase>package</phase>
+						<phase>install</phase>
 						<configuration>
 							<address>subsystem=datasources,data-source=mysql</address>
 							<resources>
@@ -81,12 +81,6 @@
 						</configuration>
 						<goals>
 							<goal>add-resource</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>deploy_application</id>
-						<phase>install</phase>
-						<goals>
 							<goal>deploy</goal>
 						</goals>
 					</execution>
