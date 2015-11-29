@@ -57,6 +57,40 @@
 					<username>itm13</username>
 					<password>iTm!3WiLdFlY</password>
 				</configuration>
+				<executions>
+					<!-- Add a data source -->
+					<execution>
+						<id>add_datasource</id>
+						<phase>package</phase>
+						<configuration>
+							<address>subsystem=datasources,data-source=mysql</address>
+							<resources>
+								<resource>
+									<properties>
+										<connection-url>jdbc:mysql://itm13db.ccvogifhormq.eu-west-1.rds.amazonaws.com:3306/itm13</connection-url>
+										<jndi-name>java:jboss/mysql</jndi-name>
+										<enabled>true</enabled>
+										<enable>true</enable>
+										<user-name>itm13root</user-name>
+										<password>iTm!3DbMySqL</password>
+										<driver-name>mysql-connector-java-5.1.37-bin.jar_com.mysql.jdbc.Driver_5_1</driver-name>
+										<use-ccm>false</use-ccm>
+									</properties>
+								</resource>
+							</resources>
+						</configuration>
+						<goals>
+							<goal>add-resource</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>deploy_application</id>
+						<phase>install</phase>
+						<goals>
+							<goal>deploy</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 
 			<plugin>
