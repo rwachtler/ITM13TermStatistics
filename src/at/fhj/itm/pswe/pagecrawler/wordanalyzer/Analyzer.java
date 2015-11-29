@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import at.fhj.itm.pswe.database.DbConnection;
@@ -17,6 +18,8 @@ public class Analyzer {
 
 	private String input;
 	private HashMap<String, Integer> wordMap;
+	ReaderFilterWords rf=new ReaderFilterWords();
+	private List<String> filterwords;
 
 	private DbConnection db;
 
@@ -96,10 +99,13 @@ public class Analyzer {
 	}
 
 	public HashMap<String, Integer> calculateWordMap(String input) {
+		filterwords=rf.readWords();
+
 		HashMap<String, Integer> wordmap = new HashMap<String, Integer>();
 		String[] inputWords = input.split(" ");
 		for (int i = 0; i < inputWords.length; i++) {
 			String word = inputWords[i].toLowerCase();
+			System.out.println("Current word: "+word);
 
 			// remove punctuation from start and end of word
 			// according to:
@@ -107,10 +113,22 @@ public class Analyzer {
 			word = word.replaceFirst("^[^a-zA-Z]+", "").replaceAll("[^a-zA-Z]+$", "").trim();
 
 			if (!word.isEmpty()) {
-				if (wordmap.containsKey(word)) {
-					wordmap.put(word, (Integer) wordmap.get(word) + 1);
-				} else {
-					wordmap.put(word, 1);
+				boolean isForbidden=false;
+				for(String s : filterwords){
+					
+					System.out.println("Filter: "+s);
+					if(s.contentEquals(word)){
+						System.out.println("TRUE: "+s+" vs "+word);
+						isForbidden=true;
+					}
+
+				}
+				if(!isForbidden){
+					if (wordmap.containsKey(word)) {
+						wordmap.put(word, (Integer) wordmap.get(word) + 1);
+					} else {
+						wordmap.put(word, 1);
+					}
 				}
 			}
 		}
