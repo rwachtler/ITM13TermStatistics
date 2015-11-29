@@ -90,6 +90,13 @@
 							<goal>deploy</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>undeploy_application</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>undeploy</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 
