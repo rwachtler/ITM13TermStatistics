@@ -55,13 +55,13 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 
 ##Subsites
 - Subsites( Word/Site Overview) are called via Servlet
--url: TermStatistics/SiteOverview/{idOfSite}
+- url: `TermStatistics/SiteOverview/{idOfSite}`
 
 
 ## REST-Calls
-- /rest/website/{websiteid}/words -> all words an amount on this website
-- /rest/website/{websiteid}/words/{num} -> all words an amount on this website, limit amount of words by num
-- /rest/word/{word}/websites -> all websites of specific word with corresponding amounts
+- `/rest/website/{websiteid}/words` -> all words an amount on this website
+- `/rest/website/{websiteid}/words/{num}` -> all words an amount on this website, limit amount of words by num
+- `/rest/word/{word}/websites` -> all websites of specific word with corresponding amounts
 
 ### Start a Crawler with given URL
 
