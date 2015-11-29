@@ -112,10 +112,8 @@ var generateBarChart = function(data){
 var generateLineChart = function(data){
     var labels = [];
     var amount = [];
-    console.log(data);
     var keyWord = Object.keys(data)[0];
     var wordLogs = data[keyWord];
-    console.log(wordLogs);
     $(wordLogs).each(function (index) {
         labels.push(wordLogs[index].date);
         amount.push(wordLogs[index].amount);
