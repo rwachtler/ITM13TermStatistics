@@ -1674,7 +1674,7 @@ function generateSiteListTable() {
 		          { data: "depth" },
 		          { data: "active" },
 		          { data: null }
-		          //add render function for button
+		          //Renderfunction below
 		          ],
 		          columnDefs: 
 		        	  [
@@ -1745,7 +1745,7 @@ function generateWordsTable() {
 		          { data: "amount" },
 		          { data: "active" },
 		          { data: null}
-		          //add render function
+		          //Render Function below
 		          ],
 		          columnDefs: 
 		        	  [

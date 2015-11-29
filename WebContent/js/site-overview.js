@@ -1,19 +1,37 @@
-var barChart, lineChart, siteID;
+var barChart, lineChart, siteID, wordTable;
 var $chartsSection = $('#charts');
 $(document).ready(function(){
     siteID = $('#siteID').val();
+    generateWordsTable();
     getAllWordsForDomain(generateBarChart);
 });
 
 var getAllWordsForDomain = function(callback){
     $.getJSON(
-        "/TermStatistics/rest/container/oneSite/"+siteID,
+        "/TermStatistics/rest/website/"+siteID+"/words/10",
         function(response){
             $chartsSection.removeClass("overlay");
             callback(response.data);
-        }
+        } 
     );
 }
+
+
+function generateWordsTable() {
+	wordTable = $('#word-list-table').DataTable({
+		dom: "frtip",
+		ajax: "../rest/website/"+siteID+"/words", 
+		order: [[ 1, "desc" ]],
+		columns: [
+		          { data: "word" },
+		          { data: "amount" },
+		          ],
+		          select: 'single'
+	} );
+}
+
+
+
 
 /**
  * Bar-Chart for all words

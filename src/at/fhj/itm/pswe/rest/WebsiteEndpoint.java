@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -55,6 +56,62 @@ public class WebsiteEndpoint{
 		return Response.ok(my.toString()).build();
 	}
 
+	//For Datatable on Subiste "Website"
+	@GET
+	@Path("/{id:[0-9][0-9]*}/words")
+	@Produces("application/json")
+	public Response wordsOfSite(@PathParam("id") int id)
+	{
+
+		JSONObject my=new JSONObject();
+		my.put("data", findWordsOFSite(id, 0));
+
+		return Response.ok(my.toString()).build();
+	}
+
+	@GET
+	@Path("/{id:[0-9][0-9]*}/words/{num:[0-9][0-9]*}")
+	@Produces("application/json")
+	public Response wordsOfSiteNumbered(@PathParam("id") int id, @PathParam("num") int num)
+	{
+
+		JSONObject my=new JSONObject();
+		my.put("data", findWordsOFSite(id, num));
+
+		return Response.ok(my.toString()).build();
+	}
+	
+	
+	private JSONArray findWordsOFSite(int id, int maxNum){
+		Query q = em
+				.createQuery("SELECT c.word.text, sum(c.amount)  "
+						+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
+						+ "GROUP BY c.word ORDER BY sum(c.amount) DESC")
+						.setParameter("id", id);
+		
+		if(maxNum > 0){
+			q.setMaxResults(maxNum);
+		}
+		List<Object[]> results	= q.getResultList();
+
+		JSONArray returnResult=new JSONArray();
+		
+		for(Object[] wo: results){
+			System.out.println(wo[0]+" | "+wo[1]);
+
+			JSONObject temp= new JSONObject();
+			temp.put("word", wo[0]);
+			temp.put("amount", wo[1]);
+
+			returnResult.put(temp);
+		}
+		return returnResult;
+
+	}
+
+
+
+
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces("application/json")
@@ -87,28 +144,28 @@ public class WebsiteEndpoint{
 		System.out.println("Received Request");
 		JSONObject json= new JSONObject(incoming);
 		System.out.println("JSON: "+json.toString());
-		
+
 		//Create Website object
 		Website ws = new Website();
 		ws.setDomain(json.getString("address"));
 		ws.setDescription(json.getString("description"));
 		ws.setCrawldepth(json.getInt("depth"));
 		ws.setActive(true);
-		
+
 		//Save to DB
 		em.persist(ws);
 		em.flush();
-		
+
 		System.out.println("ID:" +ws.getId());
-		
+
 		//Add info for Return object
 		json.put("id", ws.getId());
 		json.put("active", ws.getActive());
 		System.out.println("JSON: "+json.toString());
-		
+
 		//TODO STart crawler
-		
-		
+
+
 		return Response.ok(new JSONObject().put("data", json).toString()).build();
 	}
 
@@ -120,22 +177,22 @@ public class WebsiteEndpoint{
 		System.out.println("Received DELETE");
 		JSONObject json= new JSONObject(incoming);
 		System.out.println("JSON: "+json.toString());
-		
+
 		//Get KEY and
 		Iterator<String> keys = json.keys();
 		String id="";
 		if( keys.hasNext() ){
-		   id = (String)keys.next(); // First key in your json object
+			id = (String)keys.next(); // First key in your json object
 		}
 		Website ws = em.find(Website.class, Integer.parseInt(id));
 		em.remove(ws);
-		
-		
+
+
 		//Send empty object on success
-			
+
 		return Response.ok("{}").build();
 	}
-	
+
 	@PUT
 	@Produces("application/json")
 	@Consumes("application/json")
@@ -144,25 +201,25 @@ public class WebsiteEndpoint{
 		System.out.println("Received PUT");
 		JSONObject json= new JSONObject(incoming);
 		System.out.println("JSON: "+json.toString());
-		
+
 		//Get KEY and
 		Iterator<String> keys = json.keys();
 		String id="";
 		if( keys.hasNext() ){
-		   id = (String)keys.next(); // First key in your json object
+			id = (String)keys.next(); // First key in your json object
 		}
-				
+
 		//CUpdate and Save object
 		Website ws = em.find(Website.class, Integer.parseInt(id));
 		ws.setDomain(json.getJSONObject(id).getString("address"));
 		ws.setDescription(json.getJSONObject(id).getString("description"));
 		ws.setCrawldepth(json.getJSONObject(id).getInt("depth"));
-		
+
 		if(json.getJSONObject(id).getJSONArray("active").length() == 0)
 			ws.setActive(false);
 		else
 			ws.setActive(true);
-		
+
 		JSONObject output= new JSONObject();
 		output.put("data", new JSONArray().put(
 				new JSONObject().put("id", ws.getId())
@@ -171,13 +228,13 @@ public class WebsiteEndpoint{
 				.put("depth",ws.getCrawldepth())
 				.put("active", ws.getActive())
 				));
-		
-		
+
+
 		//Add info for Return object
 		System.out.println("JSON: "+output.toString());		
 		return Response.ok(output.toString()).build();
 	}
-	
+
 
 
 

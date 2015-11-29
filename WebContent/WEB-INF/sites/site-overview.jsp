@@ -44,14 +44,11 @@
             <h1>Site Overview ${domain}</h1>
             <a href="#charts" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-down"></span> How about a pie?...Chart <span class="glyphicon glyphicon-chevron-down"></span></a>
             <p class="lead">Those websites were included to the crawling process</p>
-            <table class="table table-striped" id="site-list-table">
+            <table class="table table-striped" id="word-list-table">
             	<thead>
         			<tr>
-             			<th>ID</th>
-            			<th>Adresse</th>
-            			<th>Description</th>
-            			<th>Depth</th>
-            			<th>Active</th>
+             			<th>Wort</th>
+            			<th>Amount</th>
         			</tr>
     			</thead>
             </table>
