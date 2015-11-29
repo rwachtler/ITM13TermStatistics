@@ -64,8 +64,8 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 - `/rest/website/{websiteid}/words` -> all words an amount on this website
 - `/rest/website/{websiteid}/words/{num}` -> all words an amount on this website, limit amount of words by num
 - `/rest/word/{word}/websites` -> all websites of specific word with corresponding amounts
-- `/rest/word/period/ab/10.11.2015/30.11.2015` -> one word with all dates & amounts in the given period
-- `/rest/website/period/1/10.11.2015/30.11.2015` -> words of one site in the given period
+- `/rest/word/{word}/period/10.11.2015/30.11.2015` -> one word with all dates & amounts in the given period
+- `/rest/website/{websiteid}/period/10.11.2015/30.11.2015` -> words of one site in the given period
 
 ### Start a Crawler with given URL
 

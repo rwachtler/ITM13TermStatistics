@@ -80,22 +80,22 @@ public class WebsiteEndpoint{
 
 		return Response.ok(my.toString()).build();
 	}
-	
-	
+
+
 	private JSONArray findWordsOFSite(int id, int maxNum){
 		Query q = em
 				.createQuery("SELECT c.word.text, sum(c.amount)  "
 						+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
 						+ "GROUP BY c.word ORDER BY sum(c.amount) DESC")
 						.setParameter("id", id);
-		
+
 		if(maxNum > 0){
 			q.setMaxResults(maxNum);
 		}
 		List<Object[]> results	= q.getResultList();
 
 		JSONArray returnResult=new JSONArray();
-		
+
 		for(Object[] wo: results){
 			System.out.println(wo[0]+" | "+wo[1]);
 
@@ -242,26 +242,49 @@ public class WebsiteEndpoint{
 	 * @param startdate the date as String when the analysis should start
 	 * @param enddate the date as String when the analysis should end
 	 * @return List<Integer> with the amount of the word
-	 * Example: http://localhost:8080/TermStatistics/rest/website/period/1/10.11.2015/30.11.2015
+	 * Example: http://localhost:8080/TermStatistics/rest/website/1/period/10.11.2015/30.11.2015
 	 */
 	@GET
-	@Path("/period/{domainID:[a-zA-Z][a-zA-Z]*}/{startdate:[a-zA-Z0-9][a-zA-Z0-9.]*}/{enddate:[a-zA-Z0-9][a-zA-Z0-9.]*}")
+	@Path("/{domainID:[0-9][0-9]*}/period/{startdate:[a-zA-Z0-9][a-zA-Z0-9.]*}/{enddate:[a-zA-Z0-9][a-zA-Z0-9.]*}")
 	@Produces("application/json")
-	public Response countSiteOverPeriod(@PathParam("domainID") String domainID ,@PathParam("startdate") String startdate, @PathParam("enddate") String enddate){
-		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) FROM Container co "
-				+ "WHERE co.website = :domainID AND (co.logDate BETWEEN :startdate AND :enddate) "
-				+ "GROUP BY co.logDate");
-		countWordPeriod.setParameter("domainID", domainID);
-		countWordPeriod.setParameter("startdate", startdate);
-		countWordPeriod.setParameter("enddate", enddate);
+	public Response countSiteOverPeriod(@PathParam("domainID") int domainID ,@PathParam("startdate") String startDate, @PathParam("enddate") String endDate){
+
+
+		//Get top10 words of page
+		JSONArray topwords=findWordsOFSite(domainID, 10);
+		JSONObject returner=new JSONObject();
+
+		//for each word, geht timeline
+		for(int i=0;i<topwords.length();i++){
+			String word=topwords.getJSONObject(i).getString("word");
+			returner.put(word,timeLine4WordAndSite(domainID, word, startDate, endDate));
+
+		}
+
+		System.out.println(returner.toString());
+
+		return Response.ok(returner.toString()).build();		
+	}
+
+
+	private JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate){
+
+		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) "+
+				"FROM Container co "+
+				"WHERE co.website.id = :id "+
+				"AND (co.logDate BETWEEN :startdate AND :enddate) "+
+				"AND co.word.text = :word "+
+				"GROUP BY co.word.text, co.logDate");
+		countWordPeriod.setParameter("id", siteID);
+		countWordPeriod.setParameter("word", word);
+		countWordPeriod.setParameter("startdate", startDate);
+		countWordPeriod.setParameter("enddate", endDate);
 
 		final List<Object[]> results = countWordPeriod.getResultList();
-		
+
 		JSONArray returnResult=new JSONArray();
 
 		for(Object[] wo: results){
-			System.out.println(wo[0]+" | "+wo[1]);
-
 			JSONObject temp= new JSONObject();
 			temp.put("date", wo[0]);
 			temp.put("amount", wo[1]);
@@ -269,12 +292,8 @@ public class WebsiteEndpoint{
 			returnResult.put(temp);
 		}
 
-
-		JSONObject my=new JSONObject();
-		my.put("", returnResult);
-		System.out.println(my.toString());
-
-		return Response.ok(my.toString()).build();		
+		return returnResult;
 	}
+
 
 }
