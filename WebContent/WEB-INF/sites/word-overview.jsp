@@ -60,9 +60,6 @@
 		</section>
 		<section id="charts" class="row overlay">
 			<h1>Charts</h1>
-			<a href="#website-list" class="next-section btn btn-default btn-lg"><span
-				class="glyphicon glyphicon-chevron-up"></span> Add an additional
-				resource <span class="glyphicon glyphicon-chevron-up"></span></a>
 			<p class="lead">Barchart - all websites where "${word}" was crawled</p>
 			<canvas width="800" height="500" id="bar-chart"></canvas>
 			<p class="lead">LineChart - occurence of "${word}" by date-range</p>

@@ -87,7 +87,7 @@ var generateBarChart = function(data){
         labels.push(data[index].adresse);
         amount.push(data[index].amount);
     });
-    var data = {
+    var cData = {
         labels: labels,
         datasets: [{
             label: "",
@@ -101,7 +101,7 @@ var generateBarChart = function(data){
         }]
     };
     var $ctx = $("#bar-chart").get(0).getContext("2d");
-    barChart = new Chart($ctx).Bar(data);
+    barChart = new Chart($ctx).Bar(cData);
 
 }
 
@@ -118,7 +118,7 @@ var generateLineChart = function(data){
         labels.push(wordLogs[index].date);
         amount.push(wordLogs[index].amount);
     });
-    var data = {
+    var cData = {
         labels: labels,
         datasets: [{
             label: "",
@@ -132,5 +132,5 @@ var generateLineChart = function(data){
         }]
     };
     var $ctx = $("#line-chart").get(0).getContext("2d");
-    lineChart = new Chart($ctx).Line(data);
+    lineChart = new Chart($ctx).Line(cData);
 }

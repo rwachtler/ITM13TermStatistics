@@ -58,9 +58,22 @@
                 <div class="inner-spinner"></div>
             </div>
             <h1>Charts</h1>
-            <a href="#website-list" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-up"></span> Add an additional resource <span class="glyphicon glyphicon-chevron-up"></span></a>
             <p class="lead">Barchart</p>
             <canvas width="1200" height="800" id="bar-chart"></canvas>
+            <p class="lead">LineChart - all words in specified period</p>
+            <div class="form-group clearfix">
+                <div class="col-lg-2">
+                    <label for="fromDate">From</label>
+                    <input name="fromDate" type="date" id="fromDate" class="form-control" />
+                </div>
+                <div class="col-lg-2">
+                    <label for="toDate">To</label>
+                    <input disabled name="toDate" type="date" id="toDate" class="form-control" />
+                </div>
+            </div>
+            <div id="line-chart-container">
+                <canvas width="800" height="500" id="line-chart"></canvas>
+            </div>
         </section>
     </div>
     <!-- /container-fluid -->
@@ -73,6 +86,7 @@
     <script src="../datatables-select/js/dataTables.select.min.js"></script>
     <script src="../datatables-buttons/js/dataTables.buttons.min.js"></script>
     <script src="../js/ui-helper.min.js"></script>
+    <script src="../js/helper.min.js"></script>
     <script src="../js/site-overview.min.js"></script>
 </body>
 
