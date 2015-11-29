@@ -6,6 +6,10 @@ $(document).ready(function(){
     getAllWordsForDomain(generateBarChart);
 });
 
+/**
+ * Requests the crawled words for the given domain-ID, passes the result to a callback method
+ * @param callback - Performs further operations with retrieved data
+ */
 var getAllWordsForDomain = function(callback){
     $.getJSON(
         "/TermStatistics/rest/website/"+siteID+"/words/10",

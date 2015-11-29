@@ -58,7 +58,7 @@
 				</thead>
 			</table>
 		</section>
-		<section id="charts" class="row">
+		<section id="charts" class="row overlay">
 			<h1>Charts</h1>
 			<a href="#website-list" class="next-section btn btn-default btn-lg"><span
 				class="glyphicon glyphicon-chevron-up"></span> Add an additional
