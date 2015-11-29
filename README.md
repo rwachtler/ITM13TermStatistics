@@ -55,7 +55,7 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 
 ##Subsites
 - Subsites( Word/Site Overview) are called via Servlet
--url: TermStatistics/SiteOverviewServlet/{idOfSite}
+-url: TermStatistics/SiteOverview/{idOfSite}
 
 
 ## REST-Calls
