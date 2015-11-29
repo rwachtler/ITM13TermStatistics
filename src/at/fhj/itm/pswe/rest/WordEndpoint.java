@@ -178,4 +178,45 @@ public class WordEndpoint{
 		}
 		return Response.ok(entity).build();
 	}		
+	
+	/**Ein Wort auf vorkommenden Seiten mit Anzahl und Datum mit Zeituebergabe Einschraenkung
+	 * Analyse the amount of a word over a certain period
+	 * @param word the word which should be counted
+	 * @param startdate the date as String when the analysis should start
+	 * @param enddate the date as String when the analysis should end
+	 * @return List<Integer> with the amount of the word
+	 * Example: http://localhost:8080/TermStatistics/rest/word/period/ab/10.11.2015/30.11.2015
+	 */
+	@GET
+	@Path("/period/{word:[a-zA-Z][a-zA-Z]*}/{startdate:[a-zA-Z0-9][a-zA-Z0-9.]*}/{enddate:[a-zA-Z0-9][a-zA-Z0-9.]*}")
+	@Produces("application/json")
+	public Response countWordOverPeriod(@PathParam("word") String word ,@PathParam("startdate") String startdate, @PathParam("enddate") String enddate){
+		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) FROM Container co "
+				+ "WHERE co.word.text = :word AND (co.logDate BETWEEN :startdate AND :enddate) "
+				+ "GROUP BY co.logDate");
+		countWordPeriod.setParameter("word", word);
+		countWordPeriod.setParameter("startdate", startdate);
+		countWordPeriod.setParameter("enddate", enddate);
+
+		final List<Object[]> results = countWordPeriod.getResultList();
+
+		JSONArray returnResult=new JSONArray();
+
+		for(Object[] wo: results){
+			System.out.println(wo[0]+" | "+wo[1]);
+
+			JSONObject temp= new JSONObject();
+			temp.put("date", wo[0]);
+			temp.put("amount", wo[1]);
+
+			returnResult.put(temp);
+		}
+
+
+		JSONObject my=new JSONObject();
+		my.put(word, returnResult);
+		System.out.println(my.toString());
+
+		return Response.ok(my.toString()).build();		
+	}
 }
