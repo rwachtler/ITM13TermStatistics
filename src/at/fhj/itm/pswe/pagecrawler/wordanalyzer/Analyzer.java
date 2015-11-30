@@ -28,7 +28,6 @@ public class Analyzer {
 	private static String RESULT_FILE;
 
 	public Analyzer(String url) {
-		// init database connection
 		this.db = new DbConnection();
 		setRESULT_FILE(url);
 
@@ -51,50 +50,49 @@ public class Analyzer {
 	}
 
 	public void analyzeResults() {
-		if (db.isConnected()) {
-			this.wordMap = this.calculateWordMap(this.readResultFile());
 
-			// TODO remove hard-coded references
-			String website = WEBSITE_NAME;
-			String description = "";
+		this.wordMap = this.calculateWordMap(this.readResultFile());
 
-			// get website id
-			int websiteId = db.websiteExists(website);
+		// TODO remove hard-coded references
+		String website = WEBSITE_NAME;
+		String description = "";
 
-			// if website does not exist, add it
-			if (websiteId < 0) {
+		// get website id
+		int websiteId = db.websiteExists(website);
+
+		// if website does not exist, add it
+		if (websiteId < 0) {
+			int active = 1;
+
+			websiteId = db.addWebsite(website, description, active);
+		}
+
+		Iterator it = this.wordMap.entrySet().iterator();
+
+		while (it.hasNext()) {
+			// get key/value pair from hash map
+			Map.Entry pair = (Map.Entry) it.next();
+
+			String word = (String) pair.getKey();
+			int count = (int) pair.getValue();
+
+			// check if word exists in the database
+			if (!db.wordExists(word)) {
 				int active = 1;
 
-				websiteId = db.addWebsite(website, description, active);
+				db.addWord(word, active);
 			}
 
-			Iterator it = this.wordMap.entrySet().iterator();
+			// format date string
+			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+			Date date = new Date();
 
-			while (it.hasNext()) {
-				// get key/value pair from hash map
-				Map.Entry pair = (Map.Entry) it.next();
+			String dateString = dateFormat.format(date);
 
-				String word = (String) pair.getKey();
-				int count = (int) pair.getValue();
+			// add container entry to database
+			db.addContainer(word, count, websiteId, dateString);
 
-				// check if word exists in the database
-				if (!db.wordExists(word)) {
-					int active = 1;
-
-					db.addWord(word, active);
-				}
-
-				// format date string
-				DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-				Date date = new Date();
-
-				String dateString = dateFormat.format(date);
-
-				// add container entry to database
-				db.addContainer(word, count, websiteId, dateString);
-
-				it.remove();
-			}
+			it.remove();
 		}
 	}
 
@@ -115,7 +113,7 @@ public class Analyzer {
 			if (!word.isEmpty()) {
 				boolean isForbidden=false;
 				for(String s : filterwords){
-					
+
 					System.out.println("Filter: "+s);
 					if(s.contentEquals(word)){
 						System.out.println("TRUE: "+s+" vs "+word);

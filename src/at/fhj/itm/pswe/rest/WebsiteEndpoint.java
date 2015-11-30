@@ -24,6 +24,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import at.fhj.itm.pswe.model.Website;
+import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 
 @Stateless
 @Path("/website")
@@ -156,17 +157,16 @@ public class WebsiteEndpoint{
 		em.persist(ws);
 		em.flush();
 
-		System.out.println("ID:" +ws.getId());
-
 		//Add info for Return object
 		json.put("id", ws.getId());
 		json.put("active", ws.getActive());
 		System.out.println("JSON: "+json.toString());
 
-		//TODO STart crawler
+		
+		Thread t = new Thread(new MainCrawler(ws.getDomain(),1));
+		t.start();
 
-
-		return Response.ok(new JSONObject().put("data", json).toString()).build();
+		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
 	}
 
 	@DELETE
