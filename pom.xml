@@ -39,6 +39,12 @@
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
 			<resource>
+				<directory>resources</directory>
+				<includes>
+					<include>*.txt</include>
+				</includes>
+			</resource>
+			<resource>
 				<directory>src</directory>
 				<excludes>
 					<exclude>**/*.java</exclude>
