@@ -2,7 +2,6 @@ package at.fhj.itm.pswe.pagecrawler;
 
 import at.fhj.itm.pswe.pagecrawler.linkcrawler.Init_LinkCrawler;
 import at.fhj.itm.pswe.pagecrawler.wordanalyzer.Analyzer;
-import at.fhj.itm.pswe.view.Charts_db;
 
 public class MainCrawler implements Runnable{
 	
@@ -34,10 +33,7 @@ public class MainCrawler implements Runnable{
 		
 		System.out.println("FINISHED ANALYZING");
 		
-		Charts_db charts=new Charts_db();
-		charts.linechartOverPeriod();
-		charts.barchartfrequentWordofSide();
-		charts.barchartOneWordAllSides();
+		
 	}
 
 	@Override
