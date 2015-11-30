@@ -67,4 +67,4 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 
 ### Start a Crawler with given URL
 
-	localhost:8080/TermStatistics/rest/action/crawler/http://pswengi.bamb.at
+	localhost:8080/TermStatistics/rest/action/crawler/<id of webpage>
