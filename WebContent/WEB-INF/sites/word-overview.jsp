@@ -66,11 +66,11 @@
 			<div class="form-group clearfix">
 				<div class="col-lg-2">
 					<label for="fromDate">From</label>
-					<input name="fromDate" type="date" id="fromDate" class="form-control" />
+					<input placeholder="yyyy-mm-dd" name="fromDate" type="date" id="fromDate" class="form-control" />
 				</div>
 				<div class="col-lg-2">
 					<label for="toDate">To</label>
-					<input disabled name="toDate" type="date" id="toDate" class="form-control" />
+					<input placeholder="yyyy-mm-dd" disabled name="toDate" type="date" id="toDate" class="form-control" />
 				</div>
 			</div>
 			<canvas width="800" height="500" id="line-chart"></canvas>
