@@ -24,36 +24,7 @@ public class DbConnection {
 	}
 
 
-	public int addWebsite(String website, String description, int active) {
-
-		Connection conn =null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn =  DriverManager.getConnection("jdbc:mysql://" + DB_HOST + "/" + DB_NAME + "?user=" + DB_USER + "&password=" + DB_PASSWORD);
-			stmt = conn.prepareStatement("INSERT INTO website (domain, description, active) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-			stmt.setString(1, website);
-			stmt.setString(2, description);
-			stmt.setInt(3, active);
-			stmt.executeUpdate();
-
-			rs = stmt.getGeneratedKeys();
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-		} catch(Exception e) {
-			// Error Handling
-		} finally {
-			try { if (rs != null) rs.close(); } catch (Exception e) {};
-			try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-			try { if (conn != null) conn.close(); } catch (Exception e) {};
-		}
-
-		return -1;
-
-	}
-
+	
 	public int addWord(String word, int active, Connection conn) {
 		System.out.println("Adding new word");
 		

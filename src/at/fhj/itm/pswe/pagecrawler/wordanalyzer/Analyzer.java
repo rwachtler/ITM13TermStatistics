@@ -62,13 +62,6 @@ public class Analyzer {
 		// get website id
 		int websiteId = db.websiteExists(website);
 
-		// if website does not exist, add it
-		if (websiteId < 0) {
-			int active = 1;
-
-			websiteId = db.addWebsite(website, description, active);
-		}
-
 		Iterator it = this.wordMap.entrySet().iterator();
 
 		while (it.hasNext()) {
