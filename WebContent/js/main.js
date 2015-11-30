@@ -98,7 +98,8 @@ function generateSiteListTable() {
 		        		   return "<a class='btn btn-primary' href='./SiteOverview/"+row.id+"'>Details</a>"
 		        	   },
 		        	   targets: 5 },
-		        	   { orderable: false, targets: 5 }
+		        	   { orderable: false, targets: 5 },
+		        	   { searchable: false, "targets": 5 }
 		        	   ],
 		        	   select: 'single',
 		        	   buttons: [
@@ -107,6 +108,12 @@ function generateSiteListTable() {
 		        	            // { extend: "remove", editor: siteListEditor }
 		        	             ]
 	} );
+	
+
+	siteListEditor
+	.on( 'initEdit', function () { siteListEditor.hide( "address" ); siteListEditor.show( "active" ); } )
+	.on( 'initCreate', function () { siteListEditor.show( "address" ); siteListEditor.hide( "active" );} );
+	 
 }
 
 function generateWordsTable() {
@@ -169,7 +176,8 @@ function generateWordsTable() {
 		        		   				return "<a class='btn btn-primary' href='./WordOverview/"+row.word+"'>Details</a>"
 		        	   },
 		        	   targets: 3 },
-		        	   { orderable: false, targets: 3 }
+		        	   { orderable: false, targets: 3 },
+		        	   { searchable: false, targets: 3 }
 		        	   ],
 		          select: 'single',
 		          buttons: [{ extend: "edit",   editor: wordListEditor }]
