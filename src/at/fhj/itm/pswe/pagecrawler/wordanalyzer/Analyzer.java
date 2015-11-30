@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -60,13 +62,6 @@ public class Analyzer {
 		// get website id
 		int websiteId = db.websiteExists(website);
 
-		// if website does not exist, add it
-		if (websiteId < 0) {
-			int active = 1;
-
-			websiteId = db.addWebsite(website, description, active);
-		}
-
 		Iterator it = this.wordMap.entrySet().iterator();
 
 		while (it.hasNext()) {
@@ -76,23 +71,36 @@ public class Analyzer {
 			String word = (String) pair.getKey();
 			int count = (int) pair.getValue();
 
-			// check if word exists in the database
-			if (!db.wordExists(word)) {
-				int active = 1;
+			//Open connection
+			Connection conn =null;
+			try {
+				Class.forName("com.mysql.jdbc.Driver");
+				conn =  DriverManager.getConnection("jdbc:mysql://" + DbConnection.DB_HOST + "/" + DbConnection.DB_NAME + "?user=" + DbConnection.DB_USER + "&password=" + DbConnection.DB_PASSWORD);
 
-				db.addWord(word, active);
+				// check if word exists in the database
+				if (!db.wordExists(word,conn)) {
+					int active = 1;
+
+					db.addWord(word, active,conn);
+				}
+				
+				// format date string
+				DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+				Date date = new Date();
+
+				String dateString = dateFormat.format(date);
+
+				// add container entry to database
+				db.addContainer(word, count, websiteId, dateString,conn);
+
+				it.remove();
+
+			}catch(Exception e){
+				//Do nothing
+			}finally{
+				try { if (conn != null) conn.close(); } catch (Exception e) {};
 			}
 
-			// format date string
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-			Date date = new Date();
-
-			String dateString = dateFormat.format(date);
-
-			// add container entry to database
-			db.addContainer(word, count, websiteId, dateString);
-
-			it.remove();
 		}
 	}
 
@@ -114,7 +122,7 @@ public class Analyzer {
 				boolean isForbidden=false;
 				for(String s : filterwords){
 
-					System.out.println("Filter: "+s);
+					//System.out.println("Filter: "+s);
 					if(s.contentEquals(word)){
 						System.out.println("TRUE: "+s+" vs "+word);
 						isForbidden=true;

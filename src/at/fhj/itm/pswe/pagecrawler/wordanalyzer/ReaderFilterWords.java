@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,12 @@ public class ReaderFilterWords {
 	public List<String> readWords(){
 		List<String> words=new ArrayList<String>();
 		try {
-			br = new BufferedReader(new FileReader(new File("bindewoerter.txt")));
+			InputStreamReader isr= new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("bindewoerter.txt"), "UTF-8");
+			br = new BufferedReader(isr);
 			String line = null;
 			while((line = br.readLine()) != null) {          
 				String[] word=line.split("\n");
+				System.out.println("Binde: "+word[0]);
 				words.add(word[0]);
 
 			}

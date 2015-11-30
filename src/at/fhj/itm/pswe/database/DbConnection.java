@@ -13,56 +13,25 @@ import java.util.Map;
 
 public class DbConnection {
 
-	private static String DB_NAME = "itm13";
+	public static String DB_NAME = "itm13";
 
-	private static String DB_HOST = "itm13db.ccvogifhormq.eu-west-1.rds.amazonaws.com:3306";
-	private static String DB_USER = "itm13root";
-	private static String DB_PASSWORD = "iTm!3DbMySqL";
+	public static String DB_HOST = "itm13db.ccvogifhormq.eu-west-1.rds.amazonaws.com:3306";
+	public static String DB_USER = "itm13root";
+	public static String DB_PASSWORD = "iTm!3DbMySqL";
 
 	public DbConnection() {
 
 	}
 
 
-	public int addWebsite(String website, String description, int active) {
-
-		Connection conn =null;
+	
+	public int addWord(String word, int active, Connection conn) {
+		System.out.println("Adding new word");
+		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn =  DriverManager.getConnection("jdbc:mysql://" + DB_HOST + "/" + DB_NAME + "?user=" + DB_USER + "&password=" + DB_PASSWORD);
-			stmt = conn.prepareStatement("INSERT INTO website (domain, description, active) VALUES (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-			stmt.setString(1, website);
-			stmt.setString(2, description);
-			stmt.setInt(3, active);
-			stmt.executeUpdate();
-
-			rs = stmt.getGeneratedKeys();
-			if (rs.next()) {
-				return rs.getInt(1);
-			}
-		} catch(Exception e) {
-			// Error Handling
-		} finally {
-			try { if (rs != null) rs.close(); } catch (Exception e) {};
-			try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-			try { if (conn != null) conn.close(); } catch (Exception e) {};
-		}
-
-		return -1;
-
-	}
-
-	public int addWord(String word, int active) {
-
-		Connection conn =null;
-		PreparedStatement stmt = null;
-		ResultSet rs = null;
-		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn =  DriverManager.getConnection("jdbc:mysql://" + DB_HOST + "/" + DB_NAME + "?user=" + DB_USER + "&password=" + DB_PASSWORD);
-			stmt = conn.prepareStatement("INSERT INTO word (text, active) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+				stmt = conn.prepareStatement("INSERT INTO word (text, active) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
 			stmt.setString(1, word);
 			stmt.setInt(2, active);
 			stmt.executeUpdate();
@@ -76,20 +45,17 @@ public class DbConnection {
 		} finally {
 			try { if (rs != null) rs.close(); } catch (Exception e) {};
 			try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-			try { if (conn != null) conn.close(); } catch (Exception e) {};
 		}
 
 		return -1;
 	}
 
-	public int addContainer(String word, int count, int websiteId, String dateString) {
-		Connection conn =null;
+	public int addContainer(String word, int count, int websiteId, String dateString, Connection conn) {
+		
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn =  DriverManager.getConnection("jdbc:mysql://" + DB_HOST + "/" + DB_NAME + "?user=" + DB_USER + "&password=" + DB_PASSWORD);
-			stmt = conn.prepareStatement("INSERT INTO container (amount, log_date, fk_website, fk_word) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+				stmt = conn.prepareStatement("INSERT INTO container (amount, log_date, fk_website, fk_word) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 			stmt.setInt(1, count);
 			stmt.setString(2, dateString);
 			stmt.setInt(3, websiteId);
@@ -101,7 +67,6 @@ public class DbConnection {
 		} finally {
 			try { if (rs != null) rs.close(); } catch (Exception e) {};
 			try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-			try { if (conn != null) conn.close(); } catch (Exception e) {};
 		}
 
 		return -1;
@@ -143,13 +108,10 @@ public class DbConnection {
 	 * @param word  The word to search the database for
 	 * @return boolean true if word exists, false if it does not exist
 	 */
-	public boolean wordExists(String word) {
-		Connection conn =null;
+	public boolean wordExists(String word,Connection conn) {
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			conn =  DriverManager.getConnection("jdbc:mysql://" + DB_HOST + "/" + DB_NAME + "?user=" + DB_USER + "&password=" + DB_PASSWORD);
 			stmt = conn.prepareStatement("SELECT text FROM word WHERE text = ?");
 			stmt.setString(1, word);
 
@@ -163,7 +125,6 @@ public class DbConnection {
 		} finally {
 			try { if (rs != null) rs.close(); } catch (Exception e) {};
 			try { if (stmt != null) stmt.close(); } catch (Exception e) {};
-			try { if (conn != null) conn.close(); } catch (Exception e) {};
 		}
 
 		return false;
