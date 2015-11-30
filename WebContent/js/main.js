@@ -42,7 +42,7 @@ function generateSiteListTable() {
 				});
 			}
 			else if ( d.action === 'remove' ) {
-				console.log(JSON.stringify(d.data))
+				/*console.log(JSON.stringify(d.data))
 				$.ajax({
 					type: "DELETE", 
 					url: "./rest/website",
@@ -50,7 +50,7 @@ function generateSiteListTable() {
 					success: successCallback,
 					error: errorCallback,
 					contentType: "application/json",
-				});
+				});*/
 			}
 
 
@@ -103,8 +103,8 @@ function generateSiteListTable() {
 		        	   select: 'single',
 		        	   buttons: [
 		        	             { extend: "create", editor: siteListEditor },
-		        	             { extend: "edit",   editor: siteListEditor },
-		        	             { extend: "remove", editor: siteListEditor }
+		        	             { extend: "edit",   editor: siteListEditor }
+		        	            // { extend: "remove", editor: siteListEditor }
 		        	             ]
 	} );
 }
