@@ -1,5 +1,3 @@
-[![Build Status](https://ec2-54-229-245-193.eu-west-1.compute.amazonaws.com/jenkins/buildStatus/icon?job=ITM13TermStatistics)](https://ec2-54-229-245-193.eu-west-1.compute.amazonaws.com/jenkins/job/ITM13TermStatistics)
-
 # ITM13TermStatistics
 This is a project for the Practical Software Engineering course of ITM13
 
