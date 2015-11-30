@@ -34,7 +34,8 @@ public class Analyzer {
 		setRESULT_FILE(url);
 
 		BufferedReader br = null;
-
+		
+		// 2ter try block weg
 		try {
 			br = new BufferedReader(new FileReader(RESULT_FILE));
 		} catch (FileNotFoundException e) {
@@ -52,7 +53,7 @@ public class Analyzer {
 	}
 
 	public void analyzeResults() {
-
+		// Blockweise lesen (File)
 		this.wordMap = this.calculateWordMap(this.readResultFile());
 
 		// TODO remove hard-coded references
@@ -75,6 +76,7 @@ public class Analyzer {
 			Connection conn =null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
+				// nur einmal connection erstellen
 				conn =  DriverManager.getConnection("jdbc:mysql://" + DbConnection.DB_HOST + "/" + DbConnection.DB_NAME + "?user=" + DbConnection.DB_USER + "&password=" + DbConnection.DB_PASSWORD);
 
 				// check if word exists in the database
@@ -92,7 +94,8 @@ public class Analyzer {
 
 				// add container entry to database
 				db.addContainer(word, count, websiteId, dateString,conn);
-
+				
+				// nicht notwendig
 				it.remove();
 
 			}catch(Exception e){
@@ -116,6 +119,7 @@ public class Analyzer {
 			// remove punctuation from start and end of word
 			// according to:
 			// http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
+			// Umlaute zu beginn!
 			word = word.replaceFirst("^[^a-zA-Z]+", "").replaceAll("[^a-zA-Z]+$", "").trim();
 
 			if (!word.isEmpty()) {
