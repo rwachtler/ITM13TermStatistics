@@ -123,7 +123,10 @@ var generateLineChart = function(data){
     $(keys).each(function (index, value) {
         var tmpArr = [];
         $(data[value]).each(function () {
-            labels.push($(this)[0].date);
+            if (labels.indexOf($(this)[0].date) < 0){
+                labels.push($(this)[0].date);
+
+            } else{}
             tmpArr.push($(this)[0].amount);
         });
         amount.push(tmpArr);
@@ -141,9 +144,8 @@ var generateLineChart = function(data){
         "rgba(34, 49, 63, 0.8)"
     ];
 
-    var uniqueLabels = eliminateDuplicates(labels);
     var cData = {
-        labels: uniqueLabels,
+        labels: labels,
         datasets: [{
             label: keys[0],
             fillColor: "rgba(22, 160, 133, 0.0)",
