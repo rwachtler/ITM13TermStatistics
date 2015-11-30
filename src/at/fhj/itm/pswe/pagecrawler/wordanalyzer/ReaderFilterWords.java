@@ -13,10 +13,12 @@ public class ReaderFilterWords {
 	public List<String> readWords(){
 		List<String> words=new ArrayList<String>();
 		try {
-			br = new BufferedReader(new FileReader(new File("bindewoerter.txt")));
+			ClassLoader classLoader = getClass().getClassLoader();
+			br = new BufferedReader(new FileReader(new File(classLoader.getResource("/bindewoerter.txt").getFile())));
 			String line = null;
 			while((line = br.readLine()) != null) {          
 				String[] word=line.split("\n");
+				System.out.println("Binde: "+word[0]);
 				words.add(word[0]);
 
 			}
