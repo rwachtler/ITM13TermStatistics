@@ -6,6 +6,11 @@ import javax.inject.Named;
 
 import at.fhj.itm.pswe.pagecrawler.CrawlerDaemon;
 
+/**
+ * 
+ * Enterprise bean which triggers Webcrawler everyday
+ *
+ */
 @Named("CrawlerBean")
 @Singleton
 public class CrawlerBean {
@@ -14,7 +19,11 @@ public class CrawlerBean {
 		// TODO Auto-generated constructor stub
 	}
 	
-		
+	
+	/**
+	 * Schedule function
+	 * Invokes a thread of CrawlerDeamon
+	 */
 	@Schedule(hour="2")
     public void runCrawler() {
     	
