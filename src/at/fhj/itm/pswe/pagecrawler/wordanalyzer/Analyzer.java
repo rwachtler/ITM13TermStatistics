@@ -29,42 +29,36 @@ public class Analyzer {
 
 	private static String RESULT_FILE;
 
-	public Analyzer(String url) {
+	public Analyzer(String path) {
 		this.db = new DbConnection();
-		setRESULT_FILE(url);
+		setRESULT_FILE(path);
 
 		BufferedReader br = null;
-		
-		// 2ter try block weg
+
 		try {
 			br = new BufferedReader(new FileReader(RESULT_FILE));
+			WEBSITE_NAME = br.readLine();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		try {
-			WEBSITE_NAME = br.readLine();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
 
 	public void analyzeResults() {
 		// Blockweise lesen (File)
 		this.wordMap = this.calculateWordMap(this.readResultFile());
 
-		// TODO remove hard-coded references
 		String website = WEBSITE_NAME;
-		String description = "";
 
 		// get website id
 		int websiteId = db.websiteExists(website);
 
 		Iterator it = this.wordMap.entrySet().iterator();
-
+		
+		System.out.println("Start iterate over Wordmap");
 		while (it.hasNext()) {
 			// get key/value pair from hash map
 			Map.Entry pair = (Map.Entry) it.next();
@@ -100,11 +94,13 @@ public class Analyzer {
 
 			}catch(Exception e){
 				//Do nothing
+				e.printStackTrace();
 			}finally{
 				try { if (conn != null) conn.close(); } catch (Exception e) {};
 			}
 
 		}
+		System.out.println("End iterating over Wordmap");
 	}
 
 	public HashMap<String, Integer> calculateWordMap(String input) {
@@ -128,7 +124,7 @@ public class Analyzer {
 
 					//System.out.println("Filter: "+s);
 					if(s.contentEquals(word)){
-						System.out.println("TRUE: "+s+" vs "+word);
+						//System.out.println("TRUE: "+s+" vs "+word);
 						isForbidden=true;
 					}
 
@@ -151,7 +147,9 @@ public class Analyzer {
 			StringBuilder sb = new StringBuilder();
 			// Skip first 2 Lines (URL and date of creation)
 			String line = br.readLine();
+			System.out.println("First line: " + line);
 			line = br.readLine();
+			System.out.println("Second line: " + line);
 			line = br.readLine();
 
 			while (line != null) {
@@ -160,13 +158,13 @@ public class Analyzer {
 				line = br.readLine();
 			}
 			String everything = sb.toString();
+			
+			System.out.println("Everything: " + line);
 
 			return everything;
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

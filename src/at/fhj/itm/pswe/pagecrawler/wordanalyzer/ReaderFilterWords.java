@@ -1,9 +1,7 @@
 package at.fhj.itm.pswe.pagecrawler.wordanalyzer;
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -19,7 +17,7 @@ public class ReaderFilterWords {
 			String line = null;
 			while((line = br.readLine()) != null) {          
 				String[] word=line.split("\n");
-				System.out.println("Binde: "+word[0]);
+				// System.out.println("Binde: "+word[0]);
 				words.add(word[0]);
 
 			}

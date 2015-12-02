@@ -4,10 +4,9 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.Set;
 import java.util.regex.Pattern;
 
+import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -19,8 +18,6 @@ import edu.uci.ics.crawler4j.url.WebURL;
 public class MyJCrawler extends WebCrawler {
 
 	private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|gif|jpg" + "|png|mp3|mp3|zip|gz))$");
-
-	private final static Calendar cal = Calendar.getInstance();
 
 	/**
 	 * This method receives two parameters. The first parameter is the page in
@@ -35,7 +32,10 @@ public class MyJCrawler extends WebCrawler {
 	@Override
 	public boolean shouldVisit(Page referringPage, WebURL url) {
 		String href = url.getURL().toLowerCase();
-		WebURL seedUrl = (WebURL) this.myController.getCustomData();
+		JSONObject obj = (JSONObject) this.myController.getCustomData();
+		String start_url = (String) obj.get("startUrl");
+		WebURL seedUrl = new WebURL();
+		seedUrl.setURL(start_url);
 		return !FILTERS.matcher(href).matches() && url.getDomain().equals(seedUrl.getDomain());
 	}
 
@@ -45,36 +45,31 @@ public class MyJCrawler extends WebCrawler {
 	 */
 	@Override
 	public void visit(Page page) {
-		String url = page.getWebURL().getURL();
-		System.out.println("URL: " + url);
 		String domain = page.getWebURL().getDomain();
 		String subdomain = page.getWebURL().getSubDomain();
 		String total_domain = subdomain + "." + domain;
 
-		System.out.println("Subdomain: " + subdomain + "| Domain: " + domain);
+		// System.out.println("Subdomain: " + subdomain + "| Domain: " + domain);
 
 		if (page.getParseData() instanceof HtmlParseData) {
 			HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 
 			Document doc = Jsoup.parseBodyFragment(htmlParseData.getHtml());
 			getPageText(doc, total_domain);
-			Set<WebURL> links = htmlParseData.getOutgoingUrls();
-
-			System.out.println("Number of outgoing links: " + links.size());
 		}
 	}
 
 	public void getPageText(Document doc, String domain) {
 		PrintWriter out = null;
-		String filename = domain.replace(".", "_") + "_" + (cal.get(Calendar.MONTH) + 1) + "_"
-				+ cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.HOUR) + "_"
-				+ cal.get(Calendar.MINUTE) + ".txt";
-		String path_to_file = getMyController().getConfig().getCrawlStorageFolder() + filename;
+		JSONObject obj = (JSONObject) this.myController.getCustomData();
+		String path_to_file = obj.getString("filepath");
+		System.out.println("In MyJCrawler Path: " + path_to_file);
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(path_to_file, true)));
 			// Falls kein HTML gelesen werden kann (Bsp.: XML)
 			if (doc.body() != null) {
 				out.println(doc.body().text());
+				System.out.println("Write to file");
 			}
 		} catch (IOException e) {
 			// exception handling left as an exercise for the reader
