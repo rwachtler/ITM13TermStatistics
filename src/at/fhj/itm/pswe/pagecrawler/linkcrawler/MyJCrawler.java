@@ -48,32 +48,36 @@ public class MyJCrawler extends WebCrawler {
 		String domain = page.getWebURL().getDomain();
 		String subdomain = page.getWebURL().getSubDomain();
 		String total_domain = subdomain + "." + domain;
+		String url = page.getWebURL().toString();
 
-		// System.out.println("Subdomain: " + subdomain + "| Domain: " + domain);
+		// System.out.println("Subdomain: " + subdomain + "| Domain: " +
+		// domain);
+		// System.out.println("URL: " + url);
 
 		if (page.getParseData() instanceof HtmlParseData) {
 			HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
 
 			Document doc = Jsoup.parseBodyFragment(htmlParseData.getHtml());
-			getPageText(doc, total_domain);
+			getPageText(doc, total_domain, url);
 		}
 	}
 
-	public void getPageText(Document doc, String domain) {
+	public void getPageText(Document doc, String domain, String url) {
 		PrintWriter out = null;
 		JSONObject obj = (JSONObject) this.myController.getCustomData();
 		String path_to_file = obj.getString("filepath");
-		System.out.println("In MyJCrawler Path: " + path_to_file);
+		// System.out.println("In MyJCrawler Path: " + path_to_file);
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(path_to_file, true)));
 			// Falls kein HTML gelesen werden kann (Bsp.: XML)
 			if (doc.body() != null) {
+				out.println(url);
 				out.println(doc.body().text());
-				System.out.println("Write to file");
+				// System.out.println("Write to file");
 			}
 		} catch (IOException e) {
 			// exception handling left as an exercise for the reader
-			System.err.println("Error with FileHandling: " + e.getMessage());
+			System.err.println("Error with Result-FileHandling: " + e.getMessage());
 		} finally {
 			if (out != null) {
 				out.close();

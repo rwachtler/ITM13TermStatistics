@@ -18,18 +18,15 @@ public class CrawlerBean {
 	public CrawlerBean() {
 		// TODO Auto-generated constructor stub
 	}
-	
-	
+
 	/**
-	 * Schedule function
-	 * Invokes a thread of CrawlerDeamon
+	 * Schedule function Invokes a thread of CrawlerDeamon
 	 */
-	@Schedule(hour="2")
-    public void runCrawler() {
-    	
-    	Thread t= new Thread(new CrawlerDaemon());
-    	t.start();
-    }
-	
+	@Schedule(hour = "2")
+	public void runCrawler() {
+
+		Thread t = new Thread(new CrawlerDaemon());
+		t.start();
+	}
 
 }

@@ -2,33 +2,37 @@ package at.fhj.itm.pswe.model;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the website database table.
  * 
  */
 @Entity
-@Table(name="website")
+@Table(name = "website")
 public class Website implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="id")
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "id")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 
-	@Column(name="active")
+	@Column(name = "active")
 	private boolean active;
 
-	@Column(name="description")
+	@Column(name = "description")
 	private String description;
 
-	@Column(name="domain")
+	@Column(name = "domain")
 	private String domain;
-	
-	@Column(name="crawldepth")
+
+	@Column(name = "crawldepth")
 	private int crawldepth;
 
 	public int getCrawldepth() {

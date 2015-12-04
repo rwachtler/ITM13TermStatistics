@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONObject;
 
@@ -16,9 +18,14 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
 public class Init_LinkCrawler {
 
-	private String filename, crawlStorageFolder;
+	private String filename, crawlStorageFolder, path_to_file;
+	private Calendar cal;
 
 	public Init_LinkCrawler(String url, int depth) throws Exception {
+
+		// Safe starting time of Crawler
+		cal = Calendar.getInstance();
+		Date start_date = cal.getTime();
 
 		// Add to Project Root folders result/crawl where our result.txt is
 		// saved
@@ -44,21 +51,19 @@ public class Init_LinkCrawler {
 		 * which are found in these pages
 		 */
 		controller.addSeed(url);
-		
-		final Calendar cal = Calendar.getInstance();
+
+		cal = Calendar.getInstance();
 
 		filename = url.replace(".", "_").replace("http://", "") + "_" + (cal.get(Calendar.MONTH) + 1) + "_"
 				+ cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.HOUR) + "_"
 				+ cal.get(Calendar.MINUTE) + ".txt";
-		String path_to_file = crawlStorageFolder + filename;
-		
+		path_to_file = crawlStorageFolder + filename;
+
 		JSONObject obj = new JSONObject();
 		obj.put("startUrl", url);
 		obj.put("filepath", path_to_file);
-
 		controller.setCustomData(obj);
-		
-		
+
 		File f = new File(path_to_file);
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(path_to_file, true)));
 		// Schreibe bei erstellen der Datei wichtigste Daten in die ersten 2
@@ -76,12 +81,35 @@ public class Init_LinkCrawler {
 		 * will reach the line after this only when crawling is finished.
 		 */
 		controller.start(MyJCrawler.class, numberOfCrawlers);
+
+		// Reinit Calendar-Object to get new time
+		cal = Calendar.getInstance();
+		Date end_date = cal.getTime();
+
+		// Calculate Seconds, Minutes and Hours of Crawling procedure
+		long diff = end_date.getTime() - start_date.getTime();
+		long diffSeconds = TimeUnit.MILLISECONDS.toSeconds(diff);
+		long diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diff);
+		long diffHours = TimeUnit.MILLISECONDS.toHours(diff);
+
+		PrintWriter file_out = null;
+		try {
+			file_out = new PrintWriter(new BufferedWriter(new FileWriter(path_to_file, true)));
+			file_out.println(diffHours + ":" + diffMinutes + ":" + diffSeconds);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			if (out != null) {
+				file_out.close();
+			}
+		}
+
 		System.out.println("Crawler Finished");
 
 	}
 
 	public String getFileStoragePath() {
-		return crawlStorageFolder + filename;
+		return path_to_file;
 	}
 
 }

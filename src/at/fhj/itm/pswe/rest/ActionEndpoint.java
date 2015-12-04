@@ -15,17 +15,16 @@ import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 @Path("/action")
 public class ActionEndpoint {
 
-
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
-	//TODO Rewrite to post, add depth param
+	// TODO Rewrite to post, add depth param
 	@GET
 	@Path("/crawler/{id}")
 	public Response startCrawler(@PathParam("id") int id) {
 		System.out.println("ID: " + id);
 		Website ws = em.find(Website.class, id);
-		Thread t = new Thread(new MainCrawler(ws.getDomain(),2));
+		Thread t = new Thread(new MainCrawler(ws.getDomain(), 2));
 
 		t.start();
 		return Response.ok().build();

@@ -20,7 +20,7 @@ public class Analyzer {
 
 	private String input;
 	private HashMap<String, Integer> wordMap;
-	ReaderFilterWords rf=new ReaderFilterWords();
+	ReaderFilterWords rf = new ReaderFilterWords();
 	private List<String> filterwords;
 
 	private DbConnection db;
@@ -57,7 +57,7 @@ public class Analyzer {
 		int websiteId = db.websiteExists(website);
 
 		Iterator it = this.wordMap.entrySet().iterator();
-		
+
 		System.out.println("Start iterate over Wordmap");
 		while (it.hasNext()) {
 			// get key/value pair from hash map
@@ -66,20 +66,21 @@ public class Analyzer {
 			String word = (String) pair.getKey();
 			int count = (int) pair.getValue();
 
-			//Open connection
-			Connection conn =null;
+			// Open connection
+			Connection conn = null;
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
 				// nur einmal connection erstellen
-				conn =  DriverManager.getConnection("jdbc:mysql://" + DbConnection.DB_HOST + "/" + DbConnection.DB_NAME + "?user=" + DbConnection.DB_USER + "&password=" + DbConnection.DB_PASSWORD);
+				conn = DriverManager.getConnection("jdbc:mysql://" + DbConnection.DB_HOST + "/" + DbConnection.DB_NAME
+						+ "?user=" + DbConnection.DB_USER + "&password=" + DbConnection.DB_PASSWORD);
 
 				// check if word exists in the database
-				if (!db.wordExists(word,conn)) {
+				if (!db.wordExists(word, conn)) {
 					int active = 1;
 
-					db.addWord(word, active,conn);
+					db.addWord(word, active, conn);
 				}
-				
+
 				// format date string
 				DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 				Date date = new Date();
@@ -87,16 +88,21 @@ public class Analyzer {
 				String dateString = dateFormat.format(date);
 
 				// add container entry to database
-				db.addContainer(word, count, websiteId, dateString,conn);
-				
+				db.addContainer(word, count, websiteId, dateString, conn);
+
 				// nicht notwendig
 				it.remove();
 
-			}catch(Exception e){
-				//Do nothing
+			} catch (Exception e) {
+				// Do nothing
 				e.printStackTrace();
-			}finally{
-				try { if (conn != null) conn.close(); } catch (Exception e) {};
+			} finally {
+				try {
+					if (conn != null)
+						conn.close();
+				} catch (Exception e) {
+				}
+				;
 			}
 
 		}
@@ -104,13 +110,13 @@ public class Analyzer {
 	}
 
 	public HashMap<String, Integer> calculateWordMap(String input) {
-		filterwords=rf.readWords();
+		filterwords = rf.readWords();
 
 		HashMap<String, Integer> wordmap = new HashMap<String, Integer>();
 		String[] inputWords = input.split(" ");
 		for (int i = 0; i < inputWords.length; i++) {
 			String word = inputWords[i].toLowerCase();
-			System.out.println("Current word: "+word);
+			System.out.println("Current word: " + word);
 
 			// remove punctuation from start and end of word
 			// according to:
@@ -119,19 +125,19 @@ public class Analyzer {
 			word = word.replaceFirst("^[^a-zA-Z]+", "").replaceAll("[^a-zA-Z]+$", "").trim();
 
 			if (!word.isEmpty()) {
-				boolean isForbidden=false;
-				for(String s : filterwords){
+				boolean isForbidden = false;
+				for (String s : filterwords) {
 
-					//System.out.println("Filter: "+s);
-					if(s.contentEquals(word)){
-						//System.out.println("TRUE: "+s+" vs "+word);
-						isForbidden=true;
+					// System.out.println("Filter: "+s);
+					if (s.contentEquals(word)) {
+						// System.out.println("TRUE: "+s+" vs "+word);
+						isForbidden = true;
 					}
 
 				}
-				if(!isForbidden){
+				if (!isForbidden) {
 					if (wordmap.containsKey(word)) {
-						wordmap.put(word, (Integer) wordmap.get(word) + 1);
+						wordmap.put(word, wordmap.get(word) + 1);
 					} else {
 						wordmap.put(word, 1);
 					}
@@ -158,7 +164,7 @@ public class Analyzer {
 				line = br.readLine();
 			}
 			String everything = sb.toString();
-			
+
 			System.out.println("Everything: " + line);
 
 			return everything;

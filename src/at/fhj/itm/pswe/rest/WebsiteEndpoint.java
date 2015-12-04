@@ -28,43 +28,42 @@ import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 
 @Stateless
 @Path("/website")
-public class WebsiteEndpoint{
+public class WebsiteEndpoint {
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
 	@GET
 	@Produces("application/json")
-	public Response listAll()
-	{
+	public Response listAll() {
 
-		TypedQuery<Website> findAllQuery = em.createQuery("SELECT DISTINCT w FROM Website w ORDER BY w.id", Website.class);
-		final List<Website> results = findAllQuery.getResultList();		
-		JSONArray returnResult=new JSONArray();
+		TypedQuery<Website> findAllQuery = em.createQuery("SELECT DISTINCT w FROM Website w ORDER BY w.id",
+				Website.class);
+		final List<Website> results = findAllQuery.getResultList();
+		JSONArray returnResult = new JSONArray();
 
-		for(Website ws: results){
-			JSONObject temp= new JSONObject();
+		for (Website ws : results) {
+			JSONObject temp = new JSONObject();
 			temp.put("id", ws.getId());
 			temp.put("address", ws.getDomain());
 			temp.put("description", ws.getDescription());
-			temp.put("active",ws.getActive());
+			temp.put("active", ws.getActive());
 			temp.put("depth", ws.getCrawldepth());
 			returnResult.put(temp);
 		}
 
-		JSONObject my=new JSONObject();
+		JSONObject my = new JSONObject();
 		my.put("data", returnResult);
 
 		return Response.ok(my.toString()).build();
 	}
 
-	//For Datatable on Subiste "Website"
+	// For Datatable on Subiste "Website"
 	@GET
 	@Path("/{id:[0-9][0-9]*}/words")
 	@Produces("application/json")
-	public Response wordsOfSite(@PathParam("id") int id)
-	{
+	public Response wordsOfSite(@PathParam("id") int id) {
 
-		JSONObject my=new JSONObject();
+		JSONObject my = new JSONObject();
 		my.put("data", findWordsOFSite(id, 0));
 
 		return Response.ok(my.toString()).build();
@@ -73,34 +72,30 @@ public class WebsiteEndpoint{
 	@GET
 	@Path("/{id:[0-9][0-9]*}/words/{num:[0-9][0-9]*}")
 	@Produces("application/json")
-	public Response wordsOfSiteNumbered(@PathParam("id") int id, @PathParam("num") int num)
-	{
+	public Response wordsOfSiteNumbered(@PathParam("id") int id, @PathParam("num") int num) {
 
-		JSONObject my=new JSONObject();
+		JSONObject my = new JSONObject();
 		my.put("data", findWordsOFSite(id, num));
 
 		return Response.ok(my.toString()).build();
 	}
 
+	private JSONArray findWordsOFSite(int id, int maxNum) {
+		Query q = em.createQuery("SELECT c.word.text, sum(c.amount)  "
+				+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
+				+ "GROUP BY c.word ORDER BY sum(c.amount) DESC").setParameter("id", id);
 
-	private JSONArray findWordsOFSite(int id, int maxNum){
-		Query q = em
-				.createQuery("SELECT c.word.text, sum(c.amount)  "
-						+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
-						+ "GROUP BY c.word ORDER BY sum(c.amount) DESC")
-						.setParameter("id", id);
-
-		if(maxNum > 0){
+		if (maxNum > 0) {
 			q.setMaxResults(maxNum);
 		}
-		List<Object[]> results	= q.getResultList();
+		List<Object[]> results = q.getResultList();
 
-		JSONArray returnResult=new JSONArray();
+		JSONArray returnResult = new JSONArray();
 
-		for(Object[] wo: results){
-			System.out.println(wo[0]+" | "+wo[1]);
+		for (Object[] wo : results) {
+			System.out.println(wo[0] + " | " + wo[1]);
 
-			JSONObject temp= new JSONObject();
+			JSONObject temp = new JSONObject();
 			temp.put("word", wo[0]);
 			temp.put("amount", wo[1]);
 
@@ -110,60 +105,50 @@ public class WebsiteEndpoint{
 
 	}
 
-
-
-
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces("application/json")
-	public Response findById(@PathParam("id") int id)
-	{
-		TypedQuery<Website> findByIdQuery = em.createQuery("SELECT DISTINCT w FROM Website w WHERE w.id = :id", Website.class);
+	public Response findById(@PathParam("id") int id) {
+		TypedQuery<Website> findByIdQuery = em.createQuery("SELECT DISTINCT w FROM Website w WHERE w.id = :id",
+				Website.class);
 		findByIdQuery.setParameter("id", id);
 		Website entity;
-		try
-		{
+		try {
 			entity = findByIdQuery.getSingleResult();
-		}
-		catch (NoResultException nre)
-		{
+		} catch (NoResultException nre) {
 			entity = null;
 		}
-		if (entity == null)
-		{
+		if (entity == null) {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.ok(entity).build();
 	}
 
-
 	@POST
 	@Produces("application/json")
 	@Consumes("application/json")
-	public Response addSite(String incoming)
-	{
+	public Response addSite(String incoming) {
 		System.out.println("Received Request");
-		JSONObject json= new JSONObject(incoming);
-		System.out.println("JSON: "+json.toString());
+		JSONObject json = new JSONObject(incoming);
+		System.out.println("JSON: " + json.toString());
 
-		//Create Website object
+		// Create Website object
 		Website ws = new Website();
 		ws.setDomain(json.getString("address"));
 		ws.setDescription(json.getString("description"));
 		ws.setCrawldepth(json.getInt("depth"));
 		ws.setActive(true);
 
-		//Save to DB
+		// Save to DB
 		em.persist(ws);
 		em.flush();
 
-		//Add info for Return object
+		// Add info for Return object
 		json.put("id", ws.getId());
 		json.put("active", ws.getActive());
-		System.out.println("JSON: "+json.toString());
+		System.out.println("JSON: " + json.toString());
 
-		
-		Thread t = new Thread(new MainCrawler(ws.getDomain(),1));
+		Thread t = new Thread(new MainCrawler(ws.getDomain(), 1));
 		t.start();
 
 		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
@@ -172,23 +157,21 @@ public class WebsiteEndpoint{
 	@DELETE
 	@Produces("application/json")
 	@Consumes("application/json")
-	public Response deleteSite(String incoming)
-	{
+	public Response deleteSite(String incoming) {
 		System.out.println("Received DELETE");
-		JSONObject json= new JSONObject(incoming);
-		System.out.println("JSON: "+json.toString());
+		JSONObject json = new JSONObject(incoming);
+		System.out.println("JSON: " + json.toString());
 
-		//Get KEY and
+		// Get KEY and
 		Iterator<String> keys = json.keys();
-		String id="";
-		if( keys.hasNext() ){
-			id = (String)keys.next(); // First key in your json object
+		String id = "";
+		if (keys.hasNext()) {
+			id = keys.next(); // First key in your json object
 		}
 		Website ws = em.find(Website.class, Integer.parseInt(id));
 		em.remove(ws);
 
-
-		//Send empty object on success
+		// Send empty object on success
 
 		return Response.ok("{}").build();
 	}
@@ -196,85 +179,80 @@ public class WebsiteEndpoint{
 	@PUT
 	@Produces("application/json")
 	@Consumes("application/json")
-	public Response editSite(String incoming)
-	{
+	public Response editSite(String incoming) {
 		System.out.println("Received PUT");
-		JSONObject json= new JSONObject(incoming);
-		System.out.println("JSON: "+json.toString());
+		JSONObject json = new JSONObject(incoming);
+		System.out.println("JSON: " + json.toString());
 
-		//Get KEY and
+		// Get KEY and
 		Iterator<String> keys = json.keys();
-		String id="";
-		if( keys.hasNext() ){
-			id = (String)keys.next(); // First key in your json object
+		String id = "";
+		if (keys.hasNext()) {
+			id = keys.next(); // First key in your json object
 		}
 
-		//CUpdate and Save object
+		// CUpdate and Save object
 		Website ws = em.find(Website.class, Integer.parseInt(id));
 		ws.setDomain(json.getJSONObject(id).getString("address"));
 		ws.setDescription(json.getJSONObject(id).getString("description"));
 		ws.setCrawldepth(json.getJSONObject(id).getInt("depth"));
 
-		if(json.getJSONObject(id).getJSONArray("active").length() == 0)
+		if (json.getJSONObject(id).getJSONArray("active").length() == 0)
 			ws.setActive(false);
 		else
 			ws.setActive(true);
 
-		JSONObject output= new JSONObject();
-		output.put("data", new JSONArray().put(
-				new JSONObject().put("id", ws.getId())
-				.put("address", ws.getDomain())
-				.put("description", ws.getDescription())
-				.put("depth",ws.getCrawldepth())
-				.put("active", ws.getActive())
-				));
+		JSONObject output = new JSONObject();
+		output.put("data",
+				new JSONArray().put(new JSONObject().put("id", ws.getId()).put("address", ws.getDomain())
+						.put("description", ws.getDescription()).put("depth", ws.getCrawldepth())
+						.put("active", ws.getActive())));
 
-
-		//Add info for Return object
-		System.out.println("JSON: "+output.toString());		
+		// Add info for Return object
+		System.out.println("JSON: " + output.toString());
 		return Response.ok(output.toString()).build();
 	}
 
-
 	/**
 	 * Returns all words from a given domain in the chosen period
-	 * @param domainID site where words should be counted
-	 * @param startdate the date as String when the analysis should start
-	 * @param enddate the date as String when the analysis should end
-	 * @return List<Integer> with the amount of the word
-	 * Example: http://localhost:8080/TermStatistics/rest/website/1/period/10.11.2015/30.11.2015
+	 * 
+	 * @param domainID
+	 *            site where words should be counted
+	 * @param startdate
+	 *            the date as String when the analysis should start
+	 * @param enddate
+	 *            the date as String when the analysis should end
+	 * @return List<Integer> with the amount of the word Example:
+	 *         http://localhost:8080/TermStatistics/rest/website/1/period/10.11.
+	 *         2015/30.11.2015
 	 */
 	@GET
 	@Path("/{domainID:[0-9][0-9]*}/period/{startdate:[a-zA-Z0-9][a-zA-Z0-9.]*}/{enddate:[a-zA-Z0-9][a-zA-Z0-9.]*}")
 	@Produces("application/json")
-	public Response countSiteOverPeriod(@PathParam("domainID") int domainID ,@PathParam("startdate") String startDate, @PathParam("enddate") String endDate){
+	public Response countSiteOverPeriod(@PathParam("domainID") int domainID, @PathParam("startdate") String startDate,
+			@PathParam("enddate") String endDate) {
 
+		// Get top10 words of page
+		JSONArray topwords = findWordsOFSite(domainID, 10);
+		JSONObject returner = new JSONObject();
 
-		//Get top10 words of page
-		JSONArray topwords=findWordsOFSite(domainID, 10);
-		JSONObject returner=new JSONObject();
-
-		//for each word, geht timeline
-		for(int i=0;i<topwords.length();i++){
-			String word=topwords.getJSONObject(i).getString("word");
-			returner.put(word,timeLine4WordAndSite(domainID, word, startDate, endDate));
+		// for each word, geht timeline
+		for (int i = 0; i < topwords.length(); i++) {
+			String word = topwords.getJSONObject(i).getString("word");
+			returner.put(word, timeLine4WordAndSite(domainID, word, startDate, endDate));
 
 		}
 
 		System.out.println(returner.toString());
 
-		return Response.ok(returner.toString()).build();		
+		return Response.ok(returner.toString()).build();
 	}
 
+	private JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate) {
 
-	private JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate){
-
-		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) "+
-				"FROM Container co "+
-				"WHERE co.website.id = :id "+
-				"AND (co.logDate BETWEEN :startdate AND :enddate) "+
-				"AND co.word.text = :word "+
-				"GROUP BY co.word.text, co.logDate");
+		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) " + "FROM Container co "
+				+ "WHERE co.website.id = :id " + "AND (co.logDate BETWEEN :startdate AND :enddate) "
+				+ "AND co.word.text = :word " + "GROUP BY co.word.text, co.logDate");
 		countWordPeriod.setParameter("id", siteID);
 		countWordPeriod.setParameter("word", word);
 		countWordPeriod.setParameter("startdate", startDate);
@@ -282,10 +260,10 @@ public class WebsiteEndpoint{
 
 		final List<Object[]> results = countWordPeriod.getResultList();
 
-		JSONArray returnResult=new JSONArray();
+		JSONArray returnResult = new JSONArray();
 
-		for(Object[] wo: results){
-			JSONObject temp= new JSONObject();
+		for (Object[] wo : results) {
+			JSONObject temp = new JSONObject();
 			temp.put("date", wo[0]);
 			temp.put("amount", wo[1]);
 
@@ -294,6 +272,5 @@ public class WebsiteEndpoint{
 
 		return returnResult;
 	}
-
 
 }

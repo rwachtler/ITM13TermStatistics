@@ -2,36 +2,40 @@ package at.fhj.itm.pswe.model;
 
 import java.io.Serializable;
 
-import javax.persistence.*;
-
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 
 /**
  * The persistent class for the container database table.
  * 
  */
 @Entity
-@Table(name="container")
+@Table(name = "container")
 public class Container implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="id")
+	@Column(name = "id")
 	private int id;
 
-	@Column(name="amount")
+	@Column(name = "amount")
 	private int amount;
 
-	@Column(name="log_date")
+	@Column(name = "log_date")
 	private String logDate;
 
-	//bi-directional many-to-one association to Website
+	// bi-directional many-to-one association to Website
 	@ManyToOne
-	@JoinColumn(name="fk_website")
+	@JoinColumn(name = "fk_website")
 	private Website website;
 
-	//bi-directional many-to-one association to Word
+	// bi-directional many-to-one association to Word
 	@ManyToOne
-	@JoinColumn(name="fk_word")
+	@JoinColumn(name = "fk_word")
 	private Word word;
 
 	public Container() {
