@@ -27,6 +27,9 @@ public class Container implements Serializable {
 
 	@Column(name = "log_date")
 	private String logDate;
+	
+	@Column(name= "url")
+	private String url;
 
 	// bi-directional many-to-one association to Website
 	@ManyToOne
@@ -79,6 +82,14 @@ public class Container implements Serializable {
 
 	public void setWord(Word word) {
 		this.word = word;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 }
