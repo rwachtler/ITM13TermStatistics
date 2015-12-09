@@ -4,8 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -13,48 +11,59 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.ejb.Stateless;
+import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
-import at.fhj.itm.pswe.database.DbConnection;
+import at.fhj.itm.pswe.model.Container;
+import at.fhj.itm.pswe.model.Website;
+import at.fhj.itm.pswe.model.Word;
 
+@Stateless
 public class Analyzer {
+	
+	private EntityManager em;
 
 	private String input;
 	private HashMap<String, Integer> wordMap;
 	ReaderFilterWords rf = new ReaderFilterWords();
 	private List<String> filterwords;
 
-	private DbConnection db;
-
 	private static String WEBSITE_NAME;
+	private static String DATE;
 
 	private static String RESULT_FILE;
 
+	public Analyzer(){}
+	
 	public Analyzer(String path) {
-		this.db = new DbConnection();
 		setRESULT_FILE(path);
-
-		BufferedReader br = null;
-
-		try {
-			br = new BufferedReader(new FileReader(RESULT_FILE));
-			WEBSITE_NAME = br.readLine();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	}
+	
+	public void analyzeResults() {
+		readResultFile();
 	}
 
-	public void analyzeResults() {
-		// Blockweise lesen (File)
-		this.wordMap = this.calculateWordMap(this.readResultFile());
+	private void persistData(String url, String data) {
+		
+		int websiteId = -1;
+
+		this.wordMap = this.calculateWordMap(data);
 
 		String website = WEBSITE_NAME;
 
+		Website newWebsite;
+		
 		// get website id
-		int websiteId = db.websiteExists(website);
+		if(em == null) {
+			System.out.println("EntityManager is null");
+		}
+		Query websiteExistsq = em.createQuery("SELECT w.id FROM Website w WHERE w.domain = :domain").setParameter("domain", website);
+		List<Object> result = websiteExistsq.getResultList();
+
+		if(result.size()>0)
+			websiteId = (int)result.get(0);
+		newWebsite = em.find(Website.class, websiteId);
 
 		Iterator it = this.wordMap.entrySet().iterator();
 
@@ -66,63 +75,49 @@ public class Analyzer {
 			String word = (String) pair.getKey();
 			int count = (int) pair.getValue();
 
-			// Open connection
-			Connection conn = null;
-			try {
-				Class.forName("com.mysql.jdbc.Driver");
-				// nur einmal connection erstellen
-				conn = DriverManager.getConnection("jdbc:mysql://" + DbConnection.DB_HOST + "/" + DbConnection.DB_NAME
-						+ "?user=" + DbConnection.DB_USER + "&password=" + DbConnection.DB_PASSWORD);
+			Word wo = em.find(Word.class, word);
 
-				// check if word exists in the database
-				if (!db.wordExists(word, conn)) {
-					int active = 1;
-
-					db.addWord(word, active, conn);
-				}
-
-				// format date string
-				DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-				Date date = new Date();
-
-				String dateString = dateFormat.format(date);
-
-				// add container entry to database
-				db.addContainer(word, count, websiteId, dateString, conn);
-
-				// nicht notwendig
-				it.remove();
-
-			} catch (Exception e) {
-				// Do nothing
-				e.printStackTrace();
-			} finally {
-				try {
-					if (conn != null)
-						conn.close();
-				} catch (Exception e) {
-				}
-				;
+			// check if word exists in the database
+			if (wo==null) {					
+				Word newWord = new Word();
+				newWord.setActive(true);
+				newWord.setText(word);
+				em.persist(newWord);
+				em.flush();
+				wo = newWord;
 			}
 
+			// refactoring -> DATE, wenn richtig formatiert
+			// format date string
+			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
+			Date date = new Date();
+
+			String dateString = dateFormat.format(date);
+
+			// add container entry to database
+			Container newCont = new Container();
+			newCont.setAmount(count);
+			newCont.setWord(wo);
+			newCont.setLogDate(dateString);
+			newCont.setWebsite(newWebsite);
+			newCont.setUrl(url);
 		}
 		System.out.println("End iterating over Wordmap");
 	}
 
-	public HashMap<String, Integer> calculateWordMap(String input) {
+	private HashMap<String, Integer> calculateWordMap(String input) {
 		filterwords = rf.readWords();
 
 		HashMap<String, Integer> wordmap = new HashMap<String, Integer>();
 		String[] inputWords = input.split(" ");
 		for (int i = 0; i < inputWords.length; i++) {
 			String word = inputWords[i].toLowerCase();
-			System.out.println("Current word: " + word);
+			//System.out.println("Current word: " + word);
 
 			// remove punctuation from start and end of word
 			// according to:
 			// http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
-			// Umlaute zu beginn!
-			word = word.replaceFirst("^[^a-zA-Z]+", "").replaceAll("[^a-zA-Z]+$", "").trim();
+			word = word.replaceFirst("^[^a-zA-ZüÜöÖäÄ]+", "").replaceAll("[^a-zA-ZüÜöÖäÄ]+$", "").trim();
 
 			if (!word.isEmpty()) {
 				boolean isForbidden = false;
@@ -148,33 +143,29 @@ public class Analyzer {
 		return wordmap;
 	}
 
-	public String readResultFile() {
+	private void readResultFile() {
 		try (BufferedReader br = new BufferedReader(new FileReader(RESULT_FILE))) {
-			StringBuilder sb = new StringBuilder();
-			// Skip first 2 Lines (URL and date of creation)
+			// Read Start Page
 			String line = br.readLine();
-			System.out.println("First line: " + line);
+			WEBSITE_NAME = line;
+			// Read Start Date
 			line = br.readLine();
-			System.out.println("Second line: " + line);
-			line = br.readLine();
+			DATE = line;
 
-			while (line != null) {
-				sb.append(line);
-				sb.append(System.lineSeparator());
-				line = br.readLine();
+			// Start with analyzing data
+			while (true) {
+				String url = br.readLine();
+				String data = br.readLine();
+				if(data == null)
+					break;
+				else
+					persistData(url, data);
 			}
-			String everything = sb.toString();
-
-			System.out.println("Everything: " + line);
-
-			return everything;
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		return null;
 	}
 
 	public static String getRESULT_FILE() {
