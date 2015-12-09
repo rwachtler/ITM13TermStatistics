@@ -70,7 +70,7 @@ public class Init_LinkCrawler {
 		// Zeilen
 		if (f.length() == 0) {
 			out.println(url);
-			out.println(cal.getTime().toString());
+			out.println(cal.get(Calendar.DAY_OF_MONTH) + ":" + (cal.get(Calendar.MONTH) + 1) + ":" + cal.get(Calendar.YEAR));
 		}
 		if (out != null) {
 			out.close();
