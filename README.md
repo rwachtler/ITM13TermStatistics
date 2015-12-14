@@ -42,7 +42,7 @@ Example for `pswengi.bamb.at` started crawling on 23.11.2015 14:21
 	
 Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 
-### Structure
+### Result-File Structure generated from the crawler
 `1 Line:` URL
 
 	http://pswengi.bamb.at
@@ -51,20 +51,20 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 
 	'Sat Nov 23 14:21:53 CET 2015'
 	
-`3 Line and forward:` Gathered Text from Pages. Each new line is a new Page
+`3/5/7... Line:` URL of the text, that is located in the next line
+
+`4/6/8... Line:` Gathered Text from the "current" URL. Repeates for each visited URL
+
+`Last line:` Time, how long the crawler was running (in hh:mm:ss) 
 
 ##Subsites
 - Subsites( Word/Site Overview) are called via Servlet
 - url: `TermStatistics/SiteOverview/{idOfSite}`
 
-
 ## REST-Calls
+- `/rest/action/crawler/{crawlerid}` -> restart the Crawler for an already safed Website in the Database
 - `/rest/website/{websiteid}/words` -> all words an amount on this website
 - `/rest/website/{websiteid}/words/{num}` -> all words an amount on this website, limit amount of words by num
+- `/rest/website/{websiteid}/period/10.11.2015/30.11.2015` -> words of one site in the given period
 - `/rest/word/{word}/websites` -> all websites of specific word with corresponding amounts
 - `/rest/word/{word}/period/10.11.2015/30.11.2015` -> one word with all dates & amounts in the given period
-- `/rest/website/{websiteid}/period/10.11.2015/30.11.2015` -> words of one site in the given period
-
-### Start a Crawler with given URL
-
-	localhost:8080/TermStatistics/rest/action/crawler/<id of webpage>
