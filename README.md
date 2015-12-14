@@ -47,15 +47,21 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 
 	http://pswengi.bamb.at
 	
-`2 Line:` Date and time of crawling the page
+`2 Line:` Date of crawling the page (in dd:MM:yyyy)
 
-	'Sat Nov 23 14:21:53 CET 2015'
+	13:12:2015
 	
 `3/5/7... Line:` URL of the text, that is located in the next line
 
+	http://pswengi.bamb.at/article1.html
+
 `4/6/8... Line:` Gathered Text from the "current" URL. Repeates for each visited URL
 
+	Here are some random generated Word :P
+
 `Last line:` Time, how long the crawler was running (in hh:mm:ss) 
+
+	0:0:43
 
 ##Subsites
 - Subsites( Word/Site Overview) are called via Servlet
