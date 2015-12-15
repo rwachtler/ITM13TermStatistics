@@ -10,6 +10,8 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.jboss.ejb3.annotation.TransactionTimeout;
+
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.Word;
@@ -34,7 +36,9 @@ public class MainCrawler implements Runnable {
 		this.depth = depth;
 		
 	}
-
+	//Timeout manuell höher gesetzt da sonst transaction von jta abgebrochen wird
+	//Temporäre lösung, code muss unbedingt beschleunigt werden
+	@TransactionTimeout(3600)
 	public void crawl() {
 		
 		

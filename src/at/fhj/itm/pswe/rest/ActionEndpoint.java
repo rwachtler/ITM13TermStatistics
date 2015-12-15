@@ -3,6 +3,7 @@ package at.fhj.itm.pswe.rest;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.ejb.Timeout;
 import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
+import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.pagecrawler.MainCrawler;
@@ -34,6 +36,7 @@ public class ActionEndpoint {
 	// TODO Rewrite to post, add depth param
 	@GET
 	@Path("/crawler/{id}")
+	@TransactionTimeout(3600)
 	public Response startCrawler(@PathParam("id") int id) {
 		System.out.println("ID: " + id);
 		Website ws = em.find(Website.class, id);

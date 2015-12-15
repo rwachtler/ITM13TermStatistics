@@ -30,6 +30,8 @@ import javax.transaction.RollbackException;
 import javax.transaction.SystemException;
 import javax.transaction.UserTransaction;
 
+import org.jboss.ejb3.annotation.TransactionTimeout;
+
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.Word;
@@ -99,13 +101,12 @@ public class Analyzer {
 			
 			// check if word exists in the database
 			if (wo==null) {	
-				System.out.println("WORD ISNULL");
+				
 				wo = new Word();
 				wo.setActive(true);
 				wo.setText(word);
-				//em.persist(wo);
-			}else{
-				System.out.println("WORD NOT NULL");
+				//Need to persist so that it is available for newCont later on
+				em.persist(wo);
 			}
 
 			//TODO refactoring -> DATE aus parameter benutzenn, wenn richtig formatiert
@@ -125,8 +126,6 @@ public class Analyzer {
 			newCont.setWebsite(newWebsite);
 			newCont.setUrl(url);
 			em.persist(newCont);
-			em.flush();
-
 		}
 
 		System.out.println("End iterating over Wordmap");
@@ -170,6 +169,7 @@ public class Analyzer {
 		return wordmap;
 	}
 
+	@TransactionTimeout(3600)
 	public void readResultFile(String path) {
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 			// Read Start Page
@@ -190,15 +190,25 @@ public class Analyzer {
 				websiteId = (int)result.get(0);
 			Website newWebsite = em.find(Website.class, websiteId);
 
+			int count =0;
+			
 			// Start with analyzing data
 			while (true) {
 				String url = br.readLine();
+				System.out.println("URL: "+url+"|");
 				String data = br.readLine();
+				count++;
 				if(data == null)
 					break;
 				else{
 					try{					
 						persistData(url, data, newWebsite, currentdate);
+						//flush to db every 20 words
+						if(count>20){
+							count=0;
+							em.flush();
+							em.clear();
+						}
 					}catch (Exception e){
 						e.printStackTrace();
 						break; //If error occurs
