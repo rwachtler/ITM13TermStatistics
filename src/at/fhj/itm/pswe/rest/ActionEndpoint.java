@@ -1,32 +1,19 @@
 package at.fhj.itm.pswe.rest;
 
-import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.enterprise.concurrent.ManagedThreadFactory;
-import javax.enterprise.inject.Instance;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Response;
 
-import org.jboss.ejb3.annotation.TransactionTimeout;
 
-import at.fhj.itm.pswe.beans.TestBean;
-import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
-import at.fhj.itm.pswe.model.Word;
 import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 
 @Stateless

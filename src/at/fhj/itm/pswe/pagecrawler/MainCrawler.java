@@ -10,7 +10,6 @@ import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
-import at.fhj.itm.pswe.beans.TestBean;
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.Word;
