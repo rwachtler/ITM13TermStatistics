@@ -24,8 +24,9 @@ public class CrawlerDaemon implements Runnable {
 		final List<Website> results = findAllQuery.getResultList();
 
 		for (Website ws : results) {
-			MainCrawler mc = new MainCrawler(ws.getDomain(), ws.getCrawldepth());
-			mc.crawl();
+			//TODO: Start threads!
+			//MainCrawler mc = new MainCrawler(ws.getDomain(), ws.getCrawldepth(),em.getEntityManagerFactory());
+			//mc.crawl();
 		}
 
 	}

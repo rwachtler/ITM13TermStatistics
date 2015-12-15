@@ -148,8 +148,8 @@ public class WebsiteEndpoint {
 		json.put("active", ws.getActive());
 		System.out.println("JSON: " + json.toString());
 
-		Thread t = new Thread(new MainCrawler(ws.getDomain(), 1));
-		t.start();
+		/*Thread t = new Thread(new MainCrawler(ws.getDomain(), 1));
+		t.start();*/
 
 		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
 	}
