@@ -12,23 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
 import javax.ejb.LocalBean;
-import javax.ejb.Stateful;
 import javax.ejb.Stateless;
-import javax.enterprise.context.Dependent;
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
-import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
-import javax.transaction.HeuristicMixedException;
-import javax.transaction.HeuristicRollbackException;
-import javax.transaction.NotSupportedException;
-import javax.transaction.RollbackException;
-import javax.transaction.SystemException;
-import javax.transaction.UserTransaction;
 
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
@@ -40,12 +28,8 @@ import at.fhj.itm.pswe.model.Word;
 @LocalBean
 public class Analyzer {
 
-
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
-
-
-
 
 	private String input;
 	private HashMap<String, Integer> wordMap;
@@ -54,36 +38,33 @@ public class Analyzer {
 
 	private static String DATE;
 
-
-
-	public Analyzer(){}
+	public Analyzer() {
+	}
 
 	public void analyzeResults(String path) {
 		readResultFile(path);
 	}
 
-	public void testPersist(){
-		//TESTCODE
+	public void testPersist() {
+		// TESTCODE
 		Website ws = em.find(Website.class, 18);
 
-		Word w=new Word();
+		Word w = new Word();
 		w.setActive(true);
 		w.setText("hello");
-		//em.persist(w);
-		Container c= new Container();
+		// em.persist(w);
+		Container c = new Container();
 		c.setAmount(10);
 		c.setWord(w);
 		c.setLogDate("01.10.2015");
 		c.setWebsite(ws);
 		em.persist(c);
 		em.flush();
-		//END
+		// END
 	}
 
+	private void persistData(String url, String data, Website newWebsite, String currentDate) {
 
-	private void persistData(String url, String data, Website newWebsite, String currentDate){
-
-		
 		this.wordMap = this.calculateWordMap(data);
 		Iterator<Map.Entry<String, Integer>> it = this.wordMap.entrySet().iterator();
 
@@ -97,23 +78,23 @@ public class Analyzer {
 			int count = (int) pair.getValue();
 
 			Word wo = em.find(Word.class, word);
-			System.out.println("WORD: "+word);
-			
+			System.out.println("WORD: " + word);
+
 			// check if word exists in the database
-			if (wo==null) {	
-				
+			if (wo == null) {
+
 				wo = new Word();
 				wo.setActive(true);
 				wo.setText(word);
-				//Need to persist so that it is available for newCont later on
+				// Need to persist so that it is available for newCont later on
 				em.persist(wo);
 			}
 
-			//TODO refactoring -> DATE aus parameter benutzenn, wenn richtig formatiert
+			// TODO refactoring -> DATE aus parameter benutzenn, wenn richtig
+			// formatiert
 			// format date string
 			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
 			Date date = new Date();
-			
 
 			String dateString = dateFormat.format(date);
 
@@ -138,7 +119,7 @@ public class Analyzer {
 		String[] inputWords = input.split(" ");
 		for (int i = 0; i < inputWords.length; i++) {
 			String word = inputWords[i].toLowerCase();
-			//System.out.println("Current word: " + word);
+			// System.out.println("Current word: " + word);
 
 			// remove punctuation from start and end of word
 			// according to:
@@ -147,15 +128,21 @@ public class Analyzer {
 
 			if (!word.isEmpty()) {
 				boolean isForbidden = false;
-				for (String s : filterwords) {
 
-					// System.out.println("Filter: "+s);
-					if (s.contentEquals(word)) {
-						// System.out.println("TRUE: "+s+" vs "+word);
-						isForbidden = true;
-					}
-
+				if (filterwords.contains(word)) {
+					isForbidden = true;
 				}
+
+				/*
+				 * old solution for (String s : filterwords) {
+				 * 
+				 * // System.out.println("Filter: "+s); if
+				 * (s.contentEquals(word)) { // System.out.println("TRUE: "+s+
+				 * " vs "+word); isForbidden = true; }
+				 * 
+				 * }
+				 */
+
 				if (!isForbidden) {
 					if (wordmap.containsKey(word)) {
 						wordmap.put(word, wordmap.get(word) + 1);
@@ -178,40 +165,41 @@ public class Analyzer {
 			// Read Start Date
 			line = br.readLine();
 			String currentdate = line;
-			
-			//Get Current Root Domain only once, pass it further
-			
-			//Expect that domain only exists once
-			//Expect only one result
-			Query websiteExistsq = em.createQuery("SELECT w.id FROM Website w WHERE w.domain = :domain").setParameter("domain", website);
+
+			// Get Current Root Domain only once, pass it further
+
+			// Expect that domain only exists once
+			// Expect only one result
+			Query websiteExistsq = em.createQuery("SELECT w.id FROM Website w WHERE w.domain = :domain")
+					.setParameter("domain", website);
 			List<Object> result = websiteExistsq.getResultList();
-			int websiteId=-1;
-			if(result.size()>0)
-				websiteId = (int)result.get(0);
+			int websiteId = -1;
+			if (result.size() > 0)
+				websiteId = (int) result.get(0);
 			Website newWebsite = em.find(Website.class, websiteId);
 
-			int count =0;
-			
+			int count = 0;
+
 			// Start with analyzing data
 			while (true) {
 				String url = br.readLine();
-				System.out.println("URL: "+url+"|");
+				System.out.println("URL: " + url + "|");
 				String data = br.readLine();
 				count++;
-				if(data == null)
+				if (data == null)
 					break;
-				else{
-					try{					
+				else {
+					try {
 						persistData(url, data, newWebsite, currentdate);
-						//flush to db every 20 words
-						if(count>20){
-							count=0;
+						// flush to db every 20 words
+						if (count > 20) {
+							count = 0;
 							em.flush();
 							em.clear();
 						}
-					}catch (Exception e){
+					} catch (Exception e) {
 						e.printStackTrace();
-						break; //If error occurs
+						break; // If error occurs
 					}
 				}
 			}
@@ -221,7 +209,6 @@ public class Analyzer {
 			e.printStackTrace();
 		}
 	}
-
 
 	public String getInput() {
 		return input;

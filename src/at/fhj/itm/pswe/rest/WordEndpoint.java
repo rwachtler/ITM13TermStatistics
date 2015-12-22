@@ -44,6 +44,12 @@ public class WordEndpoint {
 	 * }
 	 */
 
+	/**
+	 * Get all Words from all Websites with the actual word, active status and
+	 * amount
+	 * 
+	 * @return JSONArray of desired data
+	 */
 	@GET
 	@Produces("application/json")
 	public Response listAllwithAmount() {
@@ -69,12 +75,19 @@ public class WordEndpoint {
 		return Response.ok(my.toString()).build();
 	}
 
-	// For Datatable on Subiste "Website"
+	// For Datatable on Subsite "Website"
+	/**
+	 * Get all Websites that contain the given word
+	 * 
+	 * @param word
+	 *            word, which should be checked on which websites it appears
+	 * @return JSONData of the the desired information
+	 */
 	@GET
 	@Path("/{word}/websites")
 	@Produces("application/json")
 	public Response sitesOfWord(@PathParam("word") String word) {
-		Query q = em.createQuery("SELECT c.website.id, c.website.domain, sum(c.amount)  "
+		Query q = em.createQuery("SELECT c.website.id, c.website.domain, sum(c.amount) "
 				+ "FROM Container c WHERE c.word.text LIKE :word AND c.word.active = TRUE "
 				+ "GROUP BY c.website ORDER BY sum(c.amount) DESC").setParameter("word", word);
 
@@ -99,6 +112,13 @@ public class WordEndpoint {
 		return Response.ok(my.toString()).build();
 	}
 
+	/**
+	 * Update a Word
+	 * 
+	 * @param incoming
+	 *            JSONData of the Word that should be updated
+	 * @return same JSONData from input if process was successful
+	 */
 	@PUT
 	@Produces("application/json")
 	@Consumes("application/json")
@@ -129,6 +149,13 @@ public class WordEndpoint {
 		return Response.ok(output.toString()).build();
 	}
 
+	/**
+	 * Helper method for "editWord" to get all informations of a desired word
+	 * 
+	 * @param word
+	 *            word, where the information is desired
+	 * @return JSONData from the desired word
+	 */
 	private JSONObject findSingleWordWithAmount(String word) {
 		List<Object[]> results = em
 				.createQuery(
@@ -145,6 +172,13 @@ public class WordEndpoint {
 		return temp;
 	}
 
+	/**
+	 * Get all informations of an Website by its id
+	 * 
+	 * @param id
+	 *            id of the website
+	 * @return all data from the desired website
+	 */
 	@GET
 	@Path("/{id:[a-zA-Z][a-zA-Z]*}")
 	@Produces("application/json")

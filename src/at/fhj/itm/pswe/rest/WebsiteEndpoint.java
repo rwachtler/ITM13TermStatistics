@@ -24,7 +24,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import at.fhj.itm.pswe.model.Website;
-import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 
 @Stateless
 @Path("/website")
@@ -32,6 +31,49 @@ public class WebsiteEndpoint {
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
+	/**
+	 * Add a website to the database
+	 * 
+	 * @param incoming
+	 *            JSON-Data as String
+	 * @return Sent data + id from Database + active status as JSON
+	 */
+	@POST
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response addSite(String incoming) {
+		System.out.println("Received Request");
+		JSONObject json = new JSONObject(incoming);
+		System.out.println("JSON: " + json.toString());
+
+		// Create Website object
+		Website ws = new Website();
+		ws.setDomain(json.getString("address"));
+		ws.setDescription(json.getString("description"));
+		ws.setCrawldepth(json.getInt("depth"));
+		ws.setActive(true);
+
+		// Save to DB
+		em.persist(ws);
+		em.flush();
+
+		// Add info for Return object
+		json.put("id", ws.getId());
+		json.put("active", ws.getActive());
+		System.out.println("JSON: " + json.toString());
+
+		/*
+		 * Thread t = new Thread(new MainCrawler(ws.getDomain(), 1)); t.start();
+		 */
+
+		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
+	}
+
+	/**
+	 * List all Websites that are currently in the Database
+	 * 
+	 * @return JSON with all Websites in the Database
+	 */
 	@GET
 	@Produces("application/json")
 	public Response listAll() {
@@ -58,6 +100,13 @@ public class WebsiteEndpoint {
 	}
 
 	// For Datatable on Subiste "Website"
+	/**
+	 * Get all Words of one Website
+	 * 
+	 * @param id
+	 *            id of the Website
+	 * @return JSON-Data
+	 */
 	@GET
 	@Path("/{id:[0-9][0-9]*}/words")
 	@Produces("application/json")
@@ -69,6 +118,15 @@ public class WebsiteEndpoint {
 		return Response.ok(my.toString()).build();
 	}
 
+	/**
+	 * Get just a specific amount of Words of one Website
+	 * 
+	 * @param id
+	 *            id of the Website
+	 * @param num
+	 *            maximal amount of words
+	 * @return JSONArray of desired Words of a Website
+	 */
 	@GET
 	@Path("/{id:[0-9][0-9]*}/words/{num:[0-9][0-9]*}")
 	@Produces("application/json")
@@ -80,6 +138,15 @@ public class WebsiteEndpoint {
 		return Response.ok(my.toString()).build();
 	}
 
+	/**
+	 * Get a specific amount of words from a Website by its id
+	 * 
+	 * @param id
+	 *            id of the Website
+	 * @param maxNum
+	 *            maximal amount of words
+	 * @return JSONArray of desired Words of a Website
+	 */
 	private JSONArray findWordsOFSite(int id, int maxNum) {
 		Query q = em.createQuery("SELECT c.word.text, sum(c.amount)  "
 				+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
@@ -105,6 +172,13 @@ public class WebsiteEndpoint {
 
 	}
 
+	/**
+	 * Get all informations from a Website-Object
+	 * 
+	 * @param id
+	 *            id of the website
+	 * @return JSON with desired Website-Data
+	 */
 	@GET
 	@Path("/{id:[0-9][0-9]*}")
 	@Produces("application/json")
@@ -122,95 +196,6 @@ public class WebsiteEndpoint {
 			return Response.status(Status.NOT_FOUND).build();
 		}
 		return Response.ok(entity).build();
-	}
-
-	@POST
-	@Produces("application/json")
-	@Consumes("application/json")
-	public Response addSite(String incoming) {
-		System.out.println("Received Request");
-		JSONObject json = new JSONObject(incoming);
-		System.out.println("JSON: " + json.toString());
-
-		// Create Website object
-		Website ws = new Website();
-		ws.setDomain(json.getString("address"));
-		ws.setDescription(json.getString("description"));
-		ws.setCrawldepth(json.getInt("depth"));
-		ws.setActive(true);
-
-		// Save to DB
-		em.persist(ws);
-		em.flush();
-
-		// Add info for Return object
-		json.put("id", ws.getId());
-		json.put("active", ws.getActive());
-		System.out.println("JSON: " + json.toString());
-
-		/*Thread t = new Thread(new MainCrawler(ws.getDomain(), 1));
-		t.start();*/
-
-		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
-	}
-
-	@DELETE
-	@Produces("application/json")
-	@Consumes("application/json")
-	public Response deleteSite(String incoming) {
-		System.out.println("Received DELETE");
-		JSONObject json = new JSONObject(incoming);
-		System.out.println("JSON: " + json.toString());
-
-		// Get KEY and
-		Iterator<String> keys = json.keys();
-		String id = "";
-		if (keys.hasNext()) {
-			id = keys.next(); // First key in your json object
-		}
-		Website ws = em.find(Website.class, Integer.parseInt(id));
-		em.remove(ws);
-
-		// Send empty object on success
-
-		return Response.ok("{}").build();
-	}
-
-	@PUT
-	@Produces("application/json")
-	@Consumes("application/json")
-	public Response editSite(String incoming) {
-		System.out.println("Received PUT");
-		JSONObject json = new JSONObject(incoming);
-		System.out.println("JSON: " + json.toString());
-
-		// Get KEY and
-		Iterator<String> keys = json.keys();
-		String id = "";
-		if (keys.hasNext()) {
-			id = keys.next(); // First key in your json object
-		}
-
-		// CUpdate and Save object
-		Website ws = em.find(Website.class, Integer.parseInt(id));
-		ws.setDomain(json.getJSONObject(id).getString("address"));
-		ws.setDescription(json.getJSONObject(id).getString("description"));
-		ws.setCrawldepth(json.getJSONObject(id).getInt("depth"));
-
-		if (json.getJSONObject(id).getJSONArray("active").length() == 0)
-			ws.setActive(false);
-		else
-			ws.setActive(true);
-
-		JSONObject output = new JSONObject();
-		output.put("data",
-				new JSONArray().put(new JSONObject().put("id", ws.getId()).put("address", ws.getDomain())
-						.put("description", ws.getDescription()).put("depth", ws.getCrawldepth())
-						.put("active", ws.getActive())));
-
-		// Add info for Return object
-		System.out.println("JSON: " + output.toString());
-		return Response.ok(output.toString()).build();
 	}
 
 	/**
@@ -248,6 +233,20 @@ public class WebsiteEndpoint {
 		return Response.ok(returner.toString()).build();
 	}
 
+	/**
+	 * Helper method for "countSiteOverPeriod" to get all Words from a given
+	 * Website in a specific period of time
+	 * 
+	 * @param siteID
+	 *            id of Website where the data should come from
+	 * @param word
+	 *            word, where data should be collected
+	 * @param startDate
+	 *            Date where the first dataset should start
+	 * @param endDate
+	 *            Date where the last dataset should end
+	 * @return JSONArray of desired Data
+	 */
 	private JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate) {
 
 		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) " + "FROM Container co "
@@ -271,6 +270,80 @@ public class WebsiteEndpoint {
 		}
 
 		return returnResult;
+	}
+
+	/**
+	 * Update an already saved Website.
+	 * 
+	 * @param incoming
+	 *            JSON Data with all informations of the Website
+	 * @return same JSON Data, if the update was successful
+	 */
+	@PUT
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response editSite(String incoming) {
+		System.out.println("Received PUT");
+		JSONObject json = new JSONObject(incoming);
+		System.out.println("JSON: " + json.toString());
+
+		// Get KEY and
+		Iterator<String> keys = json.keys();
+		String id = "";
+		if (keys.hasNext()) {
+			id = keys.next(); // First key in your json object
+		}
+
+		// Update and Save object
+		Website ws = em.find(Website.class, Integer.parseInt(id));
+		ws.setDomain(json.getJSONObject(id).getString("address"));
+		ws.setDescription(json.getJSONObject(id).getString("description"));
+		ws.setCrawldepth(json.getJSONObject(id).getInt("depth"));
+
+		if (json.getJSONObject(id).getJSONArray("active").length() == 0) {
+			ws.setActive(false);
+		} else {
+			ws.setActive(true);
+		}
+
+		JSONObject output = new JSONObject();
+		output.put("data",
+				new JSONArray().put(new JSONObject().put("id", ws.getId()).put("address", ws.getDomain())
+						.put("description", ws.getDescription()).put("depth", ws.getCrawldepth())
+						.put("active", ws.getActive())));
+
+		// Add info for Return object
+		System.out.println("JSON: " + output.toString());
+		return Response.ok(output.toString()).build();
+	}
+
+	/**
+	 * Delete a Website from the Database
+	 * 
+	 * @param incoming
+	 *            all informations of the Website that should be deleted
+	 * @return empty JSON if successful
+	 */
+	@DELETE
+	@Produces("application/json")
+	@Consumes("application/json")
+	public Response deleteSite(String incoming) {
+		System.out.println("Received DELETE");
+		JSONObject json = new JSONObject(incoming);
+		System.out.println("JSON: " + json.toString());
+
+		// Get KEY and
+		Iterator<String> keys = json.keys();
+		String id = "";
+		if (keys.hasNext()) {
+			id = keys.next(); // First key in your json object
+		}
+		Website ws = em.find(Website.class, Integer.parseInt(id));
+		em.remove(ws);
+
+		// Send empty object on success
+
+		return Response.ok("{}").build();
 	}
 
 }

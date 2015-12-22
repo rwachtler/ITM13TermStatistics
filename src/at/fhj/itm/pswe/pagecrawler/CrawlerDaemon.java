@@ -20,13 +20,15 @@ public class CrawlerDaemon implements Runnable {
 	@Override
 	public void run() {
 
-		TypedQuery<Website> findAllQuery = em.createQuery("SELECT DISTINCT w FROM Website w WHERE w.active = TRUE ORDER BY w.id", Website.class);
+		TypedQuery<Website> findAllQuery = em
+				.createQuery("SELECT DISTINCT w FROM Website w WHERE w.active = TRUE ORDER BY w.id", Website.class);
 		final List<Website> results = findAllQuery.getResultList();
 
 		for (Website ws : results) {
-			//TODO: Start threads!
-			//MainCrawler mc = new MainCrawler(ws.getDomain(), ws.getCrawldepth(),em.getEntityManagerFactory());
-			//mc.crawl();
+			// TODO: Start threads!
+			// MainCrawler mc = new MainCrawler(ws.getDomain(),
+			// ws.getCrawldepth(),em.getEntityManagerFactory());
+			// mc.crawl();
 		}
 
 	}
