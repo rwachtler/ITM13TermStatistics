@@ -15,6 +15,9 @@ import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 
 public class CrawlerTest {
 	private MainCrawler mc;
+	private String time;
+	private String dateActual;
+	private String dateFile;
 	@Before
 	public void setup()
 	{
@@ -22,6 +25,15 @@ public class CrawlerTest {
 		mc.setDepth(1);
 		mc.setUrl("http://pfiff.me/pswengi/");
 		mc.crawl();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("HH_mm");
+		time = sdf.format(new Date());
+		
+	    SimpleDateFormat sdfDateFile = new SimpleDateFormat("dd_MM_yyyy");
+	    dateFile=sdfDateFile.format(new Date());
+		
+	    SimpleDateFormat sdfDate = new SimpleDateFormat("dd:MM:yyyy");
+	    dateActual=sdfDate.format(new Date());
 	   
 	}
 	
@@ -30,17 +42,15 @@ public class CrawlerTest {
 	{
 		 FileReader fr;
 			try {
-				//anpassen
-				fr = new FileReader("C:/Users/Viktoria/Documents/GitHub/result/crawl/pfiff_me_pswengi__12_29_2015-7_51.txt");
+				fr = new FileReader("result/crawl/pfiff_me_pswengi__"+dateFile+"-"+time+".txt");
 				 BufferedReader br = new BufferedReader(fr);
 
 				    String url = br.readLine();
 				    Assert.assertEquals(mc.getUrl(), url);
 				    
 				    String dateString=br.readLine();
-				    SimpleDateFormat sdf = new SimpleDateFormat("dd:MM:yyyy");
-				    System.out.println(sdf.format(new Date()));
-				    Assert.assertEquals(sdf.format(new Date()), dateString);
+
+				    Assert.assertEquals(dateActual, dateString);
 				    
 				    String urlStartpage=br.readLine();
 				    Assert.assertEquals(mc.getUrl(), urlStartpage);
