@@ -18,7 +18,7 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 
 public class Init_LinkCrawler {
 
-	private String filename, crawlStorageFolder, path_to_file;
+	private String filename, crawlStorageFolder, path_to_file, url_escaped;
 	private Calendar cal;
 
 	public Init_LinkCrawler(String url, int depth) throws Exception {
@@ -27,9 +27,13 @@ public class Init_LinkCrawler {
 		cal = Calendar.getInstance();
 		Date start_date = cal.getTime();
 
+		url_escaped = url.replace(".", "_").replace("http://", "").replace("/",  "_") + "_" + (cal.get(Calendar.MONTH) + 1) + "_"
+				+ cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.HOUR) + "_"
+				+ cal.get(Calendar.MINUTE);
+		
 		// Add to Project Root folders result/crawl where our result.txt is
 		// saved
-		crawlStorageFolder = "./result/crawl/";
+		crawlStorageFolder = "./result/crawl/" + url_escaped + "/";
 		int numberOfCrawlers = 10;
 
 		CrawlConfig config = new CrawlConfig();
@@ -54,9 +58,7 @@ public class Init_LinkCrawler {
 
 		cal = Calendar.getInstance();
 
-		filename = url.replace(".", "_").replace("http://", "").replace("/",  "_") + "_" + (cal.get(Calendar.MONTH) + 1) + "_"
-				+ cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.HOUR) + "_"
-				+ cal.get(Calendar.MINUTE) + ".txt";
+		filename = url_escaped + ".txt";
 		path_to_file = crawlStorageFolder + filename;
 
 		JSONObject obj = new JSONObject();
