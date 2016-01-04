@@ -112,7 +112,7 @@ public class Analyzer {
 		System.out.println("End iterating over Wordmap");
 	}
 
-	private HashMap<String, Integer> calculateWordMap(String input) {
+	public HashMap<String, Integer> calculateWordMap(String input) {
 		filterwords = rf.readWords();
 
 		HashMap<String, Integer> wordmap = new HashMap<String, Integer>();

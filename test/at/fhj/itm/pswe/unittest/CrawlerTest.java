@@ -1,4 +1,4 @@
-package at.fhj.itm.pswe.test;
+package at.fhj.itm.pswe.unittest;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
