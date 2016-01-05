@@ -37,16 +37,6 @@ public class ActionEndpoint {
 		System.out.println("ID: " + id);
 		Website ws = em.find(Website.class, id);
 
-		/*
-		 * Word w=new Word(); w.setActive(true); w.setText("hello");
-		 * //em.persist(w); Container c= new Container(); c.setAmount(10);
-		 * c.setWord(w); c.setLogDate("01.10.2015"); c.setWebsite(ws);
-		 * 
-		 * em.persist(c);
-		 */
-
-		// tb.executeCrawl(ws.getDomain(), 2);
-
 		mc.setDepth(2);
 		mc.setUrl(ws.getDomain());
 		System.out.println("MC: " + mc.getUrl());

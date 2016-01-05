@@ -1,15 +1,9 @@
 package at.fhj.itm.pswe.rest;
 
 import java.util.Iterator;
-import java.util.List;
 
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
-import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -17,20 +11,15 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import at.fhj.itm.pswe.dao.WordDao;
-import at.fhj.itm.pswe.model.Word;
 
 @Stateless
 @Path("/word")
 public class WordEndpoint {
-	@PersistenceContext(unitName = "TermStatistics")
-	private EntityManager em;
-	
 	
 	private WordDao wDao;
 	
@@ -45,25 +34,6 @@ public class WordEndpoint {
 	}
 
 	
-	
-	
-
-	/*
-	 * @GET
-	 * 
-	 * @Produces("application/json") public List<Word>
-	 * listAll(@QueryParam("start") Integer startPosition, @QueryParam("max")
-	 * Integer maxResult) { TypedQuery<Word> findAllQuery = em.createQuery(
-	 * "SELECT DISTINCT w FROM Word w ORDER BY w.text", Word.class);
-	 * 
-	 * if (startPosition != null) { findAllQuery.setFirstResult(startPosition);
-	 * } if (maxResult != null) { findAllQuery.setMaxResults(maxResult); }
-	 * 
-	 * final List<Word> results = findAllQuery.getResultList(); return results;
-	 * }
-	 */
-
-
 	/**
 	 * Get all Words from all Websites with the actual word, active status and
 	 * amount
