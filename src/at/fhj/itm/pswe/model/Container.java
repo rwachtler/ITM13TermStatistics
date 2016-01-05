@@ -31,9 +31,6 @@ public class Container implements Serializable {
 	@Column(name = "log_date")
 	private String logDate;
 
-	@Column(name = "url")
-	private String url;
-
 	// bi-directional many-to-one association to Website
 	@ManyToOne
 	@JoinColumn(name = "fk_website")
@@ -43,12 +40,21 @@ public class Container implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "fk_word")
 	private Word word;
+	
+	// bi-directional many-to-one association to Article
+	@ManyToOne
+	@JoinColumn(name = "fk_article")
+	private Article article;
 
 	public Container() {
 	}
 
 	public int getId() {
 		return this.id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
 	}
 
 	public int getAmount() {
@@ -83,12 +89,12 @@ public class Container implements Serializable {
 		this.word = word;
 	}
 
-	public String getUrl() {
-		return url;
+	public Article getArticle() {
+		return article;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
+	public void setArticle(Article article) {
+		this.article = article;
 	}
 
 }

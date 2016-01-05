@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 /**
@@ -23,12 +25,10 @@ public class Word implements Serializable {
 	@Column(name = "active")
 	private boolean active;
 
-	// bi-directional many-to-one association to Container
-	/*
-	 * @OneToMany(mappedBy="word")
-	 * 
-	 * @Column(name="containers") private List<Container> containers;
-	 */
+	// bi-directional many-to-one association to Wordtype
+	@ManyToOne
+	@JoinColumn(name = "fk_wordtype")
+	private Wordtype wordtype;
 
 	public Word() {
 	}
@@ -49,21 +49,12 @@ public class Word implements Serializable {
 		this.active = active;
 	}
 
-	/*
-	 * public List<Container> getContainers() { return this.containers; }
-	 * 
-	 * public void setContainers(List<Container> containers) { this.containers =
-	 * containers; }
-	 * 
-	 * public Container addContainer(Container container) {
-	 * getContainers().add(container); container.setWord(this);
-	 * 
-	 * return container; }
-	 * 
-	 * public Container removeContainer(Container container) {
-	 * getContainers().remove(container); container.setWord(null);
-	 * 
-	 * return container; }
-	 */
+	public Wordtype getWordtype() {
+		return wordtype;
+	}
+
+	public void setWordtype(Wordtype wordtype) {
+		this.wordtype = wordtype;
+	}
 
 }

@@ -7,6 +7,8 @@
 		<class>at.fhj.itm.pswe.model.Container</class>
 		<class>at.fhj.itm.pswe.model.Website</class>
 		<class>at.fhj.itm.pswe.model.Word</class>
+		<class>at.fhj.itm.pswe.model.Article</class>
+		<class>at.fhj.itm.pswe.model.Wordtype</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
       	<properties>
 	         <!-- Properties for Hibernate -->

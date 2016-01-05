@@ -20,6 +20,7 @@ import javax.persistence.Query;
 
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
+import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.Word;
@@ -89,6 +90,14 @@ public class Analyzer {
 				// Need to persist so that it is available for newCont later on
 				em.persist(wo);
 			}
+			
+			Article ar = em.find(Article.class, url);
+			
+			if (ar == null){
+				ar = new Article();
+				ar.setUrl(url);
+				em.persist(ar);
+			}
 
 			// TODO refactoring -> DATE aus parameter benutzenn, wenn richtig
 			// formatiert
@@ -105,7 +114,7 @@ public class Analyzer {
 			newCont.setWord(wo);
 			newCont.setLogDate(dateString);
 			newCont.setWebsite(newWebsite);
-			newCont.setUrl(url);
+			newCont.setArticle(ar);
 			em.persist(newCont);
 		}
 
