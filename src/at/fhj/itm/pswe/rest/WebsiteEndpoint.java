@@ -20,6 +20,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import at.fhj.itm.pswe.dao.WebsiteDao;
+import at.fhj.itm.pswe.dao.interfaces.IWebsite;
 import at.fhj.itm.pswe.model.Website;
 
 @Stateless
@@ -28,14 +29,14 @@ public class WebsiteEndpoint {
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
-	private WebsiteDao wDao;
+	private IWebsite wDao;
 	
 	/**
 	 * Setter Injection to make testing easier
 	 * @param wDao
 	 */
 	@Inject
-	public void setwDao(WebsiteDao wDao) {
+	public void setwDao(IWebsite wDao) {
 		this.wDao = wDao;
 	}
 

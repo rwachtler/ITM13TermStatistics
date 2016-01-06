@@ -10,10 +10,11 @@ import javax.persistence.Query;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import at.fhj.itm.pswe.dao.interfaces.IWord;
 import at.fhj.itm.pswe.model.Word;
 
 @Stateless
-public class WordDao {
+public class WordDao implements IWord {
 
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
@@ -23,6 +24,7 @@ public class WordDao {
 	 * Finds all words of all websites and additionally the amount and the status
 	 * @return JSONArray of JSONObject of Word-Texxt,Amount and active
 	 */
+	@Override
 	public JSONArray wordAndAmount(){
 		
 		
@@ -52,6 +54,7 @@ public class WordDao {
 	 * @param word String
 	 * @return JSONArray
 	 */
+	@Override
 	public JSONArray sitesOfWord(String word){
 		Query q = em.createQuery("SELECT c.website.id, c.website.domain, sum(c.amount) "
 				+ "FROM Container c WHERE c.word.text LIKE :word AND c.word.active = TRUE "
@@ -80,6 +83,7 @@ public class WordDao {
 	 * @param word String of word
 	 * @param active boolean
 	 */
+	@Override
 	public void changeWordActive(String word, boolean active){
 		Word wo = em.find(Word.class, word);
 		wo.setActive(active);
@@ -94,6 +98,7 @@ public class WordDao {
 	 *            word, where the information is desired
 	 * @return JSONData from the desired word
 	 */
+	@Override
 	public JSONObject findSingleWordWithAmount(String word) {
 		List<Object[]> queryResult = em
 				.createQuery(
@@ -117,6 +122,7 @@ public class WordDao {
 	 * @param enddate
 	 * @return
 	 */
+	@Override
 	public JSONArray wordCountOverPeriod(String word, String startdate, String enddate){
 		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) FROM Container co "
 				+ "WHERE co.word.text = :word AND (co.logDate BETWEEN :startdate AND :enddate) "

@@ -1,5 +1,8 @@
 package at.fhj.itm.pswe.dao;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -8,13 +11,15 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
+import org.apache.tika.parser.iwork.IWorkPackageParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import at.fhj.itm.pswe.dao.interfaces.IWebsite;
 import at.fhj.itm.pswe.model.Website;
 
 @Stateless
-public class WebsiteDao {
+public class WebsiteDao implements IWebsite {
 
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
@@ -27,6 +32,7 @@ public class WebsiteDao {
 	 * @param description
 	 * @param depth
 	 */
+	@Override
 	public Website createWebsite(String address, String description, int depth){
 		// Create Website object
 		Website ws = new Website();
@@ -34,6 +40,7 @@ public class WebsiteDao {
 		ws.setDescription(description);
 		ws.setCrawldepth(depth);
 		ws.setActive(true);
+		ws.setLast_crawldate(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
 
 		// Save to DB
 		em.persist(ws);
@@ -42,7 +49,7 @@ public class WebsiteDao {
 		return ws;
 	}
 
-	
+	@Override
 	public JSONArray findAllWebsites(){
 		TypedQuery<Website> findAllQuery = em.createQuery("SELECT DISTINCT w FROM Website w ORDER BY w.id",
 				Website.class);
@@ -61,14 +68,14 @@ public class WebsiteDao {
 		return result;
 	}
 	
-	
+	@Override
 	public Website updateWebsite(Website ws){
 		em.merge(ws);
 		em.flush();
 		
 		return ws;
 	}
-	
+	@Override
 	public void deleteWebsite(int id){
 		Website ws = em.find(Website.class, id);
 		em.remove(ws);
@@ -85,6 +92,7 @@ public class WebsiteDao {
 	 *            maximal amount of words
 	 * @return JSONArray of desired Words of a Website
 	 */
+	@Override
 	public JSONArray findWordsOFSite(int id, int maxNum) {
 		Query q = em.createQuery("SELECT c.word.text, sum(c.amount)  "
 				+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
@@ -124,6 +132,7 @@ public class WebsiteDao {
 	 *            Date where the last dataset should end
 	 * @return JSONArray of desired Data
 	 */
+	@Override
 	public JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate) {
 
 		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) " + "FROM Container co "
@@ -148,6 +157,9 @@ public class WebsiteDao {
 
 		return result;
 	}
+
+
+	
 
 	
 	

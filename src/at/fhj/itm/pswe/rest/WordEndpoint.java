@@ -16,12 +16,13 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import at.fhj.itm.pswe.dao.WordDao;
+import at.fhj.itm.pswe.dao.interfaces.IWord;
 
 @Stateless
 @Path("/word")
 public class WordEndpoint {
 	
-	private WordDao wDao;
+	private IWord wDao;
 	
 
 	/**
@@ -29,7 +30,7 @@ public class WordEndpoint {
 	 * @param wDao
 	 */
 	@Inject
-	public void setwDao(WordDao wDao) {
+	public void setwDao(IWord wDao) {
 		this.wDao = wDao;
 	}
 
