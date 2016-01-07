@@ -1,8 +1,5 @@
 package at.fhj.itm.pswe.dao;
 
-import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -11,7 +8,6 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
-import org.apache.tika.parser.iwork.IWorkPackageParser;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -24,36 +20,45 @@ public class WebsiteDao implements IWebsite {
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
-
-
 	/**
 	 * Create new Website Object in DB
+	 * 
 	 * @param address
 	 * @param description
 	 * @param depth
 	 */
 	@Override
-	public Website createWebsite(String address, String description, int depth){
+	public Website createWebsite(String address, String description, int depth) {
 		// Create Website object
 		Website ws = new Website();
 		ws.setDomain(address);
 		ws.setDescription(description);
 		ws.setCrawldepth(depth);
 		ws.setActive(true);
-		ws.setLast_crawldate(new SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
+
+		ws.setLast_crawldate("1970-01-01");
+
+		// Actual Date for later use
+		// ws.setLast_crawldate(new
+		// SimpleDateFormat("yyyy-MM-dd").format(Calendar.getInstance().getTime()));
 
 		// Save to DB
 		em.persist(ws);
 		em.flush();
-		
+
 		return ws;
 	}
 
 	@Override
-	public JSONArray findAllWebsites(){
+	public List<Website> findAllWebsites() {
 		TypedQuery<Website> findAllQuery = em.createQuery("SELECT DISTINCT w FROM Website w ORDER BY w.id",
 				Website.class);
-		final List<Website> queryResult = findAllQuery.getResultList();
+		return findAllQuery.getResultList();
+	}
+
+	@Override
+	public JSONArray findAllWebsitesJSON() {
+		final List<Website> queryResult = findAllWebsites();
 		JSONArray result = new JSONArray();
 
 		for (Website ws : queryResult) {
@@ -67,22 +72,21 @@ public class WebsiteDao implements IWebsite {
 		}
 		return result;
 	}
-	
+
 	@Override
-	public Website updateWebsite(Website ws){
+	public Website updateWebsite(Website ws) {
 		em.merge(ws);
 		em.flush();
-		
+
 		return ws;
 	}
+
 	@Override
-	public void deleteWebsite(int id){
+	public void deleteWebsite(int id) {
 		Website ws = em.find(Website.class, id);
 		em.remove(ws);
 	}
-	
-	
-	
+
 	/**
 	 * Get a specific amount of words from a Website by its id
 	 * 
@@ -117,7 +121,7 @@ public class WebsiteDao implements IWebsite {
 		return result;
 
 	}
-	
+
 	/**
 	 * Helper method for "countSiteOverPeriod" to get all Words from a given
 	 * Website in a specific period of time
@@ -158,12 +162,4 @@ public class WebsiteDao implements IWebsite {
 		return result;
 	}
 
-
-	
-
-	
-	
-	
-	
-	
 }

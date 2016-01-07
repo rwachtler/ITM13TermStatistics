@@ -34,7 +34,7 @@ public class Website implements Serializable {
 
 	@Column(name = "crawldepth")
 	private int crawldepth;
-	
+
 	@Column(name = "crawldate")
 	private String last_crawldate;
 

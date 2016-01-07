@@ -40,7 +40,7 @@ public class Container implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "fk_word")
 	private Word word;
-	
+
 	// bi-directional many-to-one association to Article
 	@ManyToOne
 	@JoinColumn(name = "fk_article")
@@ -52,7 +52,7 @@ public class Container implements Serializable {
 	public int getId() {
 		return this.id;
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}

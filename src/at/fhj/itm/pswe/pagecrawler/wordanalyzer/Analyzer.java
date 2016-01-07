@@ -90,14 +90,31 @@ public class Analyzer {
 				// Need to persist so that it is available for newCont later on
 				em.persist(wo);
 			}
-			
-			Article ar = em.find(Article.class, url);
-			
-			if (ar == null){
-				ar = new Article();
-				ar.setUrl(url);
-				em.persist(ar);
+
+			// TODO Check if Article is in Database and persist if not.
+			// If already in Database, connect word with article through
+			// container
+
+			// Get Article, if already in Database
+			Query q = em.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url").setParameter("url", url);
+
+			List<Object[]> queryResults = q.getResultList();
+
+			int arr = 0;
+			int obj = 0;
+			for (Object[] or : queryResults) {
+				// if article in Database, just map word with article
+				for (Object o : or) {
+					System.out.println("arr: " + arr + " in " + obj + " :" + o);
+					obj++;
+				}
+				arr++;
 			}
+
+			// if article not in database, persist it
+			Article ar = new Article();
+			ar.setUrl(url);
+			em.persist(ar);
 
 			// TODO refactoring -> DATE aus parameter benutzenn, wenn richtig
 			// formatiert

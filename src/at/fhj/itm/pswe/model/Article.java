@@ -28,7 +28,7 @@ public class Article implements Serializable {
 
 	public Article() {
 	}
-	
+
 	public void setId(int id) {
 		this.id = id;
 	}
@@ -36,7 +36,7 @@ public class Article implements Serializable {
 	public int getId() {
 		return this.id;
 	}
-	
+
 	public String getUrl() {
 		return url;
 	}

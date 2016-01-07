@@ -18,16 +18,16 @@ public class WordDao implements IWord {
 
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
-	
-		
+
 	/**
-	 * Finds all words of all websites and additionally the amount and the status
+	 * Finds all words of all websites and additionally the amount and the
+	 * status
+	 * 
 	 * @return JSONArray of JSONObject of Word-Texxt,Amount and active
 	 */
 	@Override
-	public JSONArray wordAndAmount(){
-		
-		
+	public JSONArray wordAndAmount() {
+
 		List<Object[]> queryResult = em
 				.createQuery(
 						"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
@@ -43,19 +43,20 @@ public class WordDao implements IWord {
 
 			result.put(temp);
 		}
-		
+
 		return result;
 	}
-	
-	
+
 	/**
-	 * Finds the corresponding website and the found amount on the website
-	 * of one word
-	 * @param word String
+	 * Finds the corresponding website and the found amount on the website of
+	 * one word
+	 * 
+	 * @param word
+	 *            String
 	 * @return JSONArray
 	 */
 	@Override
-	public JSONArray sitesOfWord(String word){
+	public JSONArray sitesOfWord(String word) {
 		Query q = em.createQuery("SELECT c.website.id, c.website.domain, sum(c.amount) "
 				+ "FROM Container c WHERE c.word.text LIKE :word AND c.word.active = TRUE "
 				+ "GROUP BY c.website ORDER BY sum(c.amount) DESC").setParameter("word", word);
@@ -74,23 +75,26 @@ public class WordDao implements IWord {
 
 			result.put(temp);
 		}
-		
+
 		return result;
-		
+
 	}
+
 	/**
 	 * Toggle active/inactive state of one specific word
-	 * @param word String of word
-	 * @param active boolean
+	 * 
+	 * @param word
+	 *            String of word
+	 * @param active
+	 *            boolean
 	 */
 	@Override
-	public void changeWordActive(String word, boolean active){
+	public void changeWordActive(String word, boolean active) {
 		Word wo = em.find(Word.class, word);
 		wo.setActive(active);
-		
-		
+
 	}
-	
+
 	/**
 	 * Helper method for "editWord" to get all informations of a desired word
 	 * 
@@ -113,17 +117,17 @@ public class WordDao implements IWord {
 		}
 		return result;
 	}
-	
-	
+
 	/**
 	 * Finds and counts all words for a specific period of time
+	 * 
 	 * @param word
 	 * @param startdate
 	 * @param enddate
 	 * @return
 	 */
 	@Override
-	public JSONArray wordCountOverPeriod(String word, String startdate, String enddate){
+	public JSONArray wordCountOverPeriod(String word, String startdate, String enddate) {
 		Query countWordPeriod = em.createQuery("SELECT co.logDate, SUM(co.amount) FROM Container co "
 				+ "WHERE co.word.text = :word AND (co.logDate BETWEEN :startdate AND :enddate) "
 				+ "GROUP BY co.logDate");
@@ -144,9 +148,8 @@ public class WordDao implements IWord {
 
 			result.put(temp);
 		}
-		
+
 		return result;
 	}
-	
-	
+
 }

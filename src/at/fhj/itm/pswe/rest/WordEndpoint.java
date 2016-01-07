@@ -15,18 +15,17 @@ import javax.ws.rs.core.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import at.fhj.itm.pswe.dao.WordDao;
 import at.fhj.itm.pswe.dao.interfaces.IWord;
 
 @Stateless
 @Path("/word")
 public class WordEndpoint {
-	
+
 	private IWord wDao;
-	
 
 	/**
 	 * Setter Injection to make testing easier
+	 * 
 	 * @param wDao
 	 */
 	@Inject
@@ -34,7 +33,6 @@ public class WordEndpoint {
 		this.wDao = wDao;
 	}
 
-	
 	/**
 	 * Get all Words from all Websites with the actual word, active status and
 	 * amount
@@ -62,7 +60,6 @@ public class WordEndpoint {
 	@Path("/{word}/websites")
 	@Produces("application/json")
 	public Response sitesOfWord(@PathParam("word") String word) {
-		
 
 		JSONObject my = new JSONObject();
 		my.put("data", wDao.sitesOfWord(word));
@@ -81,7 +78,7 @@ public class WordEndpoint {
 	@Produces("application/json")
 	@Consumes("application/json")
 	public Response editWord(String incoming) {
-		
+
 		JSONObject json = new JSONObject(incoming);
 
 		// Get first key which is ID
@@ -91,7 +88,7 @@ public class WordEndpoint {
 			id = keys.next(); // First key in your json object
 		}
 
-		//Update Object in DAO		
+		// Update Object in DAO
 		if (json.getJSONObject(id).getJSONArray("active").length() == 0)
 			wDao.changeWordActive(id, false);
 		else
@@ -103,7 +100,6 @@ public class WordEndpoint {
 		// Add info for Return object
 		return Response.ok(output.toString()).build();
 	}
-
 
 	/**
 	 * Ein Wort auf vorkommenden Seiten mit Anzahl und Datum mit Zeituebergabe
@@ -124,8 +120,6 @@ public class WordEndpoint {
 	@Produces("application/json")
 	public Response countWordOverPeriod(@PathParam("word") String word, @PathParam("startdate") String startdate,
 			@PathParam("enddate") String enddate) {
-		
-		
 
 		JSONObject my = new JSONObject();
 		my.put(word, wDao.wordCountOverPeriod(word, startdate, enddate));

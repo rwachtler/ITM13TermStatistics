@@ -27,10 +27,10 @@ public class Init_LinkCrawler {
 		cal = Calendar.getInstance();
 		Date start_date = cal.getTime();
 
-		url_escaped = url.replace(".", "_").replace("http://", "").replace("/",  "_") + "_" + (cal.get(Calendar.MONTH) + 1) + "_"
-				+ cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.HOUR) + "_"
-				+ cal.get(Calendar.MINUTE);
-		
+		url_escaped = url.replace(".", "_").replace("http://", "").replace("/", "_") + "_"
+				+ (cal.get(Calendar.MONTH) + 1) + "_" + cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR)
+				+ "-" + cal.get(Calendar.HOUR) + "_" + cal.get(Calendar.MINUTE);
+
 		// Add to Project Root folders result/crawl where our result.txt is
 		// saved
 		crawlStorageFolder = "./result/crawl/" + url_escaped + "/";
