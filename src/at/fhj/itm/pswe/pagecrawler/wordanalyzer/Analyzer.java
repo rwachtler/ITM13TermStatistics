@@ -24,6 +24,7 @@ import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.Word;
+import at.fhj.itm.pswe.model.Wordtype;
 
 @Stateless
 @LocalBean
@@ -79,7 +80,7 @@ public class Analyzer {
 			int count = (int) pair.getValue();
 
 			Word wo = em.find(Word.class, word);
-			System.out.println("WORD: " + word);
+			// System.out.println("WORD: " + word);
 
 			// check if word exists in the database
 			if (wo == null) {
@@ -87,34 +88,31 @@ public class Analyzer {
 				wo = new Word();
 				wo.setActive(true);
 				wo.setText(word);
+
+				// DB Wordtype for "unknown"
+				Wordtype wt = em.find(Wordtype.class, 1);
+				wo.setWordtype(wt);
 				// Need to persist so that it is available for newCont later on
 				em.persist(wo);
 			}
-
-			// TODO Check if Article is in Database and persist if not.
-			// If already in Database, connect word with article through
-			// container
 
 			// Get Article, if already in Database
 			Query q = em.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url").setParameter("url", url);
 
 			List<Object[]> queryResults = q.getResultList();
 
-			int arr = 0;
-			int obj = 0;
-			for (Object[] or : queryResults) {
-				// if article in Database, just map word with article
-				for (Object o : or) {
-					System.out.println("arr: " + arr + " in " + obj + " :" + o);
-					obj++;
-				}
-				arr++;
-			}
+			Article ar = null;
 
-			// if article not in database, persist it
-			Article ar = new Article();
-			ar.setUrl(url);
-			em.persist(ar);
+			if (queryResults.size() == 0) {
+				// if article not in database, persist it
+				System.out.println("Add Article: " + url);
+				ar = new Article();
+				ar.setUrl(url);
+				em.persist(ar);
+			} else {
+				// else get the one from Database
+				ar = em.find(Article.class, queryResults.get(0)[0]);
+			}
 
 			// TODO refactoring -> DATE aus parameter benutzenn, wenn richtig
 			// formatiert
