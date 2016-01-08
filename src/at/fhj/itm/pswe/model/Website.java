@@ -36,7 +36,7 @@ public class Website implements Serializable {
 	private int crawldepth;
 
 	@Column(name = "crawldate")
-	private String last_crawldate;
+	private String crawldate;
 
 	public int getCrawldepth() {
 		return crawldepth;
@@ -82,11 +82,11 @@ public class Website implements Serializable {
 	}
 
 	public String getLast_crawldate() {
-		return last_crawldate;
+		return crawldate;
 	}
 
 	public void setLast_crawldate(String last_crawldate) {
-		this.last_crawldate = last_crawldate;
+		this.crawldate = last_crawldate;
 	}
 
 }
