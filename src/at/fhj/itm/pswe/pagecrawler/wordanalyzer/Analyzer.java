@@ -24,6 +24,7 @@ import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.Word;
+import at.fhj.itm.pswe.model.WordlistEntry;
 import at.fhj.itm.pswe.model.Wordtype;
 
 @Stateless
@@ -88,10 +89,42 @@ public class Analyzer {
 				wo = new Word();
 				wo.setActive(true);
 				wo.setText(word);
+				
+				// look up word type in the wordlist
+				String wordtype;
+				
+				Query q = em.createQuery("SELECT wl FROM WordlistEntry wl WHERE wl.word = :word").setParameter("word", word);
 
-				// DB Wordtype for "unknown"
-				Wordtype wt = em.find(Wordtype.class, 1);
+				List<WordlistEntry> queryResults = q.getResultList();
+
+				if (queryResults.size() == 0) {
+					// word not found in wordlist --> we set it to unknown
+					wordtype = "unknown";
+				} else {
+					// we use the wordtype found in the wordlist
+					wordtype = queryResults.get(0).getWordtype();
+				}
+				
+				// look up the word type in our own wordtype table
+				Wordtype wt;
+				
+				Query wordTypeQuery = em.createQuery("SELECT wt FROM Wordtype wt WHERE wt.texttype = :wordtype").setParameter("wordtype", wordtype);
+				
+				List<Wordtype> wordTypeQueryResults = wordTypeQuery.getResultList();
+				
+				if (wordTypeQueryResults.size() == 0) {
+					// wordtype not found --> we add it
+					wt = new Wordtype();
+					wt.setTexttype(wordtype);
+					
+					em.persist(wt);
+				} else {
+					// wordtype found --> we can use it
+					wt = wordTypeQueryResults.get(0);
+				}
+
 				wo.setWordtype(wt);
+				
 				// Need to persist so that it is available for newCont later on
 				em.persist(wo);
 			}

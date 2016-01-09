@@ -9,6 +9,7 @@
 		<class>at.fhj.itm.pswe.model.Word</class>
 		<class>at.fhj.itm.pswe.model.Article</class>
 		<class>at.fhj.itm.pswe.model.Wordtype</class>
+		<class>at.fhj.itm.pswe.model.WordlistEntry</class>
 		<exclude-unlisted-classes>false</exclude-unlisted-classes>
       	<properties>
 	         <!-- Properties for Hibernate -->
