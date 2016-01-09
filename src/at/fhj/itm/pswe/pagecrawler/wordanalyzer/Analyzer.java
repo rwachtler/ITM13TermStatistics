@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
@@ -21,15 +22,17 @@ import javax.persistence.Query;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import at.fhj.itm.pswe.model.Article;
+import at.fhj.itm.pswe.model.ArticleStat;
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
+import at.fhj.itm.pswe.model.WebsiteStat;
 import at.fhj.itm.pswe.model.Word;
 import at.fhj.itm.pswe.model.Wordtype;
 
 @Stateless
 @LocalBean
 public class Analyzer {
-
+	
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
@@ -67,8 +70,13 @@ public class Analyzer {
 
 	private void persistData(String url, String data, Website newWebsite, String currentDate) {
 
+		// Timestamp before starting analyzing article
+		long articleStartTime = System.currentTimeMillis();
+		
 		this.wordMap = this.calculateWordMap(data);
 		Iterator<Map.Entry<String, Integer>> it = this.wordMap.entrySet().iterator();
+		
+		Article ar = null;
 
 		System.out.println("Start iterate over Wordmap");
 		while (it.hasNext()) {
@@ -101,8 +109,6 @@ public class Analyzer {
 
 			List<Object[]> queryResults = q.getResultList();
 
-			Article ar = null;
-
 			if (queryResults.size() == 0) {
 				// if article not in database, persist it
 				System.out.println("Add Article: " + url);
@@ -133,6 +139,16 @@ public class Analyzer {
 			em.persist(newCont);
 		}
 
+		// Output of time from analyzing
+		System.out.println("Time of Analyzing Article:");
+		System.out.println(System.currentTimeMillis() - articleStartTime);
+		// Persist articleStat 
+		ArticleStat articleStat = new ArticleStat();
+		articleStat.setAnalyzeDuration(System.currentTimeMillis() - articleStartTime);
+		articleStat.setArticle(ar);
+		articleStat.setLogDate(DATE);
+		em.persist(articleStat);
+		
 		System.out.println("End iterating over Wordmap");
 	}
 
@@ -148,7 +164,7 @@ public class Analyzer {
 			// remove punctuation from start and end of word
 			// according to:
 			// http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
-			word = word.replaceFirst("^[^a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+", "").replaceAll("[^a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+$", "").trim();
+			word = word.replaceFirst("^[^a-zA-ZÖöÄäÜü]+", "").replaceAll("[^a-zA-ZÖöÄäÜü]+$", "").trim();
 
 			if (!word.isEmpty()) {
 				boolean isForbidden = false;
@@ -183,12 +199,14 @@ public class Analyzer {
 	@TransactionTimeout(3600)
 	public void readResultFile(String path) {
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
+			String crawlerDuration = "";
 			// Read Start Page
 			String line = br.readLine();
 			String website = line;
 			// Read Start Date
 			line = br.readLine();
 			String currentdate = line;
+			DATE = currentdate;
 
 			// Get Current Root Domain only once, pass it further
 
@@ -204,15 +222,19 @@ public class Analyzer {
 
 			int count = 0;
 
+			// Get Timestamp before starting analyzing
+			long analyzerStartTime = System.currentTimeMillis();
+			
 			// Start with analyzing data
 			while (true) {
 				String url = br.readLine();
 				System.out.println("URL: " + url + "|");
 				String data = br.readLine();
 				count++;
-				if (data == null)
+				if (data == null) {
+					crawlerDuration = url;
 					break;
-				else {
+				} else {
 					try {
 						persistData(url, data, newWebsite, currentdate);
 						// flush to db every 20 words
@@ -227,6 +249,22 @@ public class Analyzer {
 					}
 				}
 			}
+			// Output of time from analyzing
+			System.out.println("Time of Analyzing:");
+			System.out.println(System.currentTimeMillis() - analyzerStartTime);
+			// Persist websiteStat
+			WebsiteStat websiteStat = new WebsiteStat();
+			websiteStat.setAnalyzeDuration(System.currentTimeMillis() - analyzerStartTime);
+			// Convert Time into millis
+			Long durationMillis = 0L;
+			for(String s:crawlerDuration.split("[:]")){
+				durationMillis += TimeUnit.SECONDS.toMillis(Long.valueOf(s));
+			}
+			websiteStat.setCrawlDuration(durationMillis);
+			websiteStat.setLogDate(DATE);
+			websiteStat.setWebsite(newWebsite);
+			em.persist(websiteStat);
+			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

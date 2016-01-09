@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The persistent class for the container database table.
+ * The persistent class for the article database table.
  * 
  */
 @Entity
