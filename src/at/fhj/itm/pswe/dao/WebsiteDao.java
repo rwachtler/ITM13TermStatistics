@@ -75,6 +75,15 @@ public class WebsiteDao implements IWebsite {
 
 	@Override
 	public Website updateWebsite(Website ws) {
+		
+		// Get Website, if already in Database
+		Query q = em.createQuery("SELECT w.id, w.crawldate FROM Website w WHERE w.domain = :domain").setParameter("domain", ws.getDomain());
+		
+		List<Object[]> queryResults = q.getResultList();
+		
+		ws.setId((int) queryResults.get(0)[0]);
+		ws.setLast_crawldate((String) queryResults.get(0)[1]);
+		
 		em.merge(ws);
 		em.flush();
 

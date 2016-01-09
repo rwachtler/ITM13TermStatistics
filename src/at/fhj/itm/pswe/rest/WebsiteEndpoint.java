@@ -184,6 +184,8 @@ public class WebsiteEndpoint {
 			id = keys.next(); // First key in your json object
 		}
 
+		System.out.println("Edit-JSON-Object: " + json.getJSONObject(id).toString());
+		
 		// Update and Save object
 		Website ws = new Website();
 		ws.setDomain(json.getJSONObject(id).getString("address"));
@@ -195,7 +197,7 @@ public class WebsiteEndpoint {
 		} else {
 			ws.setActive(true);
 		}
-
+		
 		Website wsOut = wDao.updateWebsite(ws);
 
 		JSONObject output = new JSONObject();
@@ -206,6 +208,8 @@ public class WebsiteEndpoint {
 
 		// Add info for Return object
 		System.out.println("JSON: " + output.toString());
+		
+		
 		return Response.ok(output.toString()).build();
 	}
 
