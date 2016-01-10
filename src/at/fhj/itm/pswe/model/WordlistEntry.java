@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -24,10 +22,10 @@ public class WordlistEntry implements Serializable {
 
 	@Column(name = "Wort")
 	private String word;
-	
+
 	@Column(name = "Worttyp")
 	private String wordtype;
-	
+
 	@Column(name = "Geschlecht")
 	private String sex;
 

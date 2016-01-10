@@ -33,7 +33,7 @@ import at.fhj.itm.pswe.model.Wordtype;
 @Stateless
 @LocalBean
 public class Analyzer {
-	
+
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
@@ -73,10 +73,10 @@ public class Analyzer {
 
 		// Timestamp before starting analyzing article
 		long articleStartTime = System.currentTimeMillis();
-		
+
 		this.wordMap = this.calculateWordMap(data);
 		Iterator<Map.Entry<String, Integer>> it = this.wordMap.entrySet().iterator();
-		
+
 		Article ar = null;
 
 		System.out.println("Start iterate over Wordmap");
@@ -97,11 +97,12 @@ public class Analyzer {
 				wo = new Word();
 				wo.setActive(true);
 				wo.setText(word);
-				
+
 				// look up word type in the wordlist
 				String wordtype;
-				
-				Query q = em.createQuery("SELECT wl FROM WordlistEntry wl WHERE wl.word = :word").setParameter("word", word);
+
+				Query q = em.createQuery("SELECT wl FROM WordlistEntry wl WHERE wl.word = :word").setParameter("word",
+						word);
 
 				List<WordlistEntry> queryResults = q.getResultList();
 
@@ -112,19 +113,20 @@ public class Analyzer {
 					// we use the wordtype found in the wordlist
 					wordtype = queryResults.get(0).getWordtype();
 				}
-				
+
 				// look up the word type in our own wordtype table
 				Wordtype wt;
-				
-				Query wordTypeQuery = em.createQuery("SELECT wt FROM Wordtype wt WHERE wt.texttype = :wordtype").setParameter("wordtype", wordtype);
-				
+
+				Query wordTypeQuery = em.createQuery("SELECT wt FROM Wordtype wt WHERE wt.texttype = :wordtype")
+						.setParameter("wordtype", wordtype);
+
 				List<Wordtype> wordTypeQueryResults = wordTypeQuery.getResultList();
-				
+
 				if (wordTypeQueryResults.size() == 0) {
 					// wordtype not found --> we add it
 					wt = new Wordtype();
 					wt.setTexttype(wordtype);
-					
+
 					em.persist(wt);
 				} else {
 					// wordtype found --> we can use it
@@ -132,7 +134,7 @@ public class Analyzer {
 				}
 
 				wo.setWordtype(wt);
-				
+
 				// Need to persist so that it is available for newCont later on
 				em.persist(wo);
 			}
@@ -175,13 +177,13 @@ public class Analyzer {
 		// Output of time from analyzing
 		System.out.println("Time of Analyzing Article:");
 		System.out.println(System.currentTimeMillis() - articleStartTime);
-		// Persist articleStat 
+		// Persist articleStat
 		ArticleStat articleStat = new ArticleStat();
 		articleStat.setAnalyzeDuration(System.currentTimeMillis() - articleStartTime);
 		articleStat.setArticle(ar);
 		articleStat.setLogDate(DATE);
 		em.persist(articleStat);
-		
+
 		System.out.println("End iterating over Wordmap");
 	}
 
@@ -197,7 +199,7 @@ public class Analyzer {
 			// remove punctuation from start and end of word
 			// according to:
 			// http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
-			word = word.replaceFirst("^[^a-zA-ZÖöÄäÜü]+", "").replaceAll("[^a-zA-ZÖöÄäÜü]+$", "").trim();
+			word = word.replaceFirst("^[^a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+", "").replaceAll("[^a-zA-Zï¿½ï¿½ï¿½ï¿½ï¿½ï¿½]+$", "").trim();
 
 			if (!word.isEmpty()) {
 				boolean isForbidden = false;
@@ -257,7 +259,7 @@ public class Analyzer {
 
 			// Get Timestamp before starting analyzing
 			long analyzerStartTime = System.currentTimeMillis();
-			
+
 			// Start with analyzing data
 			while (true) {
 				String url = br.readLine();
@@ -290,14 +292,14 @@ public class Analyzer {
 			websiteStat.setAnalyzeDuration(System.currentTimeMillis() - analyzerStartTime);
 			// Convert Time into millis
 			Long durationMillis = 0L;
-			for(String s:crawlerDuration.split("[:]")){
+			for (String s : crawlerDuration.split("[:]")) {
 				durationMillis += TimeUnit.SECONDS.toMillis(Long.valueOf(s));
 			}
 			websiteStat.setCrawlDuration(durationMillis);
 			websiteStat.setLogDate(DATE);
 			websiteStat.setWebsite(newWebsite);
 			em.persist(websiteStat);
-			
+
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

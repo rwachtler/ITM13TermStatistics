@@ -30,11 +30,11 @@ public class ArticleStat implements Serializable {
 
 	@Column(name = "analyzeduration")
 	private long analyzeDuration;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fk_article")
 	private Article article;
-	
+
 	public ArticleStat() {
 	}
 

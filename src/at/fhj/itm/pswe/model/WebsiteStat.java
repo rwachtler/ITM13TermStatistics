@@ -30,14 +30,14 @@ public class WebsiteStat implements Serializable {
 
 	@Column(name = "analyzeduration")
 	private long analyzeDuration;
-	
+
 	@Column(name = "crawlduration")
 	private long crawlDuration;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "fk_website")
 	private Website website;
-	
+
 	public WebsiteStat() {
 	}
 

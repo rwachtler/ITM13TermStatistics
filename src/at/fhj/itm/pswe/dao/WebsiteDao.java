@@ -1,5 +1,6 @@
 package at.fhj.itm.pswe.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -12,6 +13,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import at.fhj.itm.pswe.dao.interfaces.IWebsite;
+import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.Website;
 
 @Stateless
@@ -20,13 +22,6 @@ public class WebsiteDao implements IWebsite {
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
-	/**
-	 * Create new Website Object in DB
-	 * 
-	 * @param address
-	 * @param description
-	 * @param depth
-	 */
 	@Override
 	public Website createWebsite(String address, String description, int depth) {
 		// Create Website object
@@ -45,6 +40,29 @@ public class WebsiteDao implements IWebsite {
 		// Save to DB
 		em.persist(ws);
 		em.flush();
+
+		return ws;
+	}
+
+	@Override
+	public Website readWebsite(String url) {
+		Query q = em
+				.createQuery(
+						"SELECT ws.id, ws.domain, ws.last_crawl_date, ws.description, ws.active FROM Website ws WHERE ws.domain = :url")
+				.setParameter("url", url);
+
+		List<Object[]> queryResults = q.getResultList();
+
+		Website ws = new Website();
+		ws.setId((int) queryResults.get(0)[0]);
+		ws.setDomain((String) queryResults.get(0)[1]);
+		ws.setLast_crawldate((String) queryResults.get(0)[2]);
+		ws.setDescription((String) queryResults.get(0)[3]);
+		if ((int) queryResults.get(0)[4] == 0) {
+			ws.setActive(false);
+		} else {
+			ws.setActive(true);
+		}
 
 		return ws;
 	}
@@ -75,15 +93,16 @@ public class WebsiteDao implements IWebsite {
 
 	@Override
 	public Website updateWebsite(Website ws) {
-		
+
 		// Get Website, if already in Database
-		Query q = em.createQuery("SELECT w.id, w.crawldate FROM Website w WHERE w.domain = :domain").setParameter("domain", ws.getDomain());
-		
+		Query q = em.createQuery("SELECT w.id, w.crawldate FROM Website w WHERE w.domain = :domain")
+				.setParameter("domain", ws.getDomain());
+
 		List<Object[]> queryResults = q.getResultList();
-		
+
 		ws.setId((int) queryResults.get(0)[0]);
 		ws.setLast_crawldate((String) queryResults.get(0)[1]);
-		
+
 		em.merge(ws);
 		em.flush();
 
@@ -96,17 +115,8 @@ public class WebsiteDao implements IWebsite {
 		em.remove(ws);
 	}
 
-	/**
-	 * Get a specific amount of words from a Website by its id
-	 * 
-	 * @param id
-	 *            id of the Website
-	 * @param maxNum
-	 *            maximal amount of words
-	 * @return JSONArray of desired Words of a Website
-	 */
 	@Override
-	public JSONArray findWordsOFSite(int id, int maxNum) {
+	public JSONArray findWordsOfSite(int id, int maxNum) {
 		Query q = em.createQuery("SELECT c.word.text, sum(c.amount)  "
 				+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
 				+ "GROUP BY c.word ORDER BY sum(c.amount) DESC").setParameter("id", id);
@@ -131,20 +141,6 @@ public class WebsiteDao implements IWebsite {
 
 	}
 
-	/**
-	 * Helper method for "countSiteOverPeriod" to get all Words from a given
-	 * Website in a specific period of time
-	 * 
-	 * @param siteID
-	 *            id of Website where the data should come from
-	 * @param word
-	 *            word, where data should be collected
-	 * @param startDate
-	 *            Date where the first dataset should start
-	 * @param endDate
-	 *            Date where the last dataset should end
-	 * @return JSONArray of desired Data
-	 */
 	@Override
 	public JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate) {
 
@@ -168,6 +164,40 @@ public class WebsiteDao implements IWebsite {
 			result.put(temp);
 		}
 
+		return result;
+	}
+
+	@Override
+	public List<Article> findAllArticlesOfOneWebsite(int id) {
+		Query q = em.createQuery("SELECT DISTINCT c.article.id, c.article.url "
+				+ "FROM Container c WHERE c.website.id=:id ORDER BY c.article.id").setParameter("id", id);
+
+		List<Object[]> queryResults = q.getResultList();
+
+		ArrayList<Article> list = new ArrayList<>();
+
+		for (Object[] obj : queryResults) {
+			Article ar = new Article();
+			// System.out.println("Obj[0]: " + obj[0] + " | obj[1]: " + obj[1]);
+			ar.setId(Integer.parseInt(obj[0].toString()));
+			ar.setUrl(obj[1].toString());
+			list.add(ar);
+		}
+
+		return list;
+	}
+
+	@Override
+	public JSONArray findAllArticlesOfOneWebsiteJSON(int id) {
+		final List<Article> queryResult = findAllArticlesOfOneWebsite(id);
+		JSONArray result = new JSONArray();
+
+		for (Article ar : queryResult) {
+			JSONObject temp = new JSONObject();
+			temp.put("id", ar.getId());
+			temp.put("url", ar.getUrl());
+			result.put(temp);
+		}
 		return result;
 	}
 

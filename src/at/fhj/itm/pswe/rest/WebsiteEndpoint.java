@@ -106,7 +106,7 @@ public class WebsiteEndpoint {
 	public Response wordsOfSite(@PathParam("id") int id) {
 
 		JSONObject my = new JSONObject();
-		my.put("data", wDao.findWordsOFSite(id, 0));
+		my.put("data", wDao.findWordsOfSite(id, 0));
 
 		return Response.ok(my.toString()).build();
 	}
@@ -126,7 +126,7 @@ public class WebsiteEndpoint {
 	public Response wordsOfSiteNumbered(@PathParam("id") int id, @PathParam("num") int num) {
 
 		JSONObject my = new JSONObject();
-		my.put("data", wDao.findWordsOFSite(id, num));
+		my.put("data", wDao.findWordsOfSite(id, num));
 
 		return Response.ok(my.toString()).build();
 	}
@@ -151,7 +151,7 @@ public class WebsiteEndpoint {
 			@PathParam("enddate") String endDate) {
 
 		// Get top10 words of page
-		JSONArray topwords = wDao.findWordsOFSite(domainID, 10);
+		JSONArray topwords = wDao.findWordsOfSite(domainID, 10);
 		JSONObject output = new JSONObject();
 
 		// for each word, geht timeline
@@ -185,7 +185,7 @@ public class WebsiteEndpoint {
 		}
 
 		System.out.println("Edit-JSON-Object: " + json.getJSONObject(id).toString());
-		
+
 		// Update and Save object
 		Website ws = new Website();
 		ws.setDomain(json.getJSONObject(id).getString("address"));
@@ -197,7 +197,7 @@ public class WebsiteEndpoint {
 		} else {
 			ws.setActive(true);
 		}
-		
+
 		Website wsOut = wDao.updateWebsite(ws);
 
 		JSONObject output = new JSONObject();
@@ -208,8 +208,7 @@ public class WebsiteEndpoint {
 
 		// Add info for Return object
 		System.out.println("JSON: " + output.toString());
-		
-		
+
 		return Response.ok(output.toString()).build();
 	}
 
@@ -238,6 +237,17 @@ public class WebsiteEndpoint {
 
 		// Send empty object on success
 		return Response.ok("{}").build();
+	}
+
+	@GET
+	@Path("/{id:[0-9][0-9]*}/articles")
+	@Produces("application/json")
+	public Response articlesOfSite(@PathParam("id") int id) {
+
+		JSONObject my = new JSONObject();
+		my.put("data", wDao.findAllArticlesOfOneWebsiteJSON(id));
+
+		return Response.ok(my.toString()).build();
 	}
 
 }
