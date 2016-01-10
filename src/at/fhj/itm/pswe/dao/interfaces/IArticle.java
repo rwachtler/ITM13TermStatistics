@@ -48,6 +48,6 @@ public interface IArticle {
 	 * @param maxNum
 	 *            Maximum amount of data
 	 */
-	public JSONArray findWordsOFArticle(int id, int maxNum);
+	public JSONArray findWordsOfArticle(int id, int maxNum);
 
 }

@@ -69,6 +69,10 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 
 ## REST-Calls
 - `/rest/action/crawler/{crawlerid}` -> restart the Crawler for an already safed Website in the Database
+- `/rest/article/{articleid}/words` -> get all words from one article identified by its id with amount
+- `/rest/article/{articleid}/words/{num}` -> get limited number of words (by num) from one article identified by its id with amount 
+- `/rest/website` -> all Websites in the Database
+- `/rest/website/{websiteid}/articles` -> all articles on this website
 - `/rest/website/{websiteid}/words` -> all words an amount on this website
 - `/rest/website/{websiteid}/words/{num}` -> all words an amount on this website, limit amount of words by num
 - `/rest/website/{websiteid}/period/10.11.2015/30.11.2015` -> words of one site in the given period

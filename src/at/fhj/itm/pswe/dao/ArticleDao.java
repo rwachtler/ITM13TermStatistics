@@ -70,7 +70,7 @@ public class ArticleDao implements IArticle {
 	}
 
 	@Override
-	public JSONArray findWordsOFArticle(int id, int maxNum) {
+	public JSONArray findWordsOfArticle(int id, int maxNum) {
 		Query q = em.createQuery("SELECT c.word.text, sum(c.amount)  "
 				+ "FROM Container c WHERE c.article.id=:id AND c.word.active = TRUE "
 				+ "GROUP BY c.word ORDER BY sum(c.amount) DESC").setParameter("id", id);

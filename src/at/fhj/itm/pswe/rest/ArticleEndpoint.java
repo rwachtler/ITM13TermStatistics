@@ -46,7 +46,7 @@ public class ArticleEndpoint {
 	public Response wordsOfArticle(@PathParam("id") int id) {
 
 		JSONObject my = new JSONObject();
-		my.put("data", arDao.findWordsOFArticle(id, 0));
+		my.put("data", arDao.findWordsOfArticle(id, 0));
 
 		return Response.ok(my.toString()).build();
 	}
@@ -66,7 +66,7 @@ public class ArticleEndpoint {
 	public Response wordsOfArticleNumbered(@PathParam("id") int id, @PathParam("num") int num) {
 
 		JSONObject my = new JSONObject();
-		my.put("data", arDao.findWordsOFArticle(id, num));
+		my.put("data", arDao.findWordsOfArticle(id, num));
 
 		return Response.ok(my.toString()).build();
 	}
