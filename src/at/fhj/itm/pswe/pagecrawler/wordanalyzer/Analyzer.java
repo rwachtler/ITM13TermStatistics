@@ -199,7 +199,7 @@ public class Analyzer {
 			// remove punctuation from start and end of word
 			// according to:
 			// http://stackoverflow.com/questions/12506655/how-can-i-remove-all-leading-and-trailing-punctuation
-			word = word.replaceFirst("^[^a-zA-Z������]+", "").replaceAll("[^a-zA-Z������]+$", "").trim();
+			word = word.replaceFirst("^[^a-zA-ZÖöÄäÜü]+", "").replaceAll("[^a-zA-ZÖöÄäÜü]+$", "").trim();
 
 			if (!word.isEmpty()) {
 				boolean isForbidden = false;
