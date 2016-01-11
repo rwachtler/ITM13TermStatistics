@@ -154,21 +154,11 @@ public class Analyzer {
 				// else get the one from Database
 				ar = em.find(Article.class, queryResults.get(0)[0]);
 			}
-
-			// TODO refactoring -> DATE aus parameter benutzenn, wenn richtig
-			// formatiert
-			// format date string
-			DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy");
-			Date date = new Date();
-
-			String dateString = dateFormat.format(date);
-
 			// add container entry to database
-
 			Container newCont = new Container();
 			newCont.setAmount(count);
 			newCont.setWord(wo);
-			newCont.setLogDate(dateString);
+			newCont.setLogDate(DATE);
 			newCont.setWebsite(newWebsite);
 			newCont.setArticle(ar);
 			em.persist(newCont);
