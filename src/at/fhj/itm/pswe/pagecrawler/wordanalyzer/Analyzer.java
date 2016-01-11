@@ -193,7 +193,7 @@ public class Analyzer {
 		HashMap<String, Integer> wordmap = new HashMap<String, Integer>();
 		String[] inputWords = input.split(" ");
 		for (int i = 0; i < inputWords.length; i++) {
-			String word = inputWords[i].toLowerCase();
+			String word = inputWords[i].trim();
 			// System.out.println("Current word: " + word);
 
 			// remove punctuation from start and end of word
