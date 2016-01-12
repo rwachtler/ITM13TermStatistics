@@ -117,7 +117,7 @@ public class WebsiteDao implements IWebsite {
 
 	@Override
 	public JSONArray findWordsOfSite(int id, int maxNum) {
-		Query q = em.createQuery("SELECT c.word.text, sum(c.amount)  "
+		Query q = em.createQuery("SELECT c.word.text, sum(c.amount) "
 				+ "FROM Container c WHERE c.website.id=:id AND c.word.active = TRUE "
 				+ "GROUP BY c.word ORDER BY sum(c.amount) DESC").setParameter("id", id);
 
@@ -129,7 +129,7 @@ public class WebsiteDao implements IWebsite {
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : queryResults) {
-			System.out.println(wo[0] + " | " + wo[1]);
+			System.out.println("findWordsOfSite: " + wo[0] + " | " + wo[1]);
 
 			JSONObject temp = new JSONObject();
 			temp.put("word", wo[0]);
@@ -178,7 +178,7 @@ public class WebsiteDao implements IWebsite {
 
 		for (Object[] obj : queryResults) {
 			Article ar = new Article();
-			// System.out.println("Obj[0]: " + obj[0] + " | obj[1]: " + obj[1]);
+			// System.out.println("findAllArticlesOfOneWebsite: Obj[0]: " + obj[0] + " | obj[1]: " + obj[1]);
 			ar.setId(Integer.parseInt(obj[0].toString()));
 			ar.setUrl(obj[1].toString());
 			list.add(ar);

@@ -52,7 +52,7 @@ public class WordDao implements IWord {
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : queryResults) {
-			System.out.println(wo[0] + " | " + wo[1]);
+			System.out.println("sitesOfWord: " + wo[0] + " | " + wo[1]);
 
 			JSONObject temp = new JSONObject();
 			temp.put("id", wo[0]);
@@ -103,7 +103,7 @@ public class WordDao implements IWord {
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : results) {
-			System.out.println(wo[0] + " | " + wo[1]);
+			System.out.println("wordCountOverPeriod: " + wo[0] + " | " + wo[1]);
 
 			JSONObject temp = new JSONObject();
 			temp.put("date", wo[0]);

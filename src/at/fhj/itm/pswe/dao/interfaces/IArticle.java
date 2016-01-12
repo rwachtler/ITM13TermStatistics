@@ -13,7 +13,7 @@ public interface IArticle {
 	 *            URL of the Article
 	 * @return persisted Article
 	 */
-	public Article createArticle(String url);
+	Article createArticle(String url);
 
 	/**
 	 * Get the persisted Article Object from the DB
@@ -22,7 +22,7 @@ public interface IArticle {
 	 *            URL of the Article
 	 * @return Complete Article Object
 	 */
-	public Article readArticle(String url);
+	Article readArticle(String url);
 
 	/**
 	 * Update an Article Object in DB
@@ -30,7 +30,7 @@ public interface IArticle {
 	 * @param ar
 	 *            new Article Object
 	 */
-	public Article updateArticle(Article ar);
+	Article updateArticle(Article ar);
 
 	/**
 	 * Delete an Article Object in DB
@@ -38,7 +38,7 @@ public interface IArticle {
 	 * @param id
 	 *            id of the article
 	 */
-	public void deleteArticle(int id);
+	void deleteArticle(int id);
 
 	/**
 	 * Find all Words of one Article by its id
@@ -48,6 +48,6 @@ public interface IArticle {
 	 * @param maxNum
 	 *            Maximum amount of data
 	 */
-	public JSONArray findWordsOfArticle(int id, int maxNum);
+	JSONArray findWordsOfArticle(int id, int maxNum);
 
 }

@@ -11,7 +11,7 @@ public interface IWord {
 	 * 
 	 * @return JSONArray of JSONObject of Word-Text, Amount and active
 	 */
-	public JSONArray wordAndAmount();
+	JSONArray wordAndAmount();
 
 	/**
 	 * Finds the corresponding website and the found amount on the website of
@@ -21,7 +21,7 @@ public interface IWord {
 	 *            Desired Word
 	 * @return JSONArray JSONArray of all Websites
 	 */
-	public JSONArray sitesOfWord(String word);
+	JSONArray sitesOfWord(String word);
 
 	/**
 	 * Toggle active/inactive state of one specific word
@@ -31,7 +31,7 @@ public interface IWord {
 	 * @param active
 	 *            boolean
 	 */
-	public void changeWordActive(String word, boolean active);
+	void changeWordActive(String word, boolean active);
 
 	/**
 	 * Helper method for "editWord" to get all informations of a desired word
@@ -40,7 +40,7 @@ public interface IWord {
 	 *            word, where the information is desired
 	 * @return JSONData from the desired word
 	 */
-	public JSONObject findSingleWordWithAmount(String word);
+	JSONObject findSingleWordWithAmount(String word);
 
 	/**
 	 * Finds and counts all words for a specific period of time
@@ -53,5 +53,5 @@ public interface IWord {
 	 *            desired end date
 	 * @return JSONArray of desired Data
 	 */
-	public JSONArray wordCountOverPeriod(String word, String startdate, String enddate);
+	JSONArray wordCountOverPeriod(String word, String startdate, String enddate);
 }

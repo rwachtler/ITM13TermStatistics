@@ -71,9 +71,9 @@ public class ArticleDao implements IArticle {
 
 	@Override
 	public JSONArray findWordsOfArticle(int id, int maxNum) {
-		Query q = em.createQuery("SELECT c.word.text, sum(c.amount)  "
+		Query q = em.createQuery("SELECT c.word.text, c.amount, c.logDate "
 				+ "FROM Container c WHERE c.article.id=:id AND c.word.active = TRUE "
-				+ "GROUP BY c.word ORDER BY sum(c.amount) DESC").setParameter("id", id);
+				+ "ORDER BY c.amount DESC").setParameter("id", id);
 
 		if (maxNum > 0) {
 			q.setMaxResults(maxNum);
@@ -83,11 +83,12 @@ public class ArticleDao implements IArticle {
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : queryResults) {
-			System.out.println(wo[0] + " | " + wo[1]);
+			System.out.println("findWordsOfArticle: " + wo[0] + " | " + wo[1] + " | " + wo[2]);
 
 			JSONObject temp = new JSONObject();
 			temp.put("word", wo[0]);
 			temp.put("amount", wo[1]);
+			temp.put("logDate", wo[2]);
 
 			result.put(temp);
 		}

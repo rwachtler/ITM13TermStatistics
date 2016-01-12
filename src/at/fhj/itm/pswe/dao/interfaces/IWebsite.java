@@ -16,7 +16,7 @@ public interface IWebsite {
 	 * @param description
 	 * @param depth
 	 */
-	public Website createWebsite(String address, String description, int depth);
+	Website createWebsite(String address, String description, int depth);
 
 	/**
 	 * Read persisted Website by its URL
@@ -25,21 +25,21 @@ public interface IWebsite {
 	 *            URL of the Website
 	 * @return complete Website Object
 	 */
-	public Website readWebsite(String url);
+	Website readWebsite(String url);
 
 	/**
 	 * Read all persisted Websites
 	 * 
 	 * @return List of all persisted Websites
 	 */
-	public List<Website> findAllWebsites();
+	List<Website> findAllWebsites();
 
 	/**
 	 * Read all persisted Websites
 	 * 
 	 * @return JSONArray of all persisted Websites
 	 */
-	public JSONArray findAllWebsitesJSON();
+	JSONArray findAllWebsitesJSON();
 
 	/**
 	 * Update a persisted Website
@@ -48,7 +48,7 @@ public interface IWebsite {
 	 *            New Website Object
 	 * @return Updated persisted Website Object
 	 */
-	public Website updateWebsite(Website ws);
+	Website updateWebsite(Website ws);
 
 	/**
 	 * Delete a persisted Website
@@ -56,7 +56,7 @@ public interface IWebsite {
 	 * @param id
 	 *            ID of the Website
 	 */
-	public void deleteWebsite(int id);
+	void deleteWebsite(int id);
 
 	/**
 	 * Get a specific amount of words from a Website by its id
@@ -67,7 +67,7 @@ public interface IWebsite {
 	 *            maximal amount of words
 	 * @return JSONArray of desired Words of a Website
 	 */
-	public JSONArray findWordsOfSite(int id, int maxNum);
+	JSONArray findWordsOfSite(int id, int maxNum);
 
 	/**
 	 * Helper method for "countSiteOverPeriod" to get all Words from a given
@@ -83,7 +83,7 @@ public interface IWebsite {
 	 *            Date where the last dataset should end
 	 * @return JSONArray of desired Data
 	 */
-	public JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate);
+	JSONArray timeLine4WordAndSite(int siteID, String word, String startDate, String endDate);
 
 	/**
 	 * Get a List of all Articles from one Website
@@ -92,7 +92,7 @@ public interface IWebsite {
 	 *            ID of the Website
 	 * @return List of all Articles on the Website
 	 */
-	public List<Article> findAllArticlesOfOneWebsite(int id);
+	List<Article> findAllArticlesOfOneWebsite(int id);
 
 	/**
 	 * Get a List of all Articles from one Website
@@ -101,6 +101,6 @@ public interface IWebsite {
 	 *            ID of the Website
 	 * @return JSONArray of all Articles on the Website
 	 */
-	public JSONArray findAllArticlesOfOneWebsiteJSON(int id);
+	JSONArray findAllArticlesOfOneWebsiteJSON(int id);
 
 }
