@@ -77,32 +77,7 @@ public class CrawlerTestSplited {
 	}
 	
 	@Test
-	public void ctestStartURL(){
-		   String urlStartpage;
-		try {
-			urlStartpage = br.readLine();
-			Assert.assertEquals(mc.getUrl(), urlStartpage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		 System.out.println("Test 3");  
-	}
-	
-	@Test
-	public void dtestFirstPageText(){
-		   
-	    String textfirstPage;
-		try {
-			textfirstPage = br.readLine();
-			Assert.assertEquals("Das ist eine Testseite Seite 2", textfirstPage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	    System.out.println("Test 4");
-	}
-	
-	@Test
-	public void etestUrlSecondPage(){
+	public void ctestUrlSecondPage(){
 		  
 	    String nextURL;
 		try {
@@ -111,12 +86,12 @@ public class CrawlerTestSplited {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Test 5");
+		System.out.println("Test 3");
 	  
 	}
 	
 	@Test
-	public void ftestTextSecondPage(){ 
+	public void dtestTextSecondPage(){ 
 	    String textsecondPage;
 		try {
 			textsecondPage = br.readLine();
@@ -124,8 +99,35 @@ public class CrawlerTestSplited {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Test 6");
+		System.out.println("Test 4");
 	}
+	
+	@Test
+	public void etestStartURL(){
+		   String urlStartpage;
+		try {
+			urlStartpage = br.readLine();
+			Assert.assertEquals(mc.getUrl(), urlStartpage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		 System.out.println("Test 5");  
+	}
+	
+	@Test
+	public void ftestFirstPageText(){
+		   
+	    String textfirstPage;
+		try {
+			textfirstPage = br.readLine();
+			Assert.assertEquals("Das ist eine Testseite Seite 2", textfirstPage);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	    System.out.println("Test 6");
+	}
+	
+
 	
 	@AfterClass
 	public static void teardown(){
