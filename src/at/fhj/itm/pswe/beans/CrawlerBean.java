@@ -3,6 +3,8 @@ package at.fhj.itm.pswe.beans;
 import javax.ejb.Schedule;
 import javax.ejb.Singleton;
 import javax.inject.Named;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import at.fhj.itm.pswe.pagecrawler.CrawlerDaemon;
 
@@ -14,6 +16,9 @@ import at.fhj.itm.pswe.pagecrawler.CrawlerDaemon;
 @Named("CrawlerBean")
 @Singleton
 public class CrawlerBean {
+	
+	@PersistenceContext(unitName = "TermStatistics")
+	private EntityManager em;
 
 	public CrawlerBean() {
 		// TODO Auto-generated constructor stub
@@ -25,7 +30,7 @@ public class CrawlerBean {
 	@Schedule(hour = "2")
 	public void runCrawler() {
 
-		Thread t = new Thread(new CrawlerDaemon());
+		Thread t = new Thread(new CrawlerDaemon(em));
 		t.start();
 	}
 
