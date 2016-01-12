@@ -16,8 +16,14 @@ import at.fhj.itm.pswe.model.Word;
 @Stateless
 public class WordDao implements IWord {
 
-	@PersistenceContext(unitName = "TermStatistics")
+	
 	private EntityManager em;
+	
+	@PersistenceContext(unitName = "TermStatistics")
+	public void setEntityManager(EntityManager em) {
+	  this.em = em;
+	}
+	
 
 	@Override
 	public JSONArray wordAndAmount() {
@@ -70,6 +76,7 @@ public class WordDao implements IWord {
 	public void changeWordActive(String word, boolean active) {
 		Word wo = em.find(Word.class, word);
 		wo.setActive(active);
+		
 
 	}
 
