@@ -7,6 +7,7 @@ import javax.ejb.Stateless;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.Query;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -235,6 +236,20 @@ public class WebsiteEndpoint {
 
 		wDao.deleteWebsite(Integer.parseInt(id));
 
+		// Send empty object on success
+		return Response.ok("{}").build();
+	}
+	
+	@GET
+	@Path("/{url}/delete")
+	@Produces("application/json")
+	public Response deleteSiteSelenium(@PathParam("url") String incoming) {
+		incoming="http://"+incoming;
+		Query q = em.createQuery("DELETE FROM Website we WHERE we.domain = :url").setParameter("url",
+				incoming);
+		q.executeUpdate();
+
+	
 		// Send empty object on success
 		return Response.ok("{}").build();
 	}
