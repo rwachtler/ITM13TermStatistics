@@ -54,7 +54,7 @@ public class WordMockTest {
 	 * Test call to entitymanager in changeWord
 	 * em returns null (no such word found
 	 */
-	@Test
+	@Test(expected=java.lang.NullPointerException.class)
 	public void testChangeWordNoWordFound(){
 
 		//Setup

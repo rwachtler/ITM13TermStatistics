@@ -23,13 +23,13 @@ public class AnalyzerTest {
 	@Test
 	public void testCalculateWordMap(){
 		HashMap<String,Integer> result=new HashMap<String, Integer>();
-		result=analyzer.calculateWordMap("Das ist ein Test Test bei dem Wörter schon ausgefiltert wurden sind");
+		result=analyzer.calculateWordMap("Das ist ein Test Test bei dem Wörter schon ausgefiltert worden sind");
 		
 		if(result !=null){
-			int wurden=result.get("wurden");
-			Assert.assertEquals(wurden, 1);
+			int worden=result.get("worden");
+			Assert.assertEquals(worden, 1);
 			
-			int test=result.get("test");
+			int test=result.get("Test");
 			Assert.assertEquals(test, 2);
 
 		}
