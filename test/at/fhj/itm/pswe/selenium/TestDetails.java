@@ -42,7 +42,7 @@ public class TestDetails {
 	@Test
 	public void testDetailsWord(){
 		selenium.get("http://localhost:8080/TermStatistics/");
-		selenium.findElementByXPath("(//a[contains(text(),'Details')])[3]").click();
+		selenium.findElementByXPath("(//a[contains(text(),'Details')])[4]").click();
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
