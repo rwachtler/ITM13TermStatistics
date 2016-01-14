@@ -142,4 +142,57 @@ public class WordMockTest {
 
 
 	}
+	
+	/**
+	 * Test the findSingleWordMethodNoValid
+	 * With no valid input
+	 * 
+	 */
+	
+	@Test(expected=java.lang.NullPointerException.class)
+	public void testFindSingleWordNoValid(){
+
+		//Setup
+		WordDao wDAO= new WordDao();
+		String testWord= "test";
+		boolean testActive=true;
+		int testNum=10;
+		List<Object[]> returnList = new ArrayList<Object[]>();
+
+		Object[] retArr= new Object[3];
+		retArr[0]=testWord;
+		retArr[1]=testActive;
+		retArr[2]=testNum;
+
+		returnList.add(retArr);
+		//Compare to
+		JSONObject validator= new JSONObject();
+		validator.put("amount", testNum);
+		validator.put("word", testWord);
+		validator.put("active", testActive);
+		
+		
+		//Init Mock For Query
+		Query qMock=mockQuery("word", testWord, returnList);
+		replay(qMock);
+
+		//Init Mock for em
+		EntityManager mockEm = createMock(EntityManager.class);
+		//Expect one single call to find
+		expect(mockEm.createQuery(
+				"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active")
+				).andReturn(null);
+		//set to replay state
+		replay(mockEm);
+		//Set Mock Object
+		wDAO.setEntityManager(mockEm);
+
+		//run test
+		JSONObject testResult= wDAO.findSingleWordWithAmount(testWord);
+		
+		//Validate
+		Assert.assertEquals(testResult.toString(),validator.toString());
+
+
+	}
 }

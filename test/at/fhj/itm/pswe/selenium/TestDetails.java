@@ -1,5 +1,6 @@
 package at.fhj.itm.pswe.selenium;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import junit.framework.Assert;
@@ -42,14 +43,20 @@ public class TestDetails {
 	@Test
 	public void testDetailsWord(){
 		selenium.get("http://localhost:8080/TermStatistics/");
-		selenium.findElementByXPath("(//a[contains(text(),'Details')])[4]").click();
+		//that the test always starts with the right element in the word tabel
+		int startnumber;
+		String checkamount=selenium.findElement(By.id("site-list-table")).getText();
+		System.out.println(checkamount);
+		String[] lines=checkamount.split("\n");
+		startnumber=lines.length;
+		System.out.println(startnumber+"!!!!!!!");
+		selenium.findElementByXPath("(//a[contains(text(),'Details')])["+startnumber+"]").click();
 		try {
 			Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
 		String output=selenium.findElement(By.id("site-list-table")).getText();
-		System.out.println(output);
 		
 		if(output.contains("http://pfiff.me/pswengi/")){
 			Assert.assertTrue(true);
