@@ -15,12 +15,14 @@ import java.util.concurrent.TimeUnit;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
+import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
+import at.fhj.itm.pswe.dao.AnalyzerDao;
 import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.ArticleStat;
 import at.fhj.itm.pswe.model.Container;
@@ -34,8 +36,15 @@ import at.fhj.itm.pswe.model.Wordtype;
 @LocalBean
 public class Analyzer {
 
-	@PersistenceContext(unitName = "TermStatistics")
-	private EntityManager em;
+	/*@PersistenceContext(unitName = "TermStatistics")
+	private EntityManager em;*/
+	
+	private AnalyzerDao analyzerDAO;
+	
+	@Inject
+	public void setAnalyzerDAO(AnalyzerDao analyzerDAO) {
+		this.analyzerDAO = analyzerDAO;
+	}
 
 	private String input;
 	private HashMap<String, Integer> wordMap;
@@ -50,7 +59,7 @@ public class Analyzer {
 	public void analyzeResults(String path) {
 		readResultFile(path);
 	}
-
+/* Temporary Testcode?
 	public void testPersist() {
 		// TESTCODE
 		Website ws = em.find(Website.class, 18);
@@ -67,7 +76,7 @@ public class Analyzer {
 		em.persist(c);
 		em.flush();
 		// END
-	}
+	}*/
 
 	private void persistData(String url, String data, Website newWebsite, String currentDate) {
 
@@ -88,7 +97,7 @@ public class Analyzer {
 			String word = (String) pair.getKey();
 			int count = (int) pair.getValue();
 
-			Word wo = em.find(Word.class, word);
+			Word wo = analyzerDAO.findWord(word);
 			// System.out.println("WORD: " + word);
 
 			// check if word exists in the database
@@ -99,61 +108,13 @@ public class Analyzer {
 				wo.setText(word);
 
 				// look up word type in the wordlist
-				String wordtype;
-
-				Query q = em.createQuery("SELECT wl FROM WordlistEntry wl WHERE wl.word = :word").setParameter("word",
-						word);
-
-				List<WordlistEntry> queryResults = q.getResultList();
-
-				if (queryResults.size() == 0) {
-					// word not found in wordlist --> we set it to unknown
-					wordtype = "unknown";
-				} else {
-					// we use the wordtype found in the wordlist
-					wordtype = queryResults.get(0).getWordtype();
-				}
-
-				// look up the word type in our own wordtype table
-				Wordtype wt;
-
-				Query wordTypeQuery = em.createQuery("SELECT wt FROM Wordtype wt WHERE wt.texttype = :wordtype")
-						.setParameter("wordtype", wordtype);
-
-				List<Wordtype> wordTypeQueryResults = wordTypeQuery.getResultList();
-
-				if (wordTypeQueryResults.size() == 0) {
-					// wordtype not found --> we add it
-					wt = new Wordtype();
-					wt.setTexttype(wordtype);
-
-					em.persist(wt);
-				} else {
-					// wordtype found --> we can use it
-					wt = wordTypeQueryResults.get(0);
-				}
-
-				wo.setWordtype(wt);
-
-				// Need to persist so that it is available for newCont later on
-				em.persist(wo);
+				String wordtype = analyzerDAO.findTypeForWord(word);
+				//Set Type for word and persist both
+				analyzerDAO.setTypeForWord(wo, wordtype);
 			}
 
 			// Get Article, if already in Database
-			Query q = em.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url").setParameter("url", url);
-
-			List<Object[]> queryResults = q.getResultList();
-
-			if (queryResults.size() == 0) {
-				// if article not in database, persist it
-				System.out.println("Add Article: " + url);
-				ar = new Article();
-				ar.setUrl(url);
-				em.persist(ar);
-			} else {
-				// else get the one from Database
-				ar = em.find(Article.class, queryResults.get(0)[0]);
-			}
+			ar = analyzerDAO.findArticle(url);
 			// add container entry to database
 			Container newCont = new Container();
 			newCont.setAmount(count);
@@ -161,7 +122,7 @@ public class Analyzer {
 			newCont.setLogDate(DATE);
 			newCont.setWebsite(newWebsite);
 			newCont.setArticle(ar);
-			em.persist(newCont);
+			analyzerDAO.saveContainer(newCont);
 		}
 
 		// Output of time from analyzing
@@ -172,7 +133,7 @@ public class Analyzer {
 		articleStat.setAnalyzeDuration(System.currentTimeMillis() - articleStartTime);
 		articleStat.setArticle(ar);
 		articleStat.setLogDate(DATE);
-		em.persist(articleStat);
+		analyzerDAO.saveArticleStat(articleStat);
 
 		System.out.println("End iterating over Wordmap");
 	}
@@ -236,15 +197,7 @@ public class Analyzer {
 			// Get Current Root Domain only once, pass it further
 
 			// Expect that domain only exists once
-			// Expect only one result
-			Query websiteExistsq = em.createQuery("SELECT w.id FROM Website w WHERE w.domain = :domain")
-					.setParameter("domain", website);
-			List<Object> result = websiteExistsq.getResultList();
-			int websiteId = -1;
-			if (result.size() > 0)
-				websiteId = (int) result.get(0);
-			Website newWebsite = em.find(Website.class, websiteId);
-
+			Website webSite = analyzerDAO.findWebsite(website);
 			int count = 0;
 
 			// Get Timestamp before starting analyzing
@@ -261,12 +214,11 @@ public class Analyzer {
 					break;
 				} else {
 					try {
-						persistData(url, data, newWebsite, currentdate);
+						persistData(url, data, webSite, currentdate);
 						// flush to db every 20 words
 						if (count > 20) {
 							count = 0;
-							em.flush();
-							em.clear();
+							analyzerDAO.flushDAO();
 						}
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -287,8 +239,8 @@ public class Analyzer {
 			}
 			websiteStat.setCrawlDuration(durationMillis);
 			websiteStat.setLogDate(DATE);
-			websiteStat.setWebsite(newWebsite);
-			em.persist(websiteStat);
+			websiteStat.setWebsite(webSite);
+			analyzerDAO.saveWebsiteStat(websiteStat);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
