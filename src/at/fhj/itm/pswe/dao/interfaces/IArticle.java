@@ -41,7 +41,7 @@ public interface IArticle {
 	void deleteArticle(int id);
 
 	/**
-	 * Find all Words of one Article by its id
+	 * Find all Words of one Article by its id and the date of insertion
 	 * 
 	 * @param id
 	 *            id of the article
@@ -49,5 +49,14 @@ public interface IArticle {
 	 *            Maximum amount of data
 	 */
 	JSONArray findWordsOfArticle(int id, int maxNum);
+
+	/**
+	 * Get the average Analyzeduration of an Article over all analyze processes
+	 * 
+	 * @param id
+	 *            Article ID
+	 * @return
+	 */
+	JSONArray getAVGAnalyzeDurationofArticle(int id);
 
 }

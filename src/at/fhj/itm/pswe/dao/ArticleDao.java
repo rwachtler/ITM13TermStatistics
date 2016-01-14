@@ -71,9 +71,9 @@ public class ArticleDao implements IArticle {
 
 	@Override
 	public JSONArray findWordsOfArticle(int id, int maxNum) {
-		Query q = em.createQuery("SELECT c.word.text, c.amount, c.logDate "
+		Query q = em.createQuery("SELECT SUM(c.amount), c.logDate "
 				+ "FROM Container c WHERE c.article.id=:id AND c.word.active = TRUE "
-				+ "ORDER BY c.amount DESC").setParameter("id", id);
+				+ "GROUP BY c.article.id, c.logDate ORDER BY SUM(c.amount) DESC").setParameter("id", id);
 
 		if (maxNum > 0) {
 			q.setMaxResults(maxNum);
@@ -83,17 +83,36 @@ public class ArticleDao implements IArticle {
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : queryResults) {
-			System.out.println("findWordsOfArticle: " + wo[0] + " | " + wo[1] + " | " + wo[2]);
+			System.out.println("findWordsOfArticle: " + wo[0] + " | " + wo[1]);
 
 			JSONObject temp = new JSONObject();
-			temp.put("word", wo[0]);
-			temp.put("amount", wo[1]);
-			temp.put("logDate", wo[2]);
+			temp.put("amount", wo[0]);
+			temp.put("logDate", wo[1]);
 
 			result.put(temp);
 		}
+		
 		return result;
+	}
+	
+	public JSONArray getAVGAnalyzeDurationofArticle(int id){
+		Query q = em.createQuery("SELECT SUM(ast.analyzeDuration)/COUNT(ast.analyzeDuration) "
+				+ "FROM ArticleStat ast WHERE ast.article.id=:id ORDER BY ast.article.url").setParameter("id", id);
+		
+		List<Long> queryResults = q.getResultList();
 
+		JSONArray result = new JSONArray();
+
+		for (Long wo : queryResults) {
+			System.out.println("getAVGAnalyzeDurationofArticle: " + wo);
+
+			JSONObject temp = new JSONObject();
+			temp.put("avgAnalyze", wo);
+
+			result.put(temp);
+		}
+		
+		return result;
 	}
 
 }

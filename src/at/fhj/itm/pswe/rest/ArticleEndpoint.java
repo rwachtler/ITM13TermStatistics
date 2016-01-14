@@ -34,7 +34,7 @@ public class ArticleEndpoint {
 
 	// For Datatable on Subsite "Article"
 	/**
-	 * Get all Words of one Article
+	 * Get all summarized Words of one Article with date
 	 * 
 	 * @param id
 	 *            id of the Website
@@ -52,7 +52,7 @@ public class ArticleEndpoint {
 	}
 
 	/**
-	 * Get just a specific amount of Words of one Article
+	 * Get a specified amount of summarized Words of one Article with date
 	 * 
 	 * @param id
 	 *            id of the Article
@@ -67,6 +67,17 @@ public class ArticleEndpoint {
 
 		JSONObject my = new JSONObject();
 		my.put("data", arDao.findWordsOfArticle(id, num));
+
+		return Response.ok(my.toString()).build();
+	}
+	
+	@GET
+	@Path("/{id:[0-9][0-9]*}/stats")
+	@Produces("application/json")
+	public Response statsOfArticle(@PathParam("id") int id) {
+
+		JSONObject my = new JSONObject();
+		my.put("data", arDao.getAVGAnalyzeDurationofArticle(id));
 
 		return Response.ok(my.toString()).build();
 	}

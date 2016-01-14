@@ -1,5 +1,7 @@
 package at.fhj.itm.pswe.dao;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.ejb.Stateless;
@@ -123,6 +125,18 @@ public class AnalyzerDao {
 	public void flushDAO(){
 		em.flush();
 		em.clear();
+	}
+	
+	public void updateCrawlDateofWebsite(String domain){
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		Query q = em.createQuery("UPDATE Website w SET crawldate = :crawldate WHERE w.domain = :domain")
+				.setParameter("crawldate", df.format(cal.getTime())).setParameter("domain", domain);
+
+		int updatenumber = q.executeUpdate();
+
+		flushDAO();
 	}
 	
 }

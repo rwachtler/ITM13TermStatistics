@@ -1,9 +1,15 @@
 package at.fhj.itm.pswe.pagecrawler;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
+import javax.swing.text.DateFormatter;
+
+import org.apache.xmlbeans.impl.xb.xsdschema.SimpleDerivationSet;
 
 import at.fhj.itm.pswe.model.Website;
 
@@ -26,9 +32,18 @@ public class CrawlerDaemon implements Runnable {
 			
 			System.out.println("Crawler-Daemon: " + ws.getDomain());
 			
+			Calendar cal = Calendar.getInstance();
+			
+			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+			
+			ws.setLast_crawldate(df.format(cal));
+			
+			em.merge(ws);
+			em.flush();
+			
 			// TODO: Start threads!
 			// MainCrawler mc = new MainCrawler(ws.getDomain(),
-			// ws.getCrawldepth(),em.getEntityManagerFactory());
+			// ws.getCrawldepth());
 			// mc.crawl();
 		}
 

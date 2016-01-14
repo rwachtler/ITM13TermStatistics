@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -23,6 +24,7 @@ import javax.persistence.Query;
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import at.fhj.itm.pswe.dao.AnalyzerDao;
+import at.fhj.itm.pswe.dao.WebsiteDao;
 import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.ArticleStat;
 import at.fhj.itm.pswe.model.Container;
@@ -198,6 +200,10 @@ public class Analyzer {
 
 			// Expect that domain only exists once
 			Website webSite = analyzerDAO.findWebsite(website);
+			
+			// Update Last Website Crawldate
+			analyzerDAO.updateCrawlDateofWebsite(website);
+			
 			int count = 0;
 
 			// Get Timestamp before starting analyzing
