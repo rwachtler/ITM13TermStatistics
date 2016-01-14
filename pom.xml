@@ -60,7 +60,6 @@
 	
 	</dependencies>
 	<build>
-		<testSourceDirectory>${basedir}/test/</testSourceDirectory>
 		<finalName>${project.artifactId}</finalName>
 		<sourceDirectory>src</sourceDirectory>
 		<resources>
