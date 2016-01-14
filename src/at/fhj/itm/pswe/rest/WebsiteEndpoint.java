@@ -179,7 +179,7 @@ public class WebsiteEndpoint {
 		JSONObject json = new JSONObject(incoming);
 
 		// Get first key which is id
-		Iterator<String> keys = json.keys();
+		Iterator<String> keys = json.keys(); 
 		String id = "";
 		if (keys.hasNext()) {
 			id = keys.next(); // First key in your json object
@@ -261,6 +261,39 @@ public class WebsiteEndpoint {
 
 		JSONObject my = new JSONObject();
 		my.put("data", wDao.findAllArticlesOfOneWebsiteJSON(id));
+
+		return Response.ok(my.toString()).build();
+	}
+	
+	@GET
+	@Path("/{id:[0-9][0-9]*}/stats")
+	@Produces("application/json")
+	public Response statsOfSite(@PathParam("id") int id) {
+
+		JSONObject my = new JSONObject();
+		my.put("data", wDao.getAverageWebsiteStats(id));
+
+		return Response.ok(my.toString()).build();
+	}
+	
+	@GET
+	@Path("/{id:[0-9][0-9]*}/articles/timeline")
+	@Produces("application/json")
+	public Response timelineOfArticlesofSite(@PathParam("id") int id) {
+
+		JSONObject my = new JSONObject();
+		my.put("data", wDao.articleTimelineofOneWebsite(id));
+
+		return Response.ok(my.toString()).build();
+	}
+	
+	@GET
+	@Path("/{id:[0-9][0-9]*}/avgword")
+	@Produces("application/json")
+	public Response avgWordsofSite(@PathParam("id") int id) {
+
+		JSONObject my = new JSONObject();
+		my.put("data", wDao.getAverageWordAmountofWebsite(id));
 
 		return Response.ok(my.toString()).build();
 	}

@@ -3,6 +3,7 @@ package at.fhj.itm.pswe.dao.interfaces;
 import java.util.List;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.Website;
@@ -102,5 +103,21 @@ public interface IWebsite {
 	 * @return JSONArray of all Articles on the Website
 	 */
 	JSONArray findAllArticlesOfOneWebsiteJSON(int id);
+	
+	/**
+	 * Get Timeline of Crawled Dates for each Website with the corresponding numbers of Articles
+	 * Example: KleineZeitung am 1.1 5 Artikel, am 2.1 7 Artikel etc.
+	 */
+	JSONArray articleTimelineofOneWebsite(int id);
+	
+	/**
+	 * Get Average Crawler and Analyzer Stats of Website
+	 * Example: KleineZeitung hat durchschnittlich 5 Artikel, Crawlerzeit durchschnittlich 41 Sekunden, Analyzerzeit durchschnittlich 5 Sekunden
+	 * @param id of Website
+	 * @return
+	 */
+	JSONArray getAverageWebsiteStats(int id);
+	
+	JSONArray getAverageWordAmountofWebsite(int id);
 
 }
