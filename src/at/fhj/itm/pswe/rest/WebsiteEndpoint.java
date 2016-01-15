@@ -23,6 +23,7 @@ import org.json.JSONObject;
 
 import at.fhj.itm.pswe.dao.interfaces.IWebsite;
 import at.fhj.itm.pswe.model.Website;
+import at.fhj.itm.pswe.pagecrawler.MainCrawler;
 
 @Stateless
 @Path("/website")
@@ -30,6 +31,9 @@ public class WebsiteEndpoint {
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 
+	@Inject
+	MainCrawler mc;
+	
 	private IWebsite wDao;
 
 	/**
@@ -75,6 +79,12 @@ public class WebsiteEndpoint {
 		 * Depcrecated---Thread t = new Thread(new MainCrawler(ws.getDomain(),
 		 * 1)); t.start();
 		 */
+		
+		/*
+		mc.setDepth(ws.getCrawldepth());
+		mc.setUrl(ws.getDomain());
+		mc.crawl();
+		*/
 
 		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
 	}
