@@ -75,8 +75,12 @@ $('#toDate').change(function(){
     }
 });
 
+/**
+ * Requests the article timeline for the given domain-ID, passes the result to a callback method
+ * @param callback - Performs further operations with retrieved data
+ */
 var getArticleTimeline = function(callback){
-    $.getJSON("../rest/website/1/articles/timeline", function(response){
+    $.getJSON('../rest/website/'+siteID+'/articles/timeline', function(response){
        $chartsSection.removeClass("overlay");
         callback(response.data);
     });
