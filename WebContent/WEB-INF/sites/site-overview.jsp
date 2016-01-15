@@ -81,6 +81,8 @@
             <div id="line-chart-container">
                 <canvas width="800" height="500" id="line-chart"></canvas>
             </div>
+            <p class="lead">LineChart - Article timeline</p>
+            <canvas width="1200" height="800" id="article-timeline-chart"></canvas>
         </section>
     </div>
     <!-- /container-fluid -->

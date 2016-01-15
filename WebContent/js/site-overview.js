@@ -1,9 +1,10 @@
-var barChart, lineChart, siteID, wordTable, startRange, endRange;
+var barChart, lineChart, articleLineChart, siteID, wordTable, startRange, endRange;
 var $chartsSection = $('#charts');
 $(document).ready(function(){
     siteID = $('#siteID').val();
     generateWordsTable();
     getAllWordsForDomain(generateBarChart);
+    getArticleTimeline(generateArticleTimeline);
     getSiteCrawlingStats();
     getSubsiteCrawlingStats();
 });
@@ -74,6 +75,13 @@ $('#toDate').change(function(){
     }
 });
 
+var getArticleTimeline = function(callback){
+    $.getJSON("../rest/website/1/articles/timeline", function(response){
+       $chartsSection.removeClass("overlay");
+        callback(response.data);
+    });
+}
+
 /**
  * Requests the crawled words for the given domain-ID, passes the result to a callback method
  * @param callback - Performs further operations with retrieved data
@@ -118,8 +126,37 @@ function generateWordsTable() {
 	} );
 }
 
+/**
+ * Line chart for crawled articles
+ * @param data - amount of articles crawled with on a specific date
+ */
+var generateArticleTimeline = function(data){
+    var labels = [];
+    var amount = [];
+    var options = {
+        pointDotStrokeWidth: 2.0
+    };
+    $(data).each(function() {
+        labels.push($(this)[0].crawldate);
+        amount.push($(this)[0].amount);
+    });
+    var cdata = {
+        labels: labels,
+        datasets: [{
+            label: "",
+            fillColor: "rgba(22, 160, 133, 0.0)",
+            strokeColor: "#2ECC71",
+            pointColor: "rgba(220,220,220,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: amount
+        }]
+    };
 
-
+    var $ctx = $("#article-timeline-chart").get(0).getContext("2d");
+    articleLineChart = new Chart($ctx).Line(cdata, options);
+}
 
 /**
  * Bar-Chart for all words
