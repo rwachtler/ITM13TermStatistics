@@ -46,8 +46,7 @@
 	<a href="#charts" class="next-section btn btn-default btn-lg"><span
 	class="glyphicon glyphicon-chevron-down"></span> How about a
 	pie?...Chart <span class="glyphicon glyphicon-chevron-down"></span></a>
-			<p class="lead">Those websites were included to the crawling
-				process</p>
+			<p class="lead">Crawled words</p>
 			<table class="table table-striped" id="site-list-table">
 				<thead>
 					<tr>
