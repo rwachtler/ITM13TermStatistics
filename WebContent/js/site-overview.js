@@ -4,7 +4,49 @@ $(document).ready(function(){
     siteID = $('#siteID').val();
     generateWordsTable();
     getAllWordsForDomain(generateBarChart);
+    getSiteCrawlingStats();
+    getSubsiteCrawlingStats();
 });
+
+
+/**
+ * Gets the crawling statistics for a specified site
+ * Transforms values from milliseconds to seconds
+ */
+var getSiteCrawlingStats = function(){
+    $.getJSON('../rest/website/'+siteID+'/stats', function(response){
+        var avgStats = response.data[0];
+        if(typeof avgStats !== undefined){
+            if(typeof avgStats.crawlDuration !== undefined){
+                $('#crawl-duration').text(avgStats.crawlDuration/1000 + " s");
+            }
+            if(typeof avgStats.avg_article !== undefined){
+                $('#avg-article-amount').text(avgStats.avg_article);
+            }
+            if(typeof avgStats.analyzeDuration !== undefined){
+                $('#analyze-duration').text(avgStats.analyzeDuration/1000 + " s");
+            }
+        }
+    });
+}
+
+/**
+ * Gets the crawling statistics for all subsites of a site
+ */
+var getSubsiteCrawlingStats = function(){
+    $.getJSON('../rest/website/'+siteID+'/avgword', function(response){
+        var avgStats = response.data[0];
+        if(typeof avgStats !== undefined){
+            if(typeof avgStats.avgwordlength !== undefined){
+                $('#avg-word-length').text(avgStats.avgwordlength);
+            }
+            if(typeof avgStats.avgwords !== undefined){
+                $('#avg-word-amount').text(avgStats.avgwords);
+            }
+        }
+
+    });
+}
 
 /**
  * Triggers on change of #fromDate

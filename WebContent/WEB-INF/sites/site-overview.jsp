@@ -43,7 +43,14 @@
         <section id="website-list" class="row">
             <h1>Site Overview ${domain}</h1>
             <a href="#charts" class="next-section btn btn-default btn-lg"><span class="glyphicon glyphicon-chevron-down"></span> How about a pie?...Chart <span class="glyphicon glyphicon-chevron-down"></span></a>
-            <p class="lead">Those websites were included to the crawling process</p>
+            <h2>Site crawl statistics</h2>
+            <p>Crawl duration in seconds - <span id="crawl-duration">no data available</span></p>
+            <p>Average article amount - <span id="avg-article-amount">no data available</span></p>
+            <p>Analyze duration in seconds - <span id="analyze-duration">no data available</span></p>
+            <h2>Subsite crawl statistics</h2>
+            <p>Average word amount - <span id="avg-word-amount">no data available</span></p>
+            <p>Average word length - <span id="avg-word-length">no data available</span></p>
+            <h2>Crawled words</h2>
             <table class="table table-striped" id="word-list-table">
             	<thead>
         			<tr>
