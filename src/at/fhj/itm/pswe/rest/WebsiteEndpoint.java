@@ -80,9 +80,11 @@ public class WebsiteEndpoint {
 		 * 1)); t.start();
 		 */
 		
+		/*
 		mc.setDepth(ws.getCrawldepth());
 		mc.setUrl(ws.getDomain());
 		mc.crawl();
+		*/
 
 		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
 	}
