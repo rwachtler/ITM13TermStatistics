@@ -98,7 +98,7 @@ public class Init_LinkCrawler {
 		PrintWriter file_out = null;
 		try {
 			file_out = new PrintWriter(new BufferedWriter(new FileWriter(path_to_file, true)));
-			file_out.println(diffHours + ":" + diffMinutes + ":" + diffSeconds);
+			file_out.print(diffHours + ":" + diffMinutes + ":" + diffSeconds);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
