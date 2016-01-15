@@ -202,7 +202,7 @@ public class Analyzer {
 			Website webSite = analyzerDAO.findWebsite(website);
 			
 			// Update Last Website Crawldate
-			analyzerDAO.updateCrawlDateofWebsite(website);
+			//analyzerDAO.updateCrawlDateofWebsite(website);
 			
 			int count = 0;
 
