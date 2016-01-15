@@ -280,4 +280,9 @@ public class WebsiteDao implements IWebsite {
 		return list;
 	}
 
+	public void setEntityManager(EntityManager mockEm) {
+		this.em=em;
+		
+	}
+
 }

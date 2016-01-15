@@ -75,7 +75,11 @@ public class WordDao implements IWord {
 	@Override
 	public void changeWordActive(String word, boolean active) {
 		Word wo = em.find(Word.class, word);
-		wo.setActive(active);
+		try{
+			wo.setActive(active);
+		}catch (NullPointerException e){
+			System.out.println("No word found");
+		}
 		
 
 	}
