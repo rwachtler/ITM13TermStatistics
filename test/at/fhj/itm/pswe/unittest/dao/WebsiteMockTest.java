@@ -40,5 +40,34 @@ public class WebsiteMockTest {
 		verify(mockEm);
 		
 	}
+	
+	@Test
+	public void createWebsite(){
+		Website w = new Website();
+		w.setDomain("http://test.at");
+		w.setDescription("Test");
+		w.setCrawldepth(1);
+		w.setActive(true);
+		
+		WebsiteDao wDao=new WebsiteDao();
+		
+		EntityManager mockEm = createMock(EntityManager.class);
+		expect(mockEm.find(Website.class, "http://test.at")).andReturn(w);
+		mockEm.persist(w);
+		EasyMock.expectLastCall().once();
+		
+		mockEm.flush();
+		EasyMock.expectLastCall();
+		//set to replay state
+		replay(mockEm);
+		//Set Mock Object
+		wDao.setEntityManager(mockEm);
+
+		//TEST
+		wDao.createWebsite("http://test.at", "Test", 1);
+
+		//Verify
+		verify(mockEm);
+	}
 
 }
