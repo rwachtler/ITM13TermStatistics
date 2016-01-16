@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -199,6 +200,7 @@ public class WebsiteEndpoint {
 
 		// Update and Save object
 		Website ws = new Website();
+		ws.setId(Integer.parseInt(id));
 		ws.setDomain(json.getJSONObject(id).getString("address"));
 		ws.setDescription(json.getJSONObject(id).getString("description"));
 		ws.setCrawldepth(json.getJSONObject(id).getInt("depth"));
@@ -210,6 +212,11 @@ public class WebsiteEndpoint {
 		}
 
 		Website wsOut = wDao.updateWebsite(ws);
+		if(wsOut==null){
+			JSONObject error= new JSONObject();
+			error.put("error", "Website not found - please reload page");
+			return Response.ok(error.toString()).build();
+		}else{
 
 		JSONObject output = new JSONObject();
 		output.put("data",
@@ -221,6 +228,7 @@ public class WebsiteEndpoint {
 		System.out.println("JSON: " + output.toString());
 
 		return Response.ok(output.toString()).build();
+		}
 	}
 
 	/**

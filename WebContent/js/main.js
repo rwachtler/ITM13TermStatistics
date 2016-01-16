@@ -89,6 +89,7 @@ function generateSiteListTable() {
 		          { data: "description" },
 		          { data: "depth" },
 		          { data: "active" },
+		          { data: "lCrawled"},
 		          { data: null }
 		          //Renderfunction below
 		          ],
@@ -97,9 +98,9 @@ function generateSiteListTable() {
 		        	   {	render: function ( data, type, row ) {
 		        		   return "<a class='btn btn-primary' href='./SiteOverview/"+row.id+"'>Details</a>"
 		        	   },
-		        	   targets: 5 },
-		        	   { orderable: false, targets: 5 },
-		        	   { searchable: false, "targets": 5 }
+		        	   targets: 6 },
+		        	   { orderable: false, targets: 6 },
+		        	   { searchable: false, targets: 6 }
 		        	   ],
 		        	   select: 'single',
 		        	   buttons: [
@@ -109,10 +110,10 @@ function generateSiteListTable() {
 		        	             ]
 	} );
 	
-
+	
 	siteListEditor
-	.on( 'initEdit', function () { siteListEditor.hide( "address" ); siteListEditor.show( "active" ); } )
-	.on( 'initCreate', function () { siteListEditor.show( "address" ); siteListEditor.hide( "active" );} );
+	.on( 'initEdit', function () { siteListEditor.disable( "address" ); siteListEditor.show( "active" ); } )
+	.on( 'initCreate', function () { siteListEditor.enable( "address" ); siteListEditor.hide( "active" ); } );
 	 
 }
 

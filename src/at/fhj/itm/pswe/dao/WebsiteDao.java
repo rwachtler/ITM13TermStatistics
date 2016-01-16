@@ -85,34 +85,32 @@ public class WebsiteDao implements IWebsite {
 			temp.put("address", ws.getDomain());
 			temp.put("description", ws.getDescription());
 			temp.put("active", ws.getActive());
+			temp.put("lCrawled", ws.getLast_crawldate());
 			temp.put("depth", ws.getCrawldepth());
 			result.put(temp);
 		}
 		return result;
 	}
 
+	
 	@Override
 	public Website updateWebsite(Website ws) {
 
-		// Get Website, if already in Database
-		Query q = em.createQuery("SELECT w.id, w.crawldate, w.active, w.description FROM Website w WHERE w.domain = :domain")
-				.setParameter("domain", ws.getDomain());
-
-		List<Object[]> queryResults = q.getResultList();
-
-		ws.setId((int) queryResults.get(0)[0]);
-		ws.setLast_crawldate((String) queryResults.get(0)[1]);
-		if((int) queryResults.get(0)[2] == 1){
-			ws.setActive(true);
-		} else {
-			ws.setActive(true);
+			
+		Website toUpdate = em.find(Website.class, ws.getId());
+		if(toUpdate !=null){
+			toUpdate.setDescription(ws.getDescription());
+			toUpdate.setCrawldepth(ws.getCrawldepth());
+			toUpdate.setActive(ws.getActive());
+			em.flush();
+			return toUpdate;
+		}else{
+			return null;
 		}
-		ws.setDescription((String) queryResults.get(0)[3]);
+		
+		
 
-		em.merge(ws);
-		em.flush();
-
-		return ws;
+		
 	}
 
 	@Override
