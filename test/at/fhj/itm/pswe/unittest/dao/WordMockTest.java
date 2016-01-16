@@ -6,8 +6,8 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
+import org.easymock.EasyMock;
 import org.junit.Assert; 
-
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -37,6 +37,8 @@ public class WordMockTest {
 		EntityManager mockEm = createMock(EntityManager.class);
 		//Expect one single call to find
 		expect(mockEm.find(Word.class, "test")).andReturn(w);
+		mockEm.flush();
+		EasyMock.expectLastCall();
 		//set to replay state
 		replay(mockEm);
 		//Set Mock Object
@@ -95,7 +97,6 @@ public class WordMockTest {
 	 * With valid input
 	 * 
 	 */
-	//TODO: Write test which gives non valid input(word does not exist)
 	@Test
 	public void testFindSingleWord(){
 
@@ -138,6 +139,7 @@ public class WordMockTest {
 		JSONObject testResult= wDAO.findSingleWordWithAmount(testWord);
 		
 		//Validate
+		verify(mockEm);
 		Assert.assertEquals(testResult.toString(),validator.toString());
 
 
@@ -149,27 +151,17 @@ public class WordMockTest {
 	 * 
 	 */
 	
-	@Test(expected=java.lang.NullPointerException.class)
+	@Test
 	public void testFindSingleWordNoValid(){
 
 		//Setup
 		WordDao wDAO= new WordDao();
 		String testWord= "test";
-		boolean testActive=true;
-		int testNum=10;
 		List<Object[]> returnList = new ArrayList<Object[]>();
 
-		Object[] retArr= new Object[3];
-		retArr[0]=testWord;
-		retArr[1]=testActive;
-		retArr[2]=testNum;
-
-		returnList.add(retArr);
-		//Compare to
+		
+		//Compare to empty object
 		JSONObject validator= new JSONObject();
-		validator.put("amount", testNum);
-		validator.put("word", testWord);
-		validator.put("active", testActive);
 		
 		
 		//Init Mock For Query
@@ -181,7 +173,7 @@ public class WordMockTest {
 		//Expect one single call to find
 		expect(mockEm.createQuery(
 				"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active")
-				).andReturn(null);
+				).andReturn(qMock);
 		//set to replay state
 		replay(mockEm);
 		//Set Mock Object
@@ -191,6 +183,7 @@ public class WordMockTest {
 		JSONObject testResult= wDAO.findSingleWordWithAmount(testWord);
 		
 		//Validate
+		verify(mockEm);
 		Assert.assertEquals(testResult.toString(),validator.toString());
 
 

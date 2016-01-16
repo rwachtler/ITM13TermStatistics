@@ -16,14 +16,14 @@ import at.fhj.itm.pswe.model.Word;
 @Stateless
 public class WordDao implements IWord {
 
-	
+
 	private EntityManager em;
-	
+
 	@PersistenceContext(unitName = "TermStatistics")
 	public void setEntityManager(EntityManager em) {
-	  this.em = em;
+		this.em = em;
 	}
-	
+
 
 	@Override
 	public JSONArray wordAndAmount() {
@@ -31,7 +31,7 @@ public class WordDao implements IWord {
 		List<Object[]> queryResult = em
 				.createQuery(
 						"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
-				.getResultList();
+						.getResultList();
 
 		JSONArray result = new JSONArray();
 
@@ -75,12 +75,13 @@ public class WordDao implements IWord {
 	@Override
 	public void changeWordActive(String word, boolean active) {
 		Word wo = em.find(Word.class, word);
-		try{
+		if(wo != null){
 			wo.setActive(active);
-		}catch (NullPointerException e){
-			System.out.println("No word found");
+			//save changes to db
+			em.flush();
 		}
-		
+		//do nothing if no word is found
+
 
 	}
 
@@ -89,7 +90,7 @@ public class WordDao implements IWord {
 		List<Object[]> queryResult = em
 				.createQuery(
 						"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active")
-				.setParameter("word", word).getResultList();
+						.setParameter("word", word).getResultList();
 		JSONObject result = new JSONObject();
 
 		if (!queryResult.isEmpty()) {
