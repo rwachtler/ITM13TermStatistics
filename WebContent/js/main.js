@@ -18,16 +18,23 @@ function generateSiteListTable() {
 
 
 			if ( d.action === 'create' ) {
-				console.log(JSON.stringify(d.data[0]))
+				//console.log(JSON.stringify(d.data[0]));
 				var data = d.data[0];
-				$.ajax({
-					type: "POST",
-					url: "./rest/website",
-					data: JSON.stringify(data),
-					success: successCallback,
-					error: errorCallback,
-					contentType: "application/json",
-				});
+				var address = data.address;
+				$.ajax(address)
+					.done(function(){
+						$.ajax({
+							type: "POST",
+							url: "./rest/website",
+							data: JSON.stringify(data),
+							success: successCallback,
+							error: errorCallback,
+							contentType: "application/json",
+						});
+					})
+					.fail(function(){
+						$('#url-alert-modal').modal('show');
+					});
 			}
 			else if ( d.action === 'edit' ) {
 				console.log(JSON.stringify(d.data))
