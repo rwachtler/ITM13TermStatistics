@@ -17,6 +17,7 @@ $('#url-alert-modal').on('hidden.bs.modal', function(e){
 	location.reload();
 });
 
+
 function generateSiteListTable() {
 
 	siteListEditor = new $.fn.dataTable.Editor( {
@@ -26,21 +27,15 @@ function generateSiteListTable() {
 			if ( d.action === 'create' ) {
 				//console.log(JSON.stringify(d.data[0]));
 				var data = d.data[0];
-				var address = data.address;
-				$.ajax(address)
-					.done(function(){
-						$.ajax({
-							type: "POST",
-							url: "./rest/website",
-							data: JSON.stringify(data),
-							success: successCallback,
-							error: errorCallback,
-							contentType: "application/json",
-						});
-					})
-					.fail(function(){
-						$('#url-alert-modal').modal('show');
-					});
+				ajax({
+					type: "POST",
+					url: "./rest/website",
+					data: JSON.stringify(data),
+					success: successCallback,
+					error: errorCallback,
+					contentType: "application/json",
+				});
+				
 			}
 			else if ( d.action === 'edit' ) {
 				console.log(JSON.stringify(d.data))
@@ -89,6 +84,36 @@ function generateSiteListTable() {
 		}
 		]
 	} );
+	
+	siteListEditor.on( 'preSubmit', function ( e, o, action ) {
+       console.log("Checking");
+		if ( action === 'create' ) {
+			console.log("in if");
+            var url = siteListEditor.field( 'address' );
+            var depth = siteListEditor.field('depth');
+            console.log(url.val());
+ 
+            //Beware of CORS ;)
+            $.ajax({ cache: false,
+                url: url.val(),
+                async: false
+            }).done(function (data) {
+                console.log(success);
+            }).fail(function (jqXHR, textStatus) {
+               url.error("Invalid URL: Maybe add slash at the end");
+            });
+            
+            if(depth.val()<1){
+            	depth.error("Depth must be at least 1");
+            }
+            
+            // If any error was reported, cancel the submission so it can be corrected
+            if ( this.inError() ) {
+            	console.log("inerror");
+                return false;
+            }
+        }
+    } );
 
 
 
