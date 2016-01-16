@@ -27,14 +27,9 @@ public class WebsiteDao implements IWebsite {
 	}
 
 	@Override
-	public Website createWebsite(String address, String description, int depth) {
+	public Website createWebsite(Website ws) {
 		// Create Website object
-		Website ws = new Website();
-		ws.setDomain(address);
-		ws.setDescription(description);
-		ws.setCrawldepth(depth);
 		ws.setActive(true);
-
 		ws.setLast_crawldate("1970-01-01");
 
 		// Actual Date for later use
@@ -250,7 +245,11 @@ public class WebsiteDao implements IWebsite {
 		    article_amount += c.getInt("amount");
 		}
 		
-		double average_amount = article_amount / list2.length();
+		double average_amount = 0.0;
+		
+		if(list2.length() != 0) {
+			average_amount = article_amount / list2.length();
+		}
 		
 		for (Object[] obj : queryResults) {
 			JSONObject json_obj = new JSONObject();

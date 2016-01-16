@@ -10,12 +10,12 @@ public interface IWebsite {
 
 	/**
 	 * Create new Website Object in DB
-	 * 
-	 * @param address
-	 * @param description
-	 * @param depth
+	 * @param ws: contains
+	 * address
+	 * description
+	 * depth
 	 */
-	Website createWebsite(String address, String description, int depth);
+	Website createWebsite(Website ws);
 
 	/**
 	 * Read persisted Website by its URL
