@@ -34,21 +34,33 @@ public class WordMockTest {
 		String text="test";
 		boolean active=true;
 		long sumAmount=10;
+		long wTypeID=0;
+		String wTypeText="unknown";
 
-		JSONObject validatorObject= new JSONObject();
-		validatorObject.put("amount", sumAmount);
-		validatorObject.put("word", text);
-		validatorObject.put("active", active);
+		JSONObject word = new JSONObject();
+		word.put("word", text);
+		word.put("amount",sumAmount);
+		word.put("active", active);
+		word.put("wType", wTypeID);
+		
+		JSONObject wordType = new JSONObject();
+		wordType.put("name", wTypeText);
+		
+		JSONObject validatorObject = new JSONObject();
+		validatorObject.put("word", word);
+		validatorObject.put("wTypes", wordType);
 		JSONArray validator= new JSONArray();
 		validator.put(validatorObject);
 
 
 		//QueryMock
 		List<Object[]> returnList = new ArrayList<Object[]>();
-		Object[] retArr= new Object[3];
+		Object[] retArr= new Object[5];
 		retArr[0]=text;
 		retArr[1]=active;
 		retArr[2]=sumAmount;
+		retArr[3]=wTypeID;
+		retArr[4]=wTypeText;
 		returnList.add(retArr);
 
 		Query mockedQuery = createMock(Query.class);
@@ -58,7 +70,7 @@ public class WordMockTest {
 		//EM Mock
 		EntityManager mockEm = createMock(EntityManager.class);
 		expect(mockEm.createQuery(
-				"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
+				"SELECT w.text, w.active, sum(c.amount), w.wordType.id, w.wordType.texttype  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
 				).andReturn(mockedQuery);
 		replay(mockEm);
 		WordDao wDAO= new WordDao();
