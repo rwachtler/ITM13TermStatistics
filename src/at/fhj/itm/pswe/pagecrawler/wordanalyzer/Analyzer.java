@@ -87,12 +87,11 @@ public class Analyzer {
 
 		this.wordMap = this.calculateWordMap(data);
 		Iterator<Map.Entry<String, Integer>> it = this.wordMap.entrySet().iterator();
-
+		
 		Article ar = null;
 
 		System.out.println("Start iterate over Wordmap");
 		while (it.hasNext()) {
-
 			// get key/value pair from hash map
  			Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>) it.next();
 
@@ -100,6 +99,13 @@ public class Analyzer {
 			int count = (int) pair.getValue();
 
 			Word wo = analyzerDAO.findWord(word);
+			
+			long findTypeofWordTimebefore = 0;
+			long findTypeofWordTimeafter = 0;
+			
+			long setTypeForWordTimebefore = 0;
+			long setTypeForWordTimeafter = 0;
+			
 			System.out.println("WORD: " + word + " | COUNT: " + count);
 
 			// check if word exists in the database
@@ -109,14 +115,24 @@ public class Analyzer {
 				wo.setActive(true);
 				wo.setText(word);
 
+				findTypeofWordTimebefore = System.currentTimeMillis();
 				// look up word type in the wordlist
 				String wordtype = analyzerDAO.findTypeForWord(word);
+				
+				findTypeofWordTimeafter = System.currentTimeMillis();
+				
+				setTypeForWordTimebefore = System.currentTimeMillis();
 				//Set Type for word and persist both
 				analyzerDAO.setTypeForWord(wo, wordtype);
+				setTypeForWordTimeafter = System.currentTimeMillis();
+				
+				
 			}
 
 			// Get Article, if already in Database
+			long findArticleTimebefore = System.currentTimeMillis();
 			ar = analyzerDAO.findArticle(url);
+			long findArticleTimeafter = System.currentTimeMillis();
 			// add container entry to database
 			Container newCont = new Container();
 			newCont.setAmount(count);
@@ -124,7 +140,17 @@ public class Analyzer {
 			newCont.setLogDate(DATE);
 			newCont.setWebsite(newWebsite);
 			newCont.setArticle(ar);
+			long saveContainerTimebefore = System.currentTimeMillis();
 			analyzerDAO.saveContainer(newCont);
+			long saveContainerTimeafter = System.currentTimeMillis();
+			
+			long saveContainerTime = System.currentTimeMillis();
+			
+			System.out.println("findWordTime: " + (findTypeofWordTimeafter - findTypeofWordTimebefore));
+			System.out.println("setTypeForWordTime: " + (setTypeForWordTimeafter - setTypeForWordTimebefore));
+			System.out.println("findArticleTime: " + (findArticleTimeafter - findArticleTimebefore));
+			System.out.println("saveContainerTime: " + (saveContainerTimeafter - saveContainerTimebefore));
+			System.out.println();
 		}
 
 		// Output of time from analyzing
