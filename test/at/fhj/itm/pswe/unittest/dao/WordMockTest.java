@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.easymock.EasyMock;
 import org.junit.Assert; 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Test;
 
@@ -19,6 +20,59 @@ import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
 public class WordMockTest {
+
+
+
+
+
+	/**
+	 * Tests wordAndAmount Method
+	 */
+	@Test
+	public void testWordAndAmount(){
+		//Setup
+		String text="test";
+		boolean active=true;
+		long sumAmount=10;
+
+		JSONObject validatorObject= new JSONObject();
+		validatorObject.put("amount", sumAmount);
+		validatorObject.put("word", text);
+		validatorObject.put("active", active);
+		JSONArray validator= new JSONArray();
+		validator.put(validatorObject);
+
+
+		//QueryMock
+		List<Object[]> returnList = new ArrayList<Object[]>();
+		Object[] retArr= new Object[3];
+		retArr[0]=text;
+		retArr[1]=active;
+		retArr[2]=sumAmount;
+		returnList.add(retArr);
+
+		Query mockedQuery = createMock(Query.class);
+		expect(mockedQuery.getResultList()).andReturn(returnList);
+		replay(mockedQuery);
+
+		//EM Mock
+		EntityManager mockEm = createMock(EntityManager.class);
+		expect(mockEm.createQuery(
+				"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
+				).andReturn(mockedQuery);
+		replay(mockEm);
+		WordDao wDAO= new WordDao();
+		wDAO.setEntityManager(mockEm);
+
+		//Test
+		JSONArray testResult=wDAO.wordAndAmount();
+
+		//Verify
+		verify(mockEm);
+		Assert.assertEquals(validator.toString(),testResult.toString());
+
+	}
+
 
 	/**
 	 * Test call to entitymanager in changeWord
@@ -118,8 +172,8 @@ public class WordMockTest {
 		validator.put("amount", testNum);
 		validator.put("word", testWord);
 		validator.put("active", testActive);
-		
-		
+
+
 		//Init Mock For Query
 		Query qMock=mockQuery("word", testWord, returnList);
 		replay(qMock);
@@ -137,20 +191,20 @@ public class WordMockTest {
 
 		//run test
 		JSONObject testResult= wDAO.findSingleWordWithAmount(testWord);
-		
+
 		//Validate
 		verify(mockEm);
-		Assert.assertEquals(testResult.toString(),validator.toString());
+		Assert.assertEquals(validator.toString(),testResult.toString());
 
 
 	}
-	
+
 	/**
 	 * Test the findSingleWordMethodNoValid
 	 * With no valid input
 	 * 
 	 */
-	
+
 	@Test
 	public void testFindSingleWordNoValid(){
 
@@ -159,11 +213,11 @@ public class WordMockTest {
 		String testWord= "test";
 		List<Object[]> returnList = new ArrayList<Object[]>();
 
-		
+
 		//Compare to empty object
 		JSONObject validator= new JSONObject();
-		
-		
+
+
 		//Init Mock For Query
 		Query qMock=mockQuery("word", testWord, returnList);
 		replay(qMock);
@@ -181,11 +235,102 @@ public class WordMockTest {
 
 		//run test
 		JSONObject testResult= wDAO.findSingleWordWithAmount(testWord);
-		
+
 		//Validate
 		verify(mockEm);
-		Assert.assertEquals(testResult.toString(),validator.toString());
-
-
+		Assert.assertEquals(validator.toString(),testResult.toString());
 	}
+
+	/**
+	 * Test Sitesofword method with valid input
+	 */
+	@Test
+	public void testsitesOfWord(){
+		//Setup
+		String text="test";
+		long id=15;
+		String adresse="test.de";
+		long sumAmount=10;
+
+		JSONObject validatorObject= new JSONObject();
+		validatorObject.put("amount", sumAmount);
+		validatorObject.put("id", id);
+		validatorObject.put("adresse", adresse);
+		JSONArray validator= new JSONArray();
+		validator.put(validatorObject);
+
+
+		//QueryMock
+		List<Object[]> returnList = new ArrayList<Object[]>();
+		Object[] retArr= new Object[3];
+		retArr[0]=id;
+		retArr[1]=adresse;
+		retArr[2]=sumAmount;
+		returnList.add(retArr);
+
+		Query mockedQuery = mockQuery("word", text, returnList);
+		replay(mockedQuery);
+		//EM Mock
+		EntityManager mockEm = createMock(EntityManager.class);
+		expect(mockEm.createQuery(
+				"SELECT c.website.id, c.website.domain, sum(c.amount) "
+						+ "FROM Container c WHERE c.word.text LIKE :word AND c.word.active = TRUE "
+						+ "GROUP BY c.website ORDER BY sum(c.amount) DESC")
+				).andReturn(mockedQuery);
+		replay(mockEm);
+		WordDao wDAO= new WordDao();
+		wDAO.setEntityManager(mockEm);
+
+		//Test
+		JSONArray testResult=wDAO.sitesOfWord(text);
+
+		//Verify
+		verify(mockEm);
+		Assert.assertEquals(validator.toString(),testResult.toString());
+	}
+
+	/**
+	 * Test Sitesofword method with invalid input
+	 */
+	@Test
+	public void testsitesOfWordInvalid(){
+		//Setup
+		String text="test";
+
+
+
+		JSONArray validator= new JSONArray();
+
+
+
+		//QueryMock
+		List<Object[]> returnList = new ArrayList<Object[]>();
+
+
+		Query mockedQuery = mockQuery("word", text, returnList);
+		replay(mockedQuery);
+		//EM Mock
+		EntityManager mockEm = createMock(EntityManager.class);
+		expect(mockEm.createQuery(
+				"SELECT c.website.id, c.website.domain, sum(c.amount) "
+						+ "FROM Container c WHERE c.word.text LIKE :word AND c.word.active = TRUE "
+						+ "GROUP BY c.website ORDER BY sum(c.amount) DESC")
+				).andReturn(mockedQuery);
+		replay(mockEm);
+		WordDao wDAO= new WordDao();
+		wDAO.setEntityManager(mockEm);
+
+		//Test
+		JSONArray testResult=wDAO.sitesOfWord(text);
+
+		//Verify
+		verify(mockEm);
+		Assert.assertEquals(validator.toString(),testResult.toString());
+	}
+	
+	
+
+	
+
+
 }
