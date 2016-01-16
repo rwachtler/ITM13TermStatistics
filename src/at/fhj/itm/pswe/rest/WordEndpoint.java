@@ -37,13 +37,14 @@ public class WordEndpoint {
 	 * Get all Words from all Websites with the actual word, active status and
 	 * amount
 	 * 
-	 * @return JSONObject with jsonarray of data
+	 * @return JSONObject with jsonarray of data and options
 	 */
 	@GET
 	@Produces("application/json")
 	public Response listAllwithAmount() {
 		JSONObject my = new JSONObject();
 		my.put("data", wDao.wordAndAmount());
+		my.put("options", new JSONObject().put("word.wType", wDao.wordTypeAsOption()));
 
 		return Response.ok(my.toString()).build();
 	}

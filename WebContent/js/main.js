@@ -145,7 +145,13 @@ function generateWordsTable() {
 		},
 		idSrc: "word",
 		table: "#word-list-table",
-		fields: [{
+		fields: [
+		{
+			label: "Wordtype",
+			name: "wType",
+			type: "select",
+			placeholder: "Select Wordtype"
+		},{
 			label: "Active",
 			name: "active",
 			type: "checkbox",
@@ -167,6 +173,7 @@ function generateWordsTable() {
 		columns: [
 		          { data: "word" },
 		          { data: "amount" },
+		          { data: "wType"},
 		          { data: "active" },
 		          { data: null}
 		          //Render Function below
@@ -176,12 +183,17 @@ function generateWordsTable() {
 		        	   {	render: function ( data, type, row ) {
 		        		   				return "<a class='btn btn-primary' href='./WordOverview/"+row.word+"'>Details</a>"
 		        	   },
-		        	   targets: 3 },
-		        	   { orderable: false, targets: 3 },
-		        	   { searchable: false, targets: 3 }
+		        	   targets: 34},
+		        	   { orderable: false, targets: 4 },
+		        	   { searchable: false, targets: 4 }
 		        	   ],
 		          select: 'single',
 		          buttons: [{ extend: "edit",   editor: wordListEditor }]
 
 	} );
+	
+	
+	wordListEditor
+	.on( 'initEdit', function () {  } )
+	.on( 'initCreate', function () { siteListEditor.enable( "address" ); siteListEditor.hide( "active" ); } );
 }

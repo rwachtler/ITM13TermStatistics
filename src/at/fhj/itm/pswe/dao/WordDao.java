@@ -30,22 +30,52 @@ public class WordDao implements IWord {
 
 		List<Object[]> queryResult = em
 				.createQuery(
-						"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
+						"SELECT w.text, w.active, sum(c.amount), w.wordType.id, w.wordType.texttype  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
 						.getResultList();
 
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : queryResult) {
-			JSONObject temp = new JSONObject();
-			temp.put("word", wo[0]);
-			temp.put("amount", wo[2]);
-			temp.put("active", wo[1]);
+			JSONObject word = new JSONObject();
+			word.put("word", wo[0]);
+			word.put("amount", wo[2]);
+			word.put("active", wo[1]);
+			word.put("wType", wo[3]);
+			
+			JSONObject wordType = new JSONObject();
+			wordType.put("name", wo[4]);
+			
+			JSONObject complete = new JSONObject();
+			complete.put("word", word);
+			complete.put("wTypes", wordType);
 
-			result.put(temp);
+			result.put(complete);
 		}
 
 		return result;
 	}
+	
+	@Override
+	public JSONArray wordTypeAsOption(){
+		List<Object[]> queryResult = em
+				.createQuery(
+						"SELECT wt.id, wt.texttype  FROM WordType wt  GROUP BY w.text, w.active")
+						.getResultList();
+
+		JSONArray result = new JSONArray();
+
+		for (Object[] wo : queryResult) {
+			JSONObject wordType = new JSONObject();
+			wordType.put("label", wo[1]);
+			wordType.put("value", wo[0]);
+			
+			result.put(wordType);
+		}
+
+		return result;
+	}
+	
+	
 
 	@Override
 	public JSONArray sitesOfWord(String word) {

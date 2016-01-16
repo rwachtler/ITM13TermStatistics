@@ -54,4 +54,10 @@ public interface IWord {
 	 * @return JSONArray of desired Data
 	 */
 	JSONArray wordCountOverPeriod(String word, String startdate, String enddate);
+	
+	/**
+	 * Returns all wordtype formattet as dt options
+	 * @return
+	 */
+	JSONArray wordTypeAsOption();
 }
