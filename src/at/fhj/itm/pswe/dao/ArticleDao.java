@@ -99,15 +99,15 @@ public class ArticleDao implements IArticle {
 		Query q = em.createQuery("SELECT SUM(ast.analyzeDuration)/COUNT(ast.analyzeDuration) "
 				+ "FROM ArticleStat ast WHERE ast.article.id=:id ORDER BY ast.article.url").setParameter("id", id);
 		
-		List<Long> queryResults = q.getResultList();
+		List<Object[]> queryResults = q.getResultList();
 
 		JSONArray result = new JSONArray();
 
-		for (Long wo : queryResults) {
-			System.out.println("getAVGAnalyzeDurationofArticle: " + wo);
+		for (Object[] wo : queryResults) {
+			System.out.println("getAVGAnalyzeDurationofArticle: " + wo[0]);
 
 			JSONObject temp = new JSONObject();
-			temp.put("avgAnalyze", wo);
+			temp.put("avgAnalyze", wo[0]);
 
 			result.put(temp);
 		}
