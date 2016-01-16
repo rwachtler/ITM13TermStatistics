@@ -116,7 +116,7 @@ public class ArticleDao implements IArticle {
 	}
 
 	public void setEntityManager(EntityManager mockEm) {
-		this.em=em;
+		this.em=mockEm;
 	}
 
 }
