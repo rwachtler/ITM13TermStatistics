@@ -105,7 +105,7 @@ public class AnalyzerMockTest {
 		Assert.assertEquals(testResult,we.getWordtype());
 	 }
     
-	 //unbekannter Typ!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! nicht auf null
+	 //unbekannter Typ----------------wie in wordmock umaendern----------------------
 	 @Test
 	 public void testFindNoTypOfWord(){
 		 Word w=new Word();
@@ -151,7 +151,7 @@ public class AnalyzerMockTest {
 			return mockedQuery;
 	 }
 	 
-    //testfall wenn wordtype existiert !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    //testfall wenn wordtype existiert -------------------------------------------------------------
 	 //Problem mit persist
 	 @Test
 	 public void testSetTypeForWord(){
@@ -202,7 +202,7 @@ public class AnalyzerMockTest {
 		 
 	 }
     
-    //zweiter testfall wenn wordtype noch nicht vorhanden
+    //zweiter testfall wenn wordtype noch nicht vorhanden -------------------------------------------
 	 
 	 
 	 private Query mockQueryArticle(String param, String replace, List<Object[]> results) {
@@ -253,6 +253,41 @@ public class AnalyzerMockTest {
 		 
 		 
 	 }
+	 //---------------------------------------------------------------------------
+	 @Test
+	 public void testFindArticleNotExisting(){
+		 
+		 List<Object[]> returnList = new ArrayList<Object[]>();
+	 
+		 AnalyzerDao adao=new AnalyzerDao();
+		 
+		EntityManager mockEm = createMock(EntityManager.class);
+		
+		 
+		Query qMock=mockQueryArticle("url", "http://test.at/test",returnList);
+		replay(qMock);		
+
+		expect(mockEm.createQuery(
+				"SELECT a.id, a.url FROM Article a WHERE a.url = :url")
+				).andReturn(qMock);
+		
+		Article a=new Article();
+		a.setUrl("http://test.at/test");
+		mockEm.persist(a);
+		EasyMock.expectLastCall().once();
+		replay(mockEm);
+
+
+		adao.setEntityManager(mockEm);
+		
+		Article testResult= adao.findArticle("http://test.at/test");
+		
+		verify(mockEm);
+	//	Assert.assertEquals(testResult.getUrl(),a.getUrl());
+		 
+		 
+	 }
+
 
 	 private Query mockQueryWebsite(String param, String replace,  List<Website> results) {
 			Query mockedQuery = createMock(Query.class);
@@ -288,8 +323,34 @@ public class AnalyzerMockTest {
 			ad.setEntityManager(mockEm);
 
 			Website testResult= ad.findWebsite(ws.getDomain());
+			verify(mockEm);
 
 			Assert.assertEquals(testResult.getDomain(),ws.getDomain());
+	 }
+	 
+	 @Test(expected=NullPointerException.class)
+	 public void testFindNoebsites(){
+
+		 List<Website> returnList = new ArrayList<Website>();
+		 AnalyzerDao ad=new AnalyzerDao();
+		
+		 Query qMock=mockQueryWebsite("domain", "http://test.at",returnList);
+			replay(qMock);
+
+			EntityManager mockEm = createMock(EntityManager.class);
+
+			expect(mockEm.createQuery(
+					"SELECT w FROM Website w WHERE w.domain = :domain")
+					).andReturn(qMock);
+
+			replay(mockEm);
+
+			ad.setEntityManager(mockEm);
+
+			Website testResult= ad.findWebsite("http://test.at");
+			verify(mockEm);
+
+			Assert.assertEquals(testResult.getDomain(),null);
 	 }
 
 	 @Test
