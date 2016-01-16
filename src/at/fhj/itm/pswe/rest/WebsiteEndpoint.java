@@ -77,6 +77,7 @@ public class WebsiteEndpoint {
 		// Add info for Return object
 		json.put("id", ws.getId());
 		json.put("active", ws.getActive());
+		json.put("lCrawled", ws.getLast_crawldate());
 
 		// TODO: Inject new maincrawler object and start a crawl
 		/*
@@ -103,6 +104,7 @@ public class WebsiteEndpoint {
 	public Response listAll() {
 		JSONObject my = new JSONObject();
 		my.put("data", wDao.findAllWebsitesJSON());
+		System.out.println(my.toString());
 
 		return Response.ok(my.toString()).build();
 	}
@@ -225,7 +227,7 @@ public class WebsiteEndpoint {
 		output.put("data",
 				new JSONArray().put(new JSONObject().put("id", wsOut.getId()).put("address", wsOut.getDomain())
 						.put("description", wsOut.getDescription()).put("depth", wsOut.getCrawldepth())
-						.put("active", wsOut.getActive())));
+						.put("active", wsOut.getActive()).put("lCrawled", wsOut.getLast_crawldate())));
 
 		// Add info for Return object
 		System.out.println("JSON: " + output.toString());
