@@ -95,18 +95,6 @@ public class WebsiteMockTest {
 		verify(mockEm);
 	}
 	
-	abstract public class SideEffect implements IAnswer<Void> {
-		public Void answer() throws Throwable
-		{
-		effect();
-		//Void is an uninstantiable placeholder class
-		return null;
-		}
-
-		abstract public void effect() throws Throwable;
-		}
-	
-	
 	@Test
 	public void testreadWebsite(){
 		//SETUP 

@@ -9,20 +9,22 @@ public interface IArticle {
 	/**
 	 * Create new Article Object in DB
 	 * 
-	 * @param url
-	 *            URL of the Article
+	 * @param ar
+	 *            Article Object
 	 * @return persisted Article
 	 */
-	Article createArticle(String url);
+	Article createArticle(Article ar);
 
+	/* NOT USED
 	/**
 	 * Get the persisted Article Object from the DB
 	 * 
 	 * @param url
 	 *            URL of the Article
 	 * @return Complete Article Object
-	 */
+	 *
 	Article readArticle(String url);
+	 */
 
 	/**
 	 * Update an Article Object in DB

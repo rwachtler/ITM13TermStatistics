@@ -16,22 +16,24 @@ import at.fhj.itm.pswe.model.Article;
 @Stateless
 public class ArticleDao implements IArticle {
 
-	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
+	
+	@PersistenceContext(unitName = "TermStatistics")
+	public void setEntityManager(EntityManager mockEm) {
+		this.em=mockEm;
+	}
 
 	@Override
-	public Article createArticle(String url) {
-		// Create Website object
-		Article ar = new Article();
-		ar.setUrl(url);
+	public Article createArticle(Article ar) {
 
 		// Save to DB
 		em.persist(ar);
 		em.flush();
 
-		return readArticle(url);
+		return ar;
 	}
 
+	/* NOT USED
 	@Override
 	public Article readArticle(String url) {
 		Query q = em.createQuery("SELECT ar.id, ar.url FROM Article ar WHERE ar.url = :url").setParameter("url", url);
@@ -44,6 +46,7 @@ public class ArticleDao implements IArticle {
 
 		return ar;
 	}
+	*/
 
 	@Override
 	public Article updateArticle(Article ar) {
@@ -113,10 +116,6 @@ public class ArticleDao implements IArticle {
 		}
 		
 		return result;
-	}
-
-	public void setEntityManager(EntityManager mockEm) {
-		this.em=mockEm;
 	}
 
 }

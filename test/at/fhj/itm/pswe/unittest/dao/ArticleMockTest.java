@@ -28,25 +28,34 @@ public class ArticleMockTest {
 	
 	@Test
 	public void createArticle(){
-	Article a= new Article();
-	a.setUrl("www.koeckman.at");
+		String url = "www.koeckman.at";
+		int id = 1;
+		
+		final Article a= new Article();
+		a.setUrl(url);
 
-	ArticleDao aDAO= new ArticleDao();
+		EntityManager mockEm = createMock(EntityManager.class);
 
-	EntityManager mockEm = createMock(EntityManager.class);
-	expect(mockEm.find(Article.class,a.getUrl())).andReturn(a);
-	replay(mockEm);
-	mockEm.persist(a);
-	EasyMock.expectLastCall().once();
-	mockEm.flush();
-	EasyMock.expectLastCall().once();
-	replay(mockEm);
+		mockEm.persist(a);
+		
+		mockEm.flush();
+		
+		EasyMock.expectLastCall().andAnswer(new SideEffect() {
+			
+			@Override
+			public void effect() throws Throwable {
+				a.setId(1);
+			}
+		});
 	
-	aDAO.setEntityManager(mockEm);
-	aDAO.createArticle(a.getUrl());
-	aDAO.readArticle(a.getUrl());
-
-	verify(mockEm);
+		replay(mockEm);
+		
+		ArticleDao aDAO= new ArticleDao();
+		aDAO.setEntityManager(mockEm);
+		Article result = aDAO.createArticle(a);
+	
+		Assert.assertEquals(a, result);
+		verify(mockEm);
 	
 	}	
 	
