@@ -300,49 +300,96 @@ public class WordMockTest {
 		verify(mockEm);
 		Assert.assertEquals(validator.toString(),testResult.toString());
 	}
-
-	/**
-	 * Test Sitesofword method with invalid input
-	 */
+	
 	@Test
-	public void testsitesOfWordInvalid(){
+	public void testwordCountOverPeriod(){
 		//Setup
-		String text="test";
-
-
-
+		String word = "test";
+		String startdate = "2015-05-05";
+		String enddate = "2015-05-06";
+		
+		String date = "2015-05-05";
+		int amount = 5;
+				
+		JSONObject validatorObject= new JSONObject();
+		validatorObject.put("date", date);
+		validatorObject.put("amount", amount);
 		JSONArray validator= new JSONArray();
-
-
-
-		//QueryMock
+		validator.put(validatorObject);
+		
 		List<Object[]> returnList = new ArrayList<Object[]>();
-
-
-		Query mockedQuery = mockQuery("word", text, returnList);
+		Object[] retArr= new Object[2];
+		retArr[0]=date;
+		retArr[1]=amount;
+		returnList.add(retArr);
+		
+		//QueryMock
+		Query mockedQuery = createMock(Query.class);
+		expect(mockedQuery.setParameter("word", word)).andReturn(mockedQuery);
+		expect(mockedQuery.setParameter("startdate", startdate)).andReturn(mockedQuery);
+		expect(mockedQuery.setParameter("enddate", enddate)).andReturn(mockedQuery);
+		
+		expect(mockedQuery.getResultList()).andReturn(returnList);
 		replay(mockedQuery);
-		//EM Mock
+		
 		EntityManager mockEm = createMock(EntityManager.class);
 		expect(mockEm.createQuery(
-				"SELECT c.website.id, c.website.domain, sum(c.amount) "
-						+ "FROM Container c WHERE c.word.text LIKE :word AND c.word.active = TRUE "
-						+ "GROUP BY c.website ORDER BY sum(c.amount) DESC")
+				"SELECT co.logDate, SUM(co.amount) FROM Container co "
+						+ "WHERE co.word.text = :word AND (co.logDate BETWEEN :startdate AND :enddate) "
+						+ "GROUP BY co.logDate")
 				).andReturn(mockedQuery);
 		replay(mockEm);
+		
 		WordDao wDAO= new WordDao();
 		wDAO.setEntityManager(mockEm);
 
 		//Test
-		JSONArray testResult=wDAO.sitesOfWord(text);
+		JSONArray testResult=wDAO.wordCountOverPeriod(word,startdate,enddate);
 
 		//Verify
 		verify(mockEm);
 		Assert.assertEquals(validator.toString(),testResult.toString());
 	}
 	
-	
+	@Test
+	public void testwordTypeAsOption(){
+		//Setup		
+		String label = "unknown";
+		int value = 1;
+				
+		JSONObject validatorObject= new JSONObject();
+		validatorObject.put("value", value);
+		validatorObject.put("label", label);
+		JSONArray validator= new JSONArray();
+		validator.put(validatorObject);
+		
+		List<Object[]> returnList = new ArrayList<Object[]>();
+		Object[] retArr= new Object[2];
+		retArr[0]=value;
+		retArr[1]=label;
+		returnList.add(retArr);
+		
+		//QueryMock
+		Query mockedQuery = createMock(Query.class);
+		
+		expect(mockedQuery.getResultList()).andReturn(returnList);
+		replay(mockedQuery);
+		
+		EntityManager mockEm = createMock(EntityManager.class);
+		expect(mockEm.createQuery(
+				"SELECT wt.id, wt.texttype FROM WordType wt GROUP BY w.text, w.active")
+				).andReturn(mockedQuery);
+		replay(mockEm);
+		
+		WordDao wDAO= new WordDao();
+		wDAO.setEntityManager(mockEm);
 
-	
+		//Test
+		JSONArray testResult=wDAO.wordTypeAsOption();
 
+		//Verify
+		verify(mockEm);
+		Assert.assertEquals(validator.toString(),testResult.toString());
+	}
 
 }

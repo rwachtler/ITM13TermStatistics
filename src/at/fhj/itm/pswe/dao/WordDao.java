@@ -66,8 +66,8 @@ public class WordDao implements IWord {
 
 		for (Object[] wo : queryResult) {
 			JSONObject wordType = new JSONObject();
-			wordType.put("label", wo[1]);
 			wordType.put("value", wo[0]);
+			wordType.put("label", wo[1]);
 			
 			result.put(wordType);
 		}
