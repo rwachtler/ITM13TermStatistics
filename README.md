@@ -67,6 +67,10 @@ Filename can be gathered from `Init_LinkCrawler object` with `.getFilename();`
 - Subsites( Word/Site Overview) are called via Servlet
 - url: `TermStatistics/SiteOverview/{idOfSite}`
 
+##Input Validation
+- Due to CORS, URL check may fail even if url is valid
+- Crawldepth has to be at least 1
+
 ## REST-Calls
 - `/rest/action/crawler/{crawlerid}` -> restart the Crawler for an already safed Website in the Database
 - `/rest/article/{articleid}/words` -> get all words from one article identified by its id with amount
