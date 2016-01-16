@@ -30,7 +30,7 @@ public class WordDao implements IWord {
 
 		List<Object[]> queryResult = em
 				.createQuery(
-						"SELECT w.text, w.active, sum(c.amount), w.wordType.id, w.wordType.texttype  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
+						"SELECT w.text, w.active, sum(c.amount), w.wordtype.id, w.wordtype.texttype  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
 						.getResultList();
 
 		JSONArray result = new JSONArray();
@@ -59,7 +59,7 @@ public class WordDao implements IWord {
 	public JSONArray wordTypeAsOption(){
 		List<Object[]> queryResult = em
 				.createQuery(
-						"SELECT wt.id, wt.texttype FROM WordType wt GROUP BY w.text, w.active")
+						"SELECT w.wordtype.id, w.wordtype.texttype FROM Word w GROUP BY w.text, w.active")
 						.getResultList();
 
 		JSONArray result = new JSONArray();
