@@ -13,9 +13,13 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.easymock.EasyMock;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.junit.Assert;
 import org.junit.Test;
 
 import at.fhj.itm.pswe.dao.WebsiteDao;
+import at.fhj.itm.pswe.dao.WordDao;
 import at.fhj.itm.pswe.model.Website;
 
 public class WebsiteMockTest {
@@ -155,6 +159,61 @@ public class WebsiteMockTest {
 		
 		//VERIFY
 		verify(mockEm);
+	}
+	
+	@Test
+	public void testfindAllWebsitesJSON(){
+		//Setup JSON
+		long id = 1;
+		String address = "test.at"; 
+		String description = "Testseite";
+		boolean active = true;
+		String lCrawled = "2015-05-05";
+		int depth = 2;
+		
+		JSONObject validatorObject= new JSONObject();
+		validatorObject.put("id", id);
+		validatorObject.put("address", address);
+		validatorObject.put("description", description);
+		validatorObject.put("active", active);
+		validatorObject.put("lCrawled", lCrawled);
+		validatorObject.put("depth", depth);
+		JSONArray validator= new JSONArray();
+		validator.put(validatorObject);
+		
+		//SETUP Website
+		List<Website> expected = new ArrayList<>();
+		Website w = new Website();
+		w.setId(1);
+		w.setDomain("test.at");
+		w.setActive(true);
+		w.setDescription("Testseite");
+		w.setLast_crawldate("2015-05-05");
+		w.setCrawldepth(2);
+		expected.add(w);
+		
+		//QueryMock
+		TypedQuery<Website> mockedQuery = createMock(TypedQuery.class);
+		expect(mockedQuery.getResultList()).andReturn(expected);
+		replay(mockedQuery);
+		
+		EntityManager mockEm = createMock(EntityManager.class);
+		expect(mockEm.createQuery(
+				"SELECT DISTINCT w FROM Website w ORDER BY w.id", Website.class)
+				).andReturn(mockedQuery);
+		replay(mockEm);
+		
+
+		WebsiteDao wDao=new WebsiteDao();
+		wDao.setEntityManager(mockEm);
+		
+		//TEST SETUP
+		JSONArray testResult = wDao.findAllWebsitesJSON();
+		
+		verify(mockEm);
+		
+		Assert.assertEquals(validator.toString(),testResult.toString());
+		
 	}
 
 }
