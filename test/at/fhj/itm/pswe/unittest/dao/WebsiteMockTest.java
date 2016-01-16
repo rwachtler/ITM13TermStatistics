@@ -28,7 +28,7 @@ public class WebsiteMockTest {
 		EntityManager mockEm = createMock(EntityManager.class);
 		
 		expect(mockEm.find(Website.class, w.getId())).andReturn(w);
-		
+		replay(mockEm);
 		mockEm.remove(w);
 		EasyMock.expectLastCall().once();
 		replay(mockEm);

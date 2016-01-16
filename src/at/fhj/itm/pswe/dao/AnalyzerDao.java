@@ -118,6 +118,8 @@ public class AnalyzerDao {
 		Website returnSite = null;;
 		if (result.size() > 0)
 			returnSite = result.get(0);
+		else
+			System.out.println("Site not found");
 		return returnSite;
 
 	}
