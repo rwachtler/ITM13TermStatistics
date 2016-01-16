@@ -59,7 +59,7 @@ public class WordDao implements IWord {
 	public JSONArray wordTypeAsOption(){
 		List<Object[]> queryResult = em
 				.createQuery(
-						"SELECT wt.id, wt.texttype  FROM WordType wt  GROUP BY w.text, w.active")
+						"SELECT wt.id, wt.texttype FROM WordType wt GROUP BY w.text, w.active")
 						.getResultList();
 
 		JSONArray result = new JSONArray();
