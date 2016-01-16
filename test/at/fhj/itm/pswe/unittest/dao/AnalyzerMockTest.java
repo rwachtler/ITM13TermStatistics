@@ -180,9 +180,8 @@ public class AnalyzerMockTest {
 				"SELECT wt FROM Wordtype wt WHERE wt.texttype = :wordtype")
 				).andReturn(qMock);
 			    
-		Wordtype wt=new Wordtype();
-		wt.setTexttype("nomen");
-		mockEm.persist(wt);
+
+		mockEm.persist(wtNomen);
 		EasyMock.expectLastCall().once();
 		
 		mockEm.persist(wNomen);
@@ -249,6 +248,8 @@ public class AnalyzerMockTest {
 		Article testResult= adao.findArticle(at.getUrl());
 		System.out.println(testResult.getUrl());
 		
+		verify(mockEm);
+		
 		Assert.assertEquals(testResult.getUrl(),at.getUrl());
 		 
 		 
@@ -271,10 +272,19 @@ public class AnalyzerMockTest {
 				"SELECT a.id, a.url FROM Article a WHERE a.url = :url")
 				).andReturn(qMock);
 		
-		Article a=new Article();
+		final Article a=new Article();
 		a.setUrl("http://test.at/test");
+		a.setId(1);
 		mockEm.persist(a);
-		EasyMock.expectLastCall().once();
+		//Fakes the db setting the id in the website object
+		EasyMock.expectLastCall().andAnswer(new SideEffect() {
+			
+			@Override
+			public void effect() throws Throwable {
+				a.setId(1);
+				
+			}
+		});
 		replay(mockEm);
 
 
@@ -283,7 +293,7 @@ public class AnalyzerMockTest {
 		Article testResult= adao.findArticle("http://test.at/test");
 		
 		verify(mockEm);
-	//	Assert.assertEquals(testResult.getUrl(),a.getUrl());
+		Assert.assertEquals(testResult.getUrl(),a.getUrl());
 		 
 		 
 	 }
@@ -329,7 +339,7 @@ public class AnalyzerMockTest {
 	 }
 	 
 	 @Test(expected=NullPointerException.class)
-	 public void testFindNoebsites(){
+	 public void testFindNoWebsites(){
 
 		 List<Website> returnList = new ArrayList<Website>();
 		 AnalyzerDao ad=new AnalyzerDao();
