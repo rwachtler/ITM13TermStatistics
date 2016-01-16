@@ -19,8 +19,12 @@ import at.fhj.itm.pswe.model.Website;
 @Stateless
 public class WebsiteDao implements IWebsite {
 
-	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
+	
+	@PersistenceContext(unitName = "TermStatistics")
+	public void setEntityManager(EntityManager em) {
+		this.em = em;
+	}
 
 	@Override
 	public Website createWebsite(String address, String description, int depth) {
@@ -116,7 +120,10 @@ public class WebsiteDao implements IWebsite {
 	@Override
 	public void deleteWebsite(int id) {
 		Website ws = em.find(Website.class, id);
-		em.remove(ws);
+		if(ws != null){
+			em.remove(ws);
+			em.flush();
+		}
 	}
 
 	@Override
@@ -276,11 +283,6 @@ public class WebsiteDao implements IWebsite {
 		}
 		
 		return list;
-	}
-
-	public void setEntityManager(EntityManager mockEm) {
-		this.em=em;
-		
 	}
 
 }

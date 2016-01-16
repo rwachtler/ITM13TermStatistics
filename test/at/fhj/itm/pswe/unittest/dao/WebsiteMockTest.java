@@ -17,6 +17,7 @@ public class WebsiteMockTest {
 	
 	@Test
 	public void deleteWebsite(){
+		//SETUP 
 		Website w=new Website();
 		w.setId(1);
 		w.setDomain("http://test.at");
@@ -28,15 +29,19 @@ public class WebsiteMockTest {
 		EntityManager mockEm = createMock(EntityManager.class);
 		
 		expect(mockEm.find(Website.class, w.getId())).andReturn(w);
-		replay(mockEm);
+
 		mockEm.remove(w);
+		EasyMock.expectLastCall().once();
+		mockEm.flush();
 		EasyMock.expectLastCall().once();
 		replay(mockEm);
 		
 		wDao.setEntityManager(mockEm);
 		
+		//TEST SETUP
 		wDao.deleteWebsite(1);
 		
+		//VERIFY
 		verify(mockEm);
 		
 	}
@@ -51,20 +56,18 @@ public class WebsiteMockTest {
 		
 		WebsiteDao wDao=new WebsiteDao();
 		
-		EntityManager mockEm = createMock(EntityManager.class);
-		expect(mockEm.find(Website.class, "http://test.at")).andReturn(w);
-		mockEm.persist(w);
-		EasyMock.expectLastCall().once();
+		EntityManager mockEm = EasyMock.createMock(EntityManager.class);
 		
-		mockEm.flush();
+		mockEm.persist(w);
 		EasyMock.expectLastCall();
+		
 		//set to replay state
 		replay(mockEm);
 		//Set Mock Object
 		wDao.setEntityManager(mockEm);
 
 		//TEST
-		wDao.createWebsite("http://test.at", "Test", 1);
+		Website result = wDao.createWebsite("http://test.at", "Test", 1);
 
 		//Verify
 		verify(mockEm);
