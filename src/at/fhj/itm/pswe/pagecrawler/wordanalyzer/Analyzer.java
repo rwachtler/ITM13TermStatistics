@@ -131,7 +131,9 @@ public class Analyzer {
 
 			// Get Article, if already in Database
 			long findArticleTimebefore = System.currentTimeMillis();
-			ar = analyzerDAO.findArticle(url);
+			Article tmp = new Article();
+			tmp.setUrl(url);
+			ar = analyzerDAO.findArticle(tmp);
 			long findArticleTimeafter = System.currentTimeMillis();
 			// add container entry to database
 			Container newCont = new Container();

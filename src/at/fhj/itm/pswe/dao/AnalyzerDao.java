@@ -78,16 +78,13 @@ public class AnalyzerDao {
 		em.persist(wo);
 	}
 	
-	public Article findArticle(String url){
-		Query q = em.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url").setParameter("url", url);
+	public Article findArticle(Article ar){
+		Query q = em.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url").setParameter("url", ar.getUrl());
 
 		List<Object[]> queryResults = q.getResultList();
-		Article ar;
 		if (queryResults.size() == 0) {
 			// if article not in database, persist it
-			System.out.println("Add Article: " + url);
-			ar = new Article();
-			ar.setUrl(url);
+			System.out.println("Add Article: " + ar.getUrl());
 			em.persist(ar);
 		} else {
 			// else get the one from Database

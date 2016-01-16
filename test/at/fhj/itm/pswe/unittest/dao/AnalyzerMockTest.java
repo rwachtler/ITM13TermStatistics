@@ -221,7 +221,7 @@ public class AnalyzerMockTest {
 		adao.setEntityManager(mockEm);
 
 		System.out.println(at.getUrl());
-		Article testResult = adao.findArticle(at.getUrl());
+		Article testResult = adao.findArticle(at);
 		System.out.println(testResult.getUrl());
 
 		verify(mockEm);
@@ -234,38 +234,40 @@ public class AnalyzerMockTest {
 	@Test
 	public void testFindArticleNotExisting() {
 
-		List<Object[]> returnList = new ArrayList<Object[]>();
+		String url = "http://test.at/test";
+		
+		final Article ar = new Article();
+		ar.setUrl(url);
 
-		AnalyzerDao adao = new AnalyzerDao();
+		List<Object[]> returnList = new ArrayList<>();
 
 		EntityManager mockEm = createMock(EntityManager.class);
 
-		Query qMock = mockQueryArticle("url", "http://test.at/test", returnList);
-		replay(qMock);
+		Query mockedQuery = createMock(Query.class);
+		expect(mockedQuery.setParameter("url", ar.getUrl())).andReturn(mockedQuery);
+		expect(mockedQuery.getResultList()).andReturn(returnList);
+		replay(mockedQuery);
 
-		expect(mockEm.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url")).andReturn(qMock);
+		expect(mockEm.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url")).andReturn(mockedQuery);
 
-		final Article a = new Article();
-		a.setUrl("http://test.at/test");
-		a.setId(1);
-		mockEm.persist(a);
+		mockEm.persist(ar);
 		// Fakes the db setting the id in the website object
 		EasyMock.expectLastCall().andAnswer(new SideEffect() {
 
 			@Override
 			public void effect() throws Throwable {
-				a.setId(1);
+				ar.setId(1);
 
 			}
 		});
 		replay(mockEm);
 
+		AnalyzerDao adao = new AnalyzerDao();
 		adao.setEntityManager(mockEm);
 
-		Article testResult = adao.findArticle("http://test.at/test");
-
+		Article testResult = adao.findArticle(ar);
+		Assert.assertEquals(ar, testResult);
 		verify(mockEm);
-		Assert.assertEquals(testResult.getUrl(), a.getUrl());
 
 	}
 
