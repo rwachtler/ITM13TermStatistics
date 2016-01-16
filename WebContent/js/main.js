@@ -9,6 +9,12 @@ $(document).ready(function () {
 	generateSiteListTable();
 	// Second
 	generateWordsTable();
+
+});
+
+//Reload the page after user dismisses the modal (wrong URL alert)
+$('#url-alert-modal').on('hidden.bs.modal', function(e){
+	location.reload();
 });
 
 function generateSiteListTable() {
