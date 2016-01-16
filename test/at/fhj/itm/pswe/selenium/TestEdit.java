@@ -28,7 +28,8 @@ public class TestEdit {
 		selenium.findElement(By.id("DTE_Field_address")).sendKeys(url);
 		selenium.findElement(By.id("DTE_Field_description")).sendKeys("Testseite");
 		selenium.findElement(By.id("DTE_Field_depth")).sendKeys("1");
-		WebElement web=selenium.findElementByCssSelector("button.btn");
+		
+		WebElement web=selenium.findElementByCssSelector("div.DTE_Form_Buttons > button.btn");
 		web.click();
 	}
 	
@@ -39,7 +40,7 @@ public class TestEdit {
 		selenium.findElementByXPath("//table[@id='site-list-table']/tbody/tr/td[2]").click();
 		selenium.findElementByLinkText("Edit").click();
 		selenium.findElement(By.id("DTE_Field_active_0")).click();
-		selenium.findElementByCssSelector("button.btn").click();
+		selenium.findElementByCssSelector("div.DTE_Form_Buttons > button.btn").click();
 		
 		int startnumber;
 		String checkamount=selenium.findElement(By.id("site-list-table")).getText();
@@ -48,15 +49,16 @@ public class TestEdit {
 		startnumber=lines.length;
 		System.out.println(startnumber);
 		
-		selenium.navigate().refresh();
+String output=selenium.findElement(By.id("site-list-table")).getText();
 		
-	String output=selenium.findElement(By.id("site-list-table")).getText();
+		if(output.contains("true")){
+			Assert.assertTrue(true);
+		}else{
+			Assert.assertFalse("The rigth details were not found!",true);
+		}
+		
 	
-	if(output.contains("true")){
-		Assert.assertTrue(true);
-	}else{
-		Assert.assertFalse("The rigth details were not found!",true);
-	}
+	
 	
 	
 	}
