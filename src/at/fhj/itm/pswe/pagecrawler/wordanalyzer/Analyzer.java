@@ -94,13 +94,13 @@ public class Analyzer {
 		while (it.hasNext()) {
 
 			// get key/value pair from hash map
-			Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>) it.next();
+ 			Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>) it.next();
 
 			String word = (String) pair.getKey();
 			int count = (int) pair.getValue();
 
 			Word wo = analyzerDAO.findWord(word);
-			// System.out.println("WORD: " + word);
+			System.out.println("WORD: " + word + " | COUNT: " + count);
 
 			// check if word exists in the database
 			if (wo == null) {
@@ -214,6 +214,7 @@ public class Analyzer {
 				String url = br.readLine();
 				System.out.println("URL: " + url + "|");
 				String data = br.readLine();
+				System.out.println("Data: " + data);
 				count++;
 				if (data == null) {
 					crawlerDuration = url;
