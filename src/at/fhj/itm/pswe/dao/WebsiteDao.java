@@ -27,14 +27,9 @@ public class WebsiteDao implements IWebsite {
 	}
 
 	@Override
-	public Website createWebsite(String address, String description, int depth) {
+	public Website createWebsite(Website ws) {
 		// Create Website object
-		Website ws = new Website();
-		ws.setDomain(address);
-		ws.setDescription(description);
-		ws.setCrawldepth(depth);
 		ws.setActive(true);
-
 		ws.setLast_crawldate("1970-01-01");
 
 		// Actual Date for later use

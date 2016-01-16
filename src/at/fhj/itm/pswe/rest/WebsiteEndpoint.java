@@ -69,8 +69,11 @@ public class WebsiteEndpoint {
 						.build();
 			}
 		}
-
-		Website ws = wDao.createWebsite(json.getString("address"), json.getString("description"), json.getInt("depth"));
+		Website ws = new Website();
+		ws.setDomain(json.getString("address"));
+		ws.setDescription(json.getString("description"));
+		ws.setCrawldepth(json.getInt("depth"));
+		ws = wDao.createWebsite(ws);
 		// Add info for Return object
 		json.put("id", ws.getId());
 		json.put("active", ws.getActive());

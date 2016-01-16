@@ -13,6 +13,7 @@ import javax.persistence.Query;
 import javax.persistence.TypedQuery;
 
 import org.easymock.EasyMock;
+import org.easymock.IAnswer;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -57,32 +58,53 @@ public class WebsiteMockTest {
 	
 	@Test
 	public void testcreateWebsite(){
-		Website w = new Website();
+		final Website w = new Website();
 		w.setDomain("http://test.at");
 		w.setDescription("Test");
 		w.setCrawldepth(1);
-		w.setActive(true);
-		w.setLast_crawldate("1970-01-01");
-		w.setId(1);
+		
 		
 		EntityManager mockEm = EasyMock.createMock(EntityManager.class);
 		
+		//expect void methods
 		mockEm.persist(w);
-		EasyMock.expectLastCall();
+		mockEm.flush();
+		//Fakes the db setting the id in the website object
+		EasyMock.expectLastCall().andAnswer(new SideEffect() {
+			
+			@Override
+			public void effect() throws Throwable {
+				w.setId(1);
+				
+			}
+		});
 		
 		//set to replay state
 		replay(mockEm);
+		
 		//Set Mock Object
-
 		WebsiteDao wDao=new WebsiteDao();
 		wDao.setEntityManager(mockEm);
 
 		//TEST
-		Website result = wDao.createWebsite("http://test.at", "Test", 1);
+		Website result = wDao.createWebsite(w);
 
 		//Verify
+		Assert.assertEquals(w, result);
 		verify(mockEm);
 	}
+	
+	abstract public class SideEffect implements IAnswer<Void> {
+		public Void answer() throws Throwable
+		{
+		effect();
+		//Void is an uninstantiable placeholder class
+		return null;
+		}
+
+		abstract public void effect() throws Throwable;
+		}
+	
 	
 	@Test
 	public void testreadWebsite(){
