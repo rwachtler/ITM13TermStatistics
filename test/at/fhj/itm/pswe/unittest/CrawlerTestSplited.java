@@ -76,57 +76,6 @@ public class CrawlerTestSplited {
 		System.out.println("Test 2");
 	}
 	
-	@Test
-	public void ctestUrlSecondPage(){
-		  
-	    String nextURL;
-		try {
-			nextURL = br.readLine();
-			Assert.assertEquals("http://pfiff.me/pswengi/Seite2.html",nextURL);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Test 3");
-	  
-	}
-	
-	@Test
-	public void dtestTextSecondPage(){ 
-	    String textsecondPage;
-		try {
-			textsecondPage = br.readLine();
-		    Assert.assertEquals("Dies ist eine andere Testseite", textsecondPage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		System.out.println("Test 4");
-	}
-	
-	@Test
-	public void etestStartURL(){
-		   String urlStartpage;
-		try {
-			urlStartpage = br.readLine();
-			Assert.assertEquals(mc.getUrl(), urlStartpage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		 System.out.println("Test 5");  
-	}
-	
-	@Test
-	public void ftestFirstPageText(){
-		   
-	    String textfirstPage;
-		try {
-			textfirstPage = br.readLine();
-			Assert.assertEquals("Das ist eine Testseite Seite 2", textfirstPage);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	    System.out.println("Test 6");
-	}
-	
 
 	
 	@AfterClass
