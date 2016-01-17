@@ -27,7 +27,7 @@ function generateSiteListTable() {
 			if ( d.action === 'create' ) {
 				//console.log(JSON.stringify(d.data[0]));
 				var data = d.data[0];
-				ajax({
+				$.ajax({
 					type: "POST",
 					url: "./rest/website",
 					data: JSON.stringify(data),
