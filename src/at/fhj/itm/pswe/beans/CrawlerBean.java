@@ -16,7 +16,7 @@ import at.fhj.itm.pswe.pagecrawler.CrawlerDaemon;
 @Named("CrawlerBean")
 @Singleton
 public class CrawlerBean {
-	
+
 	@PersistenceContext(unitName = "TermStatistics")
 	private EntityManager em;
 

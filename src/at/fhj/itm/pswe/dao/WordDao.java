@@ -16,7 +16,6 @@ import at.fhj.itm.pswe.model.Word;
 @Stateless
 public class WordDao implements IWord {
 
-
 	private EntityManager em;
 
 	@PersistenceContext(unitName = "TermStatistics")
@@ -24,14 +23,13 @@ public class WordDao implements IWord {
 		this.em = em;
 	}
 
-
 	@Override
 	public JSONArray wordAndAmount() {
 
 		List<Object[]> queryResult = em
 				.createQuery(
 						"SELECT w.text, w.active, sum(c.amount), w.wordtype.id, w.wordtype.texttype  FROM Container c JOIN c.word w  GROUP BY w.text, w.active")
-						.getResultList();
+				.getResultList();
 
 		JSONArray result = new JSONArray();
 
@@ -41,10 +39,10 @@ public class WordDao implements IWord {
 			word.put("amount", wo[2]);
 			word.put("active", wo[1]);
 			word.put("wType", wo[3]);
-			
+
 			JSONObject wordType = new JSONObject();
 			wordType.put("name", wo[4]);
-			
+
 			JSONObject complete = new JSONObject();
 			complete.put("word", word);
 			complete.put("wTypes", wordType);
@@ -54,13 +52,12 @@ public class WordDao implements IWord {
 
 		return result;
 	}
-	
+
 	@Override
-	public JSONArray wordTypeAsOption(){
+	public JSONArray wordTypeAsOption() {
 		List<Object[]> queryResult = em
-				.createQuery(
-						"SELECT w.wordtype.id, w.wordtype.texttype FROM Word w GROUP BY w.text, w.active")
-						.getResultList();
+				.createQuery("SELECT w.wordtype.id, w.wordtype.texttype FROM Word w GROUP BY w.text, w.active")
+				.getResultList();
 
 		JSONArray result = new JSONArray();
 
@@ -68,14 +65,12 @@ public class WordDao implements IWord {
 			JSONObject wordType = new JSONObject();
 			wordType.put("value", wo[0]);
 			wordType.put("label", wo[1]);
-			
+
 			result.put(wordType);
 		}
 
 		return result;
 	}
-	
-	
 
 	@Override
 	public JSONArray sitesOfWord(String word) {
@@ -88,7 +83,7 @@ public class WordDao implements IWord {
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : queryResults) {
-			//System.out.println("sitesOfWord: " + wo[0] + " | " + wo[1]);
+			// System.out.println("sitesOfWord: " + wo[0] + " | " + wo[1]);
 
 			JSONObject temp = new JSONObject();
 			temp.put("id", wo[0]);
@@ -105,13 +100,12 @@ public class WordDao implements IWord {
 	@Override
 	public void changeWordActive(String word, boolean active) {
 		Word wo = em.find(Word.class, word);
-		if(wo != null){
+		if (wo != null) {
 			wo.setActive(active);
-			//save changes to db
+			// save changes to db
 			em.flush();
 		}
-		//do nothing if no word is found
-
+		// do nothing if no word is found
 
 	}
 
@@ -120,7 +114,7 @@ public class WordDao implements IWord {
 		List<Object[]> queryResult = em
 				.createQuery(
 						"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active")
-						.setParameter("word", word).getResultList();
+				.setParameter("word", word).getResultList();
 		JSONObject result = new JSONObject();
 
 		if (!queryResult.isEmpty()) {

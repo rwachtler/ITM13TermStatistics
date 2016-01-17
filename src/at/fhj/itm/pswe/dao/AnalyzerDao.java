@@ -33,13 +33,12 @@ public class AnalyzerDao {
 		this.em = em;
 	}
 
-	public Word findWord(String word){
+	public Word findWord(String word) {
 		return em.find(Word.class, word);
 	}
-	
-	public String findTypeForWord(String word){
-		Query q = em.createQuery("SELECT wl FROM WordlistEntry wl WHERE wl.word = :word").setParameter("word",
-				word);
+
+	public String findTypeForWord(String word) {
+		Query q = em.createQuery("SELECT wl FROM WordlistEntry wl WHERE wl.word = :word").setParameter("word", word);
 
 		List<WordlistEntry> queryResults = q.getResultList();
 
@@ -52,8 +51,7 @@ public class AnalyzerDao {
 		}
 	}
 
-
-	public void setTypeForWord(Word wo, String type){
+	public void setTypeForWord(Word wo, String type) {
 		// look up the word type in our own wordtype table
 		Wordtype wt;
 
@@ -77,9 +75,10 @@ public class AnalyzerDao {
 		// Need to persist so that it is available for newCont later on
 		em.persist(wo);
 	}
-	
-	public Article findArticle(Article ar){
-		Query q = em.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url").setParameter("url", ar.getUrl());
+
+	public Article findArticle(Article ar) {
+		Query q = em.createQuery("SELECT a.id, a.url FROM Article a WHERE a.url = :url").setParameter("url",
+				ar.getUrl());
 
 		List<Object[]> queryResults = q.getResultList();
 		if (queryResults.size() == 0) {
@@ -92,27 +91,28 @@ public class AnalyzerDao {
 		}
 		return ar;
 	}
-	
-	public void saveContainer(Container co){
+
+	public void saveContainer(Container co) {
 		em.persist(co);
-		
+
 	}
-	
-	public void saveArticleStat(ArticleStat as){
+
+	public void saveArticleStat(ArticleStat as) {
 		em.persist(as);
 	}
-	
-	public void saveWebsiteStat(WebsiteStat webStat){
+
+	public void saveWebsiteStat(WebsiteStat webStat) {
 		em.persist(webStat);
 	}
-	
-	public Website findWebsite(String url){
+
+	public Website findWebsite(String url) {
 		// Expect only one result
-		Query websiteQuery = em.createQuery("SELECT w FROM Website w WHERE w.domain = :domain")
-				.setParameter("domain", url);
+		Query websiteQuery = em.createQuery("SELECT w FROM Website w WHERE w.domain = :domain").setParameter("domain",
+				url);
 		List<Website> result = websiteQuery.getResultList();
 		int websiteId = -1;
-		Website returnSite = null;;
+		Website returnSite = null;
+		;
 		if (result.size() > 0)
 			returnSite = result.get(0);
 		else
@@ -120,22 +120,21 @@ public class AnalyzerDao {
 		return returnSite;
 
 	}
-	
-	public void flushDAO(){
+
+	public void flushDAO() {
 		em.flush();
 		em.clear();
 	}
-	
-	public void updateCrawlDateofWebsite(String domain){
+
+	public void updateCrawlDateofWebsite(String domain) {
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		Query q = em.createQuery("UPDATE Website w SET crawldate = :crawldate WHERE w.domain = :domain")
 				.setParameter("crawldate", df.format(cal.getTime())).setParameter("domain", domain);
 
 		int updatenumber = q.executeUpdate();
-		
-		
+
 	}
-	
+
 }

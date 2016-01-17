@@ -17,7 +17,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -34,7 +33,7 @@ public class WebsiteEndpoint {
 
 	@Inject
 	MainCrawler mc;
-	
+
 	private IWebsite wDao;
 
 	/**
@@ -84,12 +83,11 @@ public class WebsiteEndpoint {
 		 * Depcrecated---Thread t = new Thread(new MainCrawler(ws.getDomain(),
 		 * 1)); t.start();
 		 */
-		
+
 		/*
-		mc.setDepth(ws.getCrawldepth());
-		mc.setUrl(ws.getDomain());
-		mc.crawl();
-		*/
+		 * mc.setDepth(ws.getCrawldepth()); mc.setUrl(ws.getDomain());
+		 * mc.crawl();
+		 */
 
 		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
 	}
@@ -195,7 +193,7 @@ public class WebsiteEndpoint {
 		JSONObject json = new JSONObject(incoming);
 
 		// Get first key which is id
-		Iterator<String> keys = json.keys(); 
+		Iterator<String> keys = json.keys();
 		String id = "";
 		if (keys.hasNext()) {
 			id = keys.next(); // First key in your json object
@@ -217,22 +215,22 @@ public class WebsiteEndpoint {
 		}
 
 		Website wsOut = wDao.updateWebsite(ws);
-		if(wsOut==null){
-			JSONObject error= new JSONObject();
+		if (wsOut == null) {
+			JSONObject error = new JSONObject();
 			error.put("error", "Website not found - please reload page");
 			return Response.ok(error.toString()).build();
-		}else{
+		} else {
 
-		JSONObject output = new JSONObject();
-		output.put("data",
-				new JSONArray().put(new JSONObject().put("id", wsOut.getId()).put("address", wsOut.getDomain())
-						.put("description", wsOut.getDescription()).put("depth", wsOut.getCrawldepth())
-						.put("active", wsOut.getActive()).put("lCrawled", wsOut.getLast_crawldate())));
+			JSONObject output = new JSONObject();
+			output.put("data",
+					new JSONArray().put(new JSONObject().put("id", wsOut.getId()).put("address", wsOut.getDomain())
+							.put("description", wsOut.getDescription()).put("depth", wsOut.getCrawldepth())
+							.put("active", wsOut.getActive()).put("lCrawled", wsOut.getLast_crawldate())));
 
-		// Add info for Return object
-		System.out.println("JSON: " + output.toString());
+			// Add info for Return object
+			System.out.println("JSON: " + output.toString());
 
-		return Response.ok(output.toString()).build();
+			return Response.ok(output.toString()).build();
 		}
 	}
 
@@ -262,17 +260,15 @@ public class WebsiteEndpoint {
 		// Send empty object on success
 		return Response.ok("{}").build();
 	}
-	
+
 	@GET
 	@Path("/{url}/delete")
 	@Produces("application/json")
 	public Response deleteSiteSelenium(@PathParam("url") String incoming) {
-		incoming="http://"+incoming;
-		Query q = em.createQuery("DELETE FROM Website we WHERE we.domain = :url").setParameter("url",
-				incoming);
+		incoming = "http://" + incoming;
+		Query q = em.createQuery("DELETE FROM Website we WHERE we.domain = :url").setParameter("url", incoming);
 		q.executeUpdate();
 
-	
 		// Send empty object on success
 		return Response.ok("{}").build();
 	}
@@ -287,7 +283,7 @@ public class WebsiteEndpoint {
 
 		return Response.ok(my.toString()).build();
 	}
-	
+
 	@GET
 	@Path("/{id:[0-9][0-9]*}/stats")
 	@Produces("application/json")
@@ -298,7 +294,7 @@ public class WebsiteEndpoint {
 
 		return Response.ok(my.toString()).build();
 	}
-	
+
 	@GET
 	@Path("/{id:[0-9][0-9]*}/articles/timeline")
 	@Produces("application/json")
@@ -309,7 +305,7 @@ public class WebsiteEndpoint {
 
 		return Response.ok(my.toString()).build();
 	}
-	
+
 	@GET
 	@Path("/{id:[0-9][0-9]*}/avgword")
 	@Produces("application/json")

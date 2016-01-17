@@ -20,7 +20,7 @@ import at.fhj.itm.pswe.model.Website;
 public class WebsiteDao implements IWebsite {
 
 	private EntityManager em;
-	
+
 	@PersistenceContext(unitName = "TermStatistics")
 	public void setEntityManager(EntityManager em) {
 		this.em = em;
@@ -91,31 +91,26 @@ public class WebsiteDao implements IWebsite {
 		return result;
 	}
 
-	
 	@Override
 	public Website updateWebsite(Website ws) {
 
-			
 		Website toUpdate = em.find(Website.class, ws.getId());
-		if(toUpdate !=null){
+		if (toUpdate != null) {
 			toUpdate.setDescription(ws.getDescription());
 			toUpdate.setCrawldepth(ws.getCrawldepth());
 			toUpdate.setActive(ws.getActive());
 			em.flush();
 			return toUpdate;
-		}else{
+		} else {
 			return null;
 		}
-		
-		
 
-		
 	}
 
 	@Override
 	public void deleteWebsite(int id) {
 		Website ws = em.find(Website.class, id);
-		if(ws != null){
+		if (ws != null) {
 			em.remove(ws);
 			em.flush();
 		}
@@ -184,7 +179,8 @@ public class WebsiteDao implements IWebsite {
 
 		for (Object[] obj : queryResults) {
 			Article ar = new Article();
-			// System.out.println("findAllArticlesOfOneWebsite: Obj[0]: " + obj[0] + " | obj[1]: " + obj[1]);
+			// System.out.println("findAllArticlesOfOneWebsite: Obj[0]: " +
+			// obj[0] + " | obj[1]: " + obj[1]);
 			ar.setId(Integer.parseInt(obj[0].toString()));
 			ar.setUrl(obj[1].toString());
 			list.add(ar);
@@ -206,11 +202,13 @@ public class WebsiteDao implements IWebsite {
 		}
 		return result;
 	}
-	
+
 	@Override
 	public JSONArray articleTimelineofOneWebsite(int id) {
-		Query q = em.createQuery("SELECT COUNT(DISTINCT c.article.url), c.logDate, c.article.id "
-				+ "FROM Container c WHERE c.website.id=:id GROUP BY c.logDate, c.website.id ORDER BY c.article.id").setParameter("id", id);
+		Query q = em
+				.createQuery("SELECT COUNT(DISTINCT c.article.url), c.logDate, c.article.id "
+						+ "FROM Container c WHERE c.website.id=:id GROUP BY c.logDate, c.website.id ORDER BY c.article.id")
+				.setParameter("id", id);
 
 		List<Object[]> queryResults = q.getResultList();
 
@@ -218,7 +216,8 @@ public class WebsiteDao implements IWebsite {
 
 		for (Object[] obj : queryResults) {
 			JSONObject json_obj = new JSONObject();
-			// System.out.println("findAllArticlesOfOneWebsite: Obj[0]: " + obj[0] + " | obj[1]: " + obj[1]);
+			// System.out.println("findAllArticlesOfOneWebsite: Obj[0]: " +
+			// obj[0] + " | obj[1]: " + obj[1]);
 			json_obj.put("amount", obj[0]);
 			json_obj.put("crawldate", obj[1]);
 			list.put(json_obj);
@@ -226,61 +225,68 @@ public class WebsiteDao implements IWebsite {
 
 		return list;
 	}
-	
+
 	@Override
-	public JSONArray getAverageWebsiteStats(int id){
-		Query q = em.createQuery("SELECT SUM(ws.crawlDuration)/COUNT(ws.id), SUM(ws.analyzeDuration)/COUNT(ws.analyzeDuration), ws.website.domain "
-				+ "FROM WebsiteStat ws WHERE ws.website.id=:id GROUP BY ws.website.id, ws.website.domain ORDER BY ws.website.domain").setParameter("id", id);
+	public JSONArray getAverageWebsiteStats(int id) {
+		Query q = em
+				.createQuery(
+						"SELECT SUM(ws.crawlDuration)/COUNT(ws.id), SUM(ws.analyzeDuration)/COUNT(ws.analyzeDuration), ws.website.domain "
+								+ "FROM WebsiteStat ws WHERE ws.website.id=:id GROUP BY ws.website.id, ws.website.domain ORDER BY ws.website.domain")
+				.setParameter("id", id);
 
 		List<Object[]> queryResults = q.getResultList();
 
 		JSONArray list = new JSONArray();
-		
+
 		JSONArray list2 = articleTimelineofOneWebsite(id);
-		
+
 		int article_amount = 0;
-		
+
 		for (int i = 0; i < list2.length(); i++) {
-		    JSONObject c = list2.getJSONObject(i);
-		    article_amount += c.getInt("amount");
+			JSONObject c = list2.getJSONObject(i);
+			article_amount += c.getInt("amount");
 		}
-		
+
 		double average_amount = 0.0;
-		
-		if(list2.length() != 0) {
+
+		if (list2.length() != 0) {
 			average_amount = article_amount / list2.length();
 		}
-		
+
 		for (Object[] obj : queryResults) {
 			JSONObject json_obj = new JSONObject();
-			// System.out.println("findAllArticlesOfOneWebsite: Obj[0]: " + obj[0] + " | obj[1]: " + obj[1]);
+			// System.out.println("findAllArticlesOfOneWebsite: Obj[0]: " +
+			// obj[0] + " | obj[1]: " + obj[1]);
 			json_obj.put("crawlDuration", obj[0]);
 			json_obj.put("analyzeDuration", obj[1]);
 			json_obj.put("domain", obj[2]);
 			json_obj.put("avg_article", average_amount);
 			list.put(json_obj);
 		}
-		
+
 		return list;
 	}
-	
 
-	public JSONArray getAverageWordAmountofWebsite(int id){
-		Query q = em.createQuery("SELECT SUM(c.amount)*1.0/COUNT(DISTINCT c.article.id), SUM(LENGTH(c.word.text))*1.0/COUNT(c.word.text) "
-				+ "FROM Container c WHERE c.website.id=:id GROUP BY c.website.id ORDER BY c.website.domain").setParameter("id", id);
-		
-		List<Object []> queryResults = q.getResultList();
+	public JSONArray getAverageWordAmountofWebsite(int id) {
+		Query q = em
+				.createQuery(
+						"SELECT SUM(c.amount)*1.0/COUNT(DISTINCT c.article.id), SUM(LENGTH(c.word.text))*1.0/COUNT(c.word.text) "
+								+ "FROM Container c WHERE c.website.id=:id GROUP BY c.website.id ORDER BY c.website.domain")
+				.setParameter("id", id);
+
+		List<Object[]> queryResults = q.getResultList();
 
 		JSONArray list = new JSONArray();
-		
+
 		for (Object[] obj : queryResults) {
 			JSONObject json_obj = new JSONObject();
-			// System.out.println("getAverageWordAmountofWebsite: Obj[0]: " + obj[0] + " | obj[1]: " + obj[1]);
+			// System.out.println("getAverageWordAmountofWebsite: Obj[0]: " +
+			// obj[0] + " | obj[1]: " + obj[1]);
 			json_obj.put("avgwords", obj[0]);
 			json_obj.put("avgwordlength", obj[1]);
 			list.put(json_obj);
 		}
-		
+
 		return list;
 	}
 

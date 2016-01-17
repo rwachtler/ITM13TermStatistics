@@ -70,7 +70,7 @@ public class ArticleEndpoint {
 
 		return Response.ok(my.toString()).build();
 	}
-	
+
 	@GET
 	@Path("/{id:[0-9][0-9]*}/stats")
 	@Produces("application/json")

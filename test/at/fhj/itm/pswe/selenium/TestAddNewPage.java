@@ -1,12 +1,6 @@
 package at.fhj.itm.pswe.selenium;
 
-import at.fhj.itm.pswe.dao.WebsiteDao;
-import at.fhj.itm.pswe.model.Website;
-import at.fhj.itm.pswe.rest.WebsiteEndpoint;
-import at.fhj.itm.pswe.rest.WordEndpoint;
-
-import com.sun.syndication.feed.atom.Content;
-import com.thoughtworks.selenium.*;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.After;
 import org.junit.Before;
@@ -17,11 +11,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import static org.junit.Assert.*;
-
-import java.util.concurrent.TimeUnit;
-import java.util.regex.Pattern;
-
 import junit.framework.Assert;
 
 public class TestAddNewPage {
@@ -30,18 +19,18 @@ public class TestAddNewPage {
 
 	@Before
 	public void setUp() throws Exception {
-		selenium=new FirefoxDriver();
+		selenium = new FirefoxDriver();
 		selenium.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
 	}
-	
-	public void addSite(){
-		url="http://rehcu.at";
+
+	public void addSite() {
+		url = "http://rehcu.at";
 		selenium.get("http://localhost:8080/TermStatistics/");
 		selenium.findElementByLinkText("New").click();
 		selenium.findElement(By.id("DTE_Field_address")).sendKeys(url);
 		selenium.findElement(By.id("DTE_Field_description")).sendKeys("Testseite");
 		selenium.findElement(By.id("DTE_Field_depth")).sendKeys("1");
-		WebElement web=selenium.findElementByCssSelector("button.btn");
+		WebElement web = selenium.findElementByCssSelector("button.btn");
 		web.click();
 	}
 
@@ -49,22 +38,23 @@ public class TestAddNewPage {
 	public void testAddSite() throws Exception {
 		addSite();
 		Thread.sleep(1000);
-		String output=selenium.findElement(By.id("site-list-table")).getText();
+		String output = selenium.findElement(By.id("site-list-table")).getText();
 		System.out.println(output);
-		if(output.contains(url)){
+		if (output.contains(url)) {
 			Assert.assertTrue(true);
-		}else{
-			Assert.assertFalse("Site was not added",true);
+		} else {
+			Assert.assertFalse("Site was not added", true);
 		}
 	}
-	
+
 	@Test
 	public void testAddSameSite() throws Exception {
 		addSite();
 		addSite();
-		WebElement element = (new WebDriverWait(selenium, 10)).until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.DTE_Form_Error")));
-		WebElement error=selenium.findElementByCssSelector("div.DTE_Form_Error");
-		Assert.assertEquals(error.getText(),"Website already in the Database!");
+		WebElement element = (new WebDriverWait(selenium, 10))
+				.until(ExpectedConditions.elementToBeClickable(By.cssSelector("div.DTE_Form_Error")));
+		WebElement error = selenium.findElementByCssSelector("div.DTE_Form_Error");
+		Assert.assertEquals(error.getText(), "Website already in the Database!");
 	}
 
 	@After

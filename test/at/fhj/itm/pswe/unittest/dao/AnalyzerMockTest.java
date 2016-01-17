@@ -5,23 +5,15 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.easymock.EasyMock.verify;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
-import javax.enterprise.inject.New;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.apache.xmlbeans.impl.jam.visitor.MVisitor;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
-import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
-
-import com.sun.jna.platform.win32.WinDef.WPARAM;
 
 import at.fhj.itm.pswe.dao.AnalyzerDao;
 import at.fhj.itm.pswe.model.Article;
@@ -235,7 +227,7 @@ public class AnalyzerMockTest {
 	public void testFindArticleNotExisting() {
 
 		String url = "http://test.at/test";
-		
+
 		final Article ar = new Article();
 		ar.setUrl(url);
 

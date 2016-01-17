@@ -28,23 +28,24 @@ public class Init_LinkCrawler {
 		// Safe starting time of Crawler
 		cal = Calendar.getInstance();
 		Date start_date = cal.getTime();
-		
+
 		String url_replaced = url.replace(".", "_").replace("http://", "").replace("/", "_");
 
-		url_escaped = url_replaced + "_" + (cal.get(Calendar.MONTH) + 1) + "_"
-				+ cal.get(Calendar.DAY_OF_MONTH) + "_" + cal.get(Calendar.YEAR)
-				+ "-" + cal.get(Calendar.HOUR) + "_" + cal.get(Calendar.MINUTE);
-		
+		url_escaped = url_replaced + "_" + (cal.get(Calendar.MONTH) + 1) + "_" + cal.get(Calendar.DAY_OF_MONTH) + "_"
+				+ cal.get(Calendar.YEAR) + "-" + cal.get(Calendar.HOUR) + "_" + cal.get(Calendar.MINUTE);
+
 		File result_dir = new File("./result/crawl/");
 		ArrayList<File> files = new ArrayList<File>(Arrays.asList(result_dir.listFiles()));
-		
+
 		System.out.println("url_replaced: " + url_replaced);
-		
-		for(File directory : files){
-			if(directory.getName().indexOf(url_replaced) != -1){
+
+		for (File directory : files) {
+			if (directory.getName().indexOf(url_replaced) != -1) {
 				deleteFolder(directory);
 			}
 		}
+		
+		System.out.println("Deleted old result directories matching '" + url_replaced + "'");
 
 		// Add to Project Root folders result/crawl where our result.txt is
 		// saved
@@ -109,11 +110,11 @@ public class Init_LinkCrawler {
 		long diffSeconds = TimeUnit.MILLISECONDS.toSeconds(diff);
 		long diffMinutes = TimeUnit.MILLISECONDS.toMinutes(diff);
 		long diffHours = TimeUnit.MILLISECONDS.toHours(diff);
-		
-		if(diffSeconds > 60){
+
+		if (diffSeconds > 60) {
 			diffSeconds = diffSeconds % 60;
 		}
-		if(diffMinutes > 60){
+		if (diffMinutes > 60) {
 			diffMinutes = diffMinutes % 60;
 		}
 
@@ -132,19 +133,19 @@ public class Init_LinkCrawler {
 		System.out.println("Crawler Finished");
 
 	}
-	
+
 	public static void deleteFolder(File folder) {
-	    File[] files = folder.listFiles();
-	    if(files!=null) { //some JVMs return null for empty dirs
-	        for(File f: files) {
-	            if(f.isDirectory()) {
-	                deleteFolder(f);
-	            } else {
-	                f.delete();
-	            }
-	        }
-	    }
-	    folder.delete();
+		File[] files = folder.listFiles();
+		if (files != null) { // some JVMs return null for empty dirs
+			for (File f : files) {
+				if (f.isDirectory()) {
+					deleteFolder(f);
+				} else {
+					f.delete();
+				}
+			}
+		}
+		folder.delete();
 	}
 
 	public String getFileStoragePath() {

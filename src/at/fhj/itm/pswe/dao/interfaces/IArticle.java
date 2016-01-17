@@ -15,15 +15,14 @@ public interface IArticle {
 	 */
 	Article createArticle(Article ar);
 
-	/* NOT USED
-	/**
-	 * Get the persisted Article Object from the DB
+	/*
+	 * NOT USED /** Get the persisted Article Object from the DB
 	 * 
-	 * @param url
-	 *            URL of the Article
+	 * @param url URL of the Article
+	 * 
 	 * @return Complete Article Object
 	 *
-	Article readArticle(String url);
+	 * Article readArticle(String url);
 	 */
 
 	/**

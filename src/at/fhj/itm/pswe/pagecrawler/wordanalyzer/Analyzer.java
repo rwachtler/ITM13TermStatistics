@@ -4,45 +4,39 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateless;
 import javax.inject.Inject;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
 
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
 import at.fhj.itm.pswe.dao.AnalyzerDao;
-import at.fhj.itm.pswe.dao.WebsiteDao;
 import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.ArticleStat;
 import at.fhj.itm.pswe.model.Container;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.model.WebsiteStat;
 import at.fhj.itm.pswe.model.Word;
-import at.fhj.itm.pswe.model.WordlistEntry;
-import at.fhj.itm.pswe.model.Wordtype;
 
 @Stateless
 @LocalBean
 public class Analyzer {
 
-	/*@PersistenceContext(unitName = "TermStatistics")
-	private EntityManager em;*/
-	
+	/*
+	 * @PersistenceContext(unitName = "TermStatistics") private EntityManager
+	 * em;
+	 */
+
 	private AnalyzerDao analyzerDAO;
-	
+
 	@Inject
 	public void setAnalyzerDAO(AnalyzerDao analyzerDAO) {
 		this.analyzerDAO = analyzerDAO;
@@ -58,27 +52,18 @@ public class Analyzer {
 	public Analyzer() {
 	}
 
-	public void analyzeResults(String path) {
+	public void analyzeResults(String path) throws ParseException {
 		readResultFile(path);
 	}
-/* Temporary Testcode?
-	public void testPersist() {
-		// TESTCODE
-		Website ws = em.find(Website.class, 18);
-
-		Word w = new Word();
-		w.setActive(true);
-		w.setText("hello");
-		// em.persist(w);
-		Container c = new Container();
-		c.setAmount(10);
-		c.setWord(w);
-		c.setLogDate("01.10.2015");
-		c.setWebsite(ws);
-		em.persist(c);
-		em.flush();
-		// END
-	}*/
+	/*
+	 * Temporary Testcode? public void testPersist() { // TESTCODE Website ws =
+	 * em.find(Website.class, 18);
+	 * 
+	 * Word w = new Word(); w.setActive(true); w.setText("hello"); //
+	 * em.persist(w); Container c = new Container(); c.setAmount(10);
+	 * c.setWord(w); c.setLogDate("01.10.2015"); c.setWebsite(ws);
+	 * em.persist(c); em.flush(); // END }
+	 */
 
 	private void persistData(String url, String data, Website newWebsite, String currentDate) {
 
@@ -87,25 +72,25 @@ public class Analyzer {
 
 		this.wordMap = this.calculateWordMap(data);
 		Iterator<Map.Entry<String, Integer>> it = this.wordMap.entrySet().iterator();
-		
+
 		Article ar = null;
 
 		System.out.println("Start iterate over Wordmap");
 		while (it.hasNext()) {
 			// get key/value pair from hash map
- 			Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>) it.next();
+			Map.Entry<String, Integer> pair = (Map.Entry<String, Integer>) it.next();
 
 			String word = (String) pair.getKey();
 			int count = (int) pair.getValue();
 
 			Word wo = analyzerDAO.findWord(word);
-			
+
 			long findTypeofWordTimebefore = 0;
 			long findTypeofWordTimeafter = 0;
-			
+
 			long setTypeForWordTimebefore = 0;
 			long setTypeForWordTimeafter = 0;
-			
+
 			System.out.println("WORD: " + word + " | COUNT: " + count);
 
 			// check if word exists in the database
@@ -118,15 +103,14 @@ public class Analyzer {
 				findTypeofWordTimebefore = System.currentTimeMillis();
 				// look up word type in the wordlist
 				String wordtype = analyzerDAO.findTypeForWord(word);
-				
+
 				findTypeofWordTimeafter = System.currentTimeMillis();
-				
+
 				setTypeForWordTimebefore = System.currentTimeMillis();
-				//Set Type for word and persist both
+				// Set Type for word and persist both
 				analyzerDAO.setTypeForWord(wo, wordtype);
 				setTypeForWordTimeafter = System.currentTimeMillis();
-				
-				
+
 			}
 
 			// Get Article, if already in Database
@@ -145,9 +129,9 @@ public class Analyzer {
 			long saveContainerTimebefore = System.currentTimeMillis();
 			analyzerDAO.saveContainer(newCont);
 			long saveContainerTimeafter = System.currentTimeMillis();
-			
+
 			long saveContainerTime = System.currentTimeMillis();
-			
+
 			System.out.println("findWordTime: " + (findTypeofWordTimeafter - findTypeofWordTimebefore));
 			System.out.println("setTypeForWordTime: " + (setTypeForWordTimeafter - setTypeForWordTimebefore));
 			System.out.println("findArticleTime: " + (findArticleTimeafter - findArticleTimebefore));
@@ -213,7 +197,7 @@ public class Analyzer {
 	}
 
 	@TransactionTimeout(3600)
-	public void readResultFile(String path) {
+	public void readResultFile(String path) throws ParseException {
 		try (BufferedReader br = new BufferedReader(new FileReader(path))) {
 			String crawlerDuration = "";
 			// Read Start Page
@@ -228,10 +212,10 @@ public class Analyzer {
 
 			// Expect that domain only exists once
 			Website webSite = analyzerDAO.findWebsite(website);
-			
+
 			// Update Last Website Crawldate
-			//analyzerDAO.updateCrawlDateofWebsite(website);
-			
+			// analyzerDAO.updateCrawlDateofWebsite(website);
+
 			int count = 0;
 
 			// Get Timestamp before starting analyzing
@@ -267,13 +251,13 @@ public class Analyzer {
 			// Persist websiteStat
 			WebsiteStat websiteStat = new WebsiteStat();
 			websiteStat.setAnalyzeDuration(System.currentTimeMillis() - analyzerStartTime);
+
 			// Convert Time into millis
 			Long durationMillis = 0L;
-			for (String s : crawlerDuration.split("[:]")) {
-				if(!(s.equals(""))){
-					durationMillis += TimeUnit.SECONDS.toMillis(Long.valueOf(s));
-				}
-			}
+			Date crawlduration = new SimpleDateFormat("HH:mm:ss").parse(crawlerDuration);
+			durationMillis = (long) crawlduration.getHours() * 60 * 60 * 1000 + crawlduration.getMinutes() * 60 * 1000
+					+ crawlduration.getSeconds() * 1000;
+
 			websiteStat.setCrawlDuration(durationMillis);
 			websiteStat.setLogDate(DATE);
 			websiteStat.setWebsite(webSite);

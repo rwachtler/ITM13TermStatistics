@@ -3,6 +3,7 @@ package at.fhj.itm.pswe.dao.interfaces;
 import java.util.List;
 
 import org.json.JSONArray;
+
 import at.fhj.itm.pswe.model.Article;
 import at.fhj.itm.pswe.model.Website;
 
@@ -10,10 +11,9 @@ public interface IWebsite {
 
 	/**
 	 * Create new Website Object in DB
-	 * @param ws: contains
-	 * address
-	 * description
-	 * depth
+	 * 
+	 * @param ws:
+	 *            contains address description depth
 	 */
 	Website createWebsite(Website ws);
 
@@ -127,7 +127,9 @@ public interface IWebsite {
 
 	/**
 	 * Get the average word amount and word length of one Website
-	 * @param id ID of the Website
+	 * 
+	 * @param id
+	 *            ID of the Website
 	 * @return Average Wordamount and average Wordlength
 	 */
 	JSONArray getAverageWordAmountofWebsite(int id);
