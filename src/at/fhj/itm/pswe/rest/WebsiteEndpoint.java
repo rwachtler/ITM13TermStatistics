@@ -3,7 +3,9 @@ package at.fhj.itm.pswe.rest;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -33,6 +35,9 @@ public class WebsiteEndpoint {
 
 	@Inject
 	MainCrawler mc;
+	
+	@Resource
+	private ManagedThreadFactory mtf;
 
 	private IWebsite wDao;
 
@@ -79,15 +84,11 @@ public class WebsiteEndpoint {
 		json.put("lCrawled", ws.getLast_crawldate());
 
 		// TODO: Inject new maincrawler object and start a crawl
-		/*
-		 * Depcrecated---Thread t = new Thread(new MainCrawler(ws.getDomain(),
-		 * 1)); t.start();
-		 */
-
-		/*
-		 * mc.setDepth(ws.getCrawldepth()); mc.setUrl(ws.getDomain());
-		 * mc.crawl();
-		 */
+		mc.setDepth(2);
+		mc.setUrl(ws.getDomain());
+		
+		Thread t = mtf.newThread(mc);
+		t.start();
 
 		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
 	}

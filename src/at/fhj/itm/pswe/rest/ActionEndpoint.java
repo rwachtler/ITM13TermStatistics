@@ -40,9 +40,9 @@ public class ActionEndpoint {
 		mc.setDepth(2);
 		mc.setUrl(ws.getDomain());
 		System.out.println("MC: " + mc.getUrl());
-		mc.crawl();
-		// Thread t = mtf.newThread(mc);
-		// t.start();
+
+		Thread t = mtf.newThread(mc);
+		t.start();
 
 		return Response.ok().build();
 	}
