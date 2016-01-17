@@ -227,6 +227,10 @@ div#main-content section.row a.next-section {
 div#main-content section.row a.next-section:hover {
   opacity: 1.0;
 }
+div#main-content section#website-list {
+  min-height: 100vh;
+  height: auto;
+}
 div#main-content section#charts {
   min-height: 100vh;
   height: auto;
