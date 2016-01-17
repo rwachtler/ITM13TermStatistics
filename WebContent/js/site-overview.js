@@ -40,7 +40,7 @@ var getSubsiteCrawlingStats = function(){
         var avgStats = response.data[0];
         if(typeof avgStats !== 'undefined'){
             if(typeof avgStats.avgwordlength !== 'undefined'){
-                $('#avg-word-length').text(avgStats.avgwordlength);
+                $('#avg-word-length').text(Math.round(avgStats.avgwordlength*100)/100 + ' chars');
             }
             if(typeof avgStats.avgwords !== 'undefined'){
                 $('#avg-word-amount').text(avgStats.avgwords);
