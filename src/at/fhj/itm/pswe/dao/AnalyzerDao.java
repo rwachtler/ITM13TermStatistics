@@ -127,14 +127,14 @@ public class AnalyzerDao {
 	}
 
 	public void updateCrawlDateofWebsite(String domain) {
+		System.out.println("Setting time");
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
+		
 		Query q = em.createQuery("UPDATE Website w SET crawldate = :crawldate WHERE w.domain = :domain")
 				.setParameter("crawldate", df.format(cal.getTime())).setParameter("domain", domain);
 
 		int updatenumber = q.executeUpdate();
-
 	}
 
 }

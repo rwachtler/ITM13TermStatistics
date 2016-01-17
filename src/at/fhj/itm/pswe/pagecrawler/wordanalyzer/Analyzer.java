@@ -262,6 +262,7 @@ public class Analyzer {
 			websiteStat.setLogDate(DATE);
 			websiteStat.setWebsite(webSite);
 			analyzerDAO.saveWebsiteStat(websiteStat);
+			analyzerDAO.updateCrawlDateofWebsite(website);
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
