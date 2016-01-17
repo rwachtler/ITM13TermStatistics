@@ -270,7 +270,9 @@ public class Analyzer {
 			// Convert Time into millis
 			Long durationMillis = 0L;
 			for (String s : crawlerDuration.split("[:]")) {
-				durationMillis += TimeUnit.SECONDS.toMillis(Long.valueOf(s));
+				if(!(s.equals(""))){
+					durationMillis += TimeUnit.SECONDS.toMillis(Long.valueOf(s));
+				}
 			}
 			websiteStat.setCrawlDuration(durationMillis);
 			websiteStat.setLogDate(DATE);

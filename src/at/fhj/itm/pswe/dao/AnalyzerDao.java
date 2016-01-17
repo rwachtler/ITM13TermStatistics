@@ -134,8 +134,8 @@ public class AnalyzerDao {
 				.setParameter("crawldate", df.format(cal.getTime())).setParameter("domain", domain);
 
 		int updatenumber = q.executeUpdate();
-
-		flushDAO();
+		
+		
 	}
 	
 }
