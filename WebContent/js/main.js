@@ -219,7 +219,7 @@ function generateWordsTable() {
 		          columnDefs: 
 		        	  [
 		        	   {	render: function ( data, type, row ) {
-		        		   				return "<a class='btn btn-primary' href='./WordOverview/"+row.word+"'>Details</a>"
+		        		   				return "<a class='btn btn-primary' href='./WordOverview/"+row.word.word+"'>Details</a>"
 		        	   },
 		        	   targets: 4},
 		        	   { orderable: false, targets: 4 },
