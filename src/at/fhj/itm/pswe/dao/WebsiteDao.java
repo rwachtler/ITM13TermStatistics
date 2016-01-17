@@ -130,7 +130,7 @@ public class WebsiteDao implements IWebsite {
 		JSONArray result = new JSONArray();
 
 		for (Object[] wo : queryResults) {
-			System.out.println("findWordsOfSite: " + wo[0] + " | " + wo[1]);
+			//System.out.println("findWordsOfSite: " + wo[0] + " | " + wo[1]);
 
 			JSONObject temp = new JSONObject();
 			temp.put("word", wo[0]);

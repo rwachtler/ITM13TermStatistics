@@ -50,6 +50,15 @@
             <h2>Subsite crawl statistics</h2>
             <p>Average word amount - <span id="avg-word-amount">no data available</span></p>
             <p>Average word length - <span id="avg-word-length">no data available</span></p>
+            <h2>Articles</h2>
+            <table class="table table-striped" id="article-list-table">
+            	<thead>
+        			<tr>
+             			<th>ID</th>
+            			<th>Article</th>
+        			</tr>
+    			</thead>
+            </table>
             <h2>Crawled words</h2>
             <table class="table table-striped" id="word-list-table">
             	<thead>

@@ -3,6 +3,7 @@ var $chartsSection = $('#charts');
 $(document).ready(function(){
     siteID = $('#siteID').val();
     generateWordsTable();
+    generateArticleTable();
     getAllWordsForDomain(generateBarChart);
     getArticleTimeline(generateArticleTimeline);
     getSiteCrawlingStats();
@@ -116,6 +117,19 @@ var getAmountsForSiteWithDateRange = function(startDate, endDate, callback){
     );
 }
 
+
+function generateArticleTable() {
+	wordTable = $('#article-list-table').DataTable({
+		dom: "frtip",
+		ajax: "../rest/website/"+siteID+"/articles", 
+		order: [[ 1, "desc" ]],
+		columns: [
+		          { data: "id" },
+		          { data: "url" },
+		          ],
+		          select: 'single'
+	} );
+}
 
 function generateWordsTable() {
 	wordTable = $('#word-list-table').DataTable({

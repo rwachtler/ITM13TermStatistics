@@ -280,7 +280,7 @@ public class WebsiteEndpoint {
 
 		JSONObject my = new JSONObject();
 		my.put("data", wDao.findAllArticlesOfOneWebsiteJSON(id));
-
+		System.out.println(my.toString());
 		return Response.ok(my.toString()).build();
 	}
 
@@ -316,5 +316,9 @@ public class WebsiteEndpoint {
 
 		return Response.ok(my.toString()).build();
 	}
+	
+
+
+	
 
 }
