@@ -114,7 +114,9 @@
 					<execution>
 						<!--  
 						<id>add_datasource</id>
+						-->
 						<phase>install</phase>
+						<!--
 						<configuration>
 							<address>subsystem=datasources,data-source=mysql</address>
 							<resources>
