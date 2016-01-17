@@ -1,5 +1,10 @@
 package at.fhj.itm.pswe.rest;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
 import javax.enterprise.concurrent.ManagedThreadFactory;
@@ -26,11 +31,11 @@ public class ActionEndpoint {
 
 	@Resource
 	private ManagedThreadFactory mtf;
-	
+
 	@Inject
 	Analyzer analyzer;
 
-	
+
 	MainCrawler mc;
 
 	// TODO Rewrite to post, add depth param
@@ -39,15 +44,36 @@ public class ActionEndpoint {
 	@TransactionTimeout(3600)
 	public Response startCrawler(@PathParam("id") int id) {
 		System.out.println("ID: " + id);
-		Website ws = em.find(Website.class, id);
-		mc=new MainCrawler();
-		mc.setDepth(2);
-		mc.setUrl(ws.getDomain());
-		mc.setAnalyzer(analyzer);
-		System.out.println("MC: " + mc.getUrl());
 
-		Thread t = mtf.newThread(mc);
-		t.start();
+		Website ws = em.find(Website.class, id);
+
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		
+		try {
+			Date current=df.parse(df.format(cal.getTime()));
+			System.out.println("Current "+current.toString());
+			System.out.println("ws: "+df.parse(ws.getLast_crawldate()).toString());
+		
+			
+			if(df.parse(ws.getLast_crawldate()).before(current)){
+				
+				mc=new MainCrawler();
+				mc.setDepth(2);
+				mc.setUrl(ws.getDomain());
+				mc.setAnalyzer(analyzer);
+				System.out.println("MC: " + mc.getUrl());
+
+				Thread t = mtf.newThread(mc);
+				t.start();
+			}
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+
 
 		return Response.ok().build();
 	}
