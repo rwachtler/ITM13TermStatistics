@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import at.fhj.itm.pswe.dao.interfaces.IWebsite;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.pagecrawler.MainCrawler;
+import at.fhj.itm.pswe.pagecrawler.wordanalyzer.Analyzer;
 
 @Stateless
 @Path("/website")
@@ -34,6 +35,8 @@ public class WebsiteEndpoint {
 	private EntityManager em;
 
 	@Inject
+	Analyzer analyzer;
+	
 	MainCrawler mc;
 	
 	@Resource
@@ -83,9 +86,11 @@ public class WebsiteEndpoint {
 		json.put("active", ws.getActive());
 		json.put("lCrawled", ws.getLast_crawldate());
 
-		// TODO: Inject new maincrawler object and start a crawl
+		// TODO: Inject new maincrawler object and start a crawl with depth of 2
+		mc=new MainCrawler();
 		mc.setDepth(2);
 		mc.setUrl(ws.getDomain());
+		mc.setAnalyzer(analyzer);
 		
 		Thread t = mtf.newThread(mc);
 		t.start();
