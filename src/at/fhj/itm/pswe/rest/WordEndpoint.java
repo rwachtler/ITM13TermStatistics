@@ -16,6 +16,8 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import at.fhj.itm.pswe.dao.interfaces.IWord;
+import at.fhj.itm.pswe.model.Word;
+import at.fhj.itm.pswe.model.Wordtype;
 
 @Stateless
 @Path("/word")
@@ -45,6 +47,7 @@ public class WordEndpoint {
 		JSONObject my = new JSONObject();
 		my.put("data", wDao.wordAndAmount());
 		my.put("options", new JSONObject().put("word.wType", wDao.wordTypeAsOption()));
+		System.out.println(my.toString());
 
 		return Response.ok(my.toString()).build();
 	}
@@ -88,12 +91,22 @@ public class WordEndpoint {
 		if (keys.hasNext()) {
 			id = keys.next(); // First key in your json object
 		}
+		JSONObject toUpdate=new JSONObject();
+		toUpdate=json.getJSONObject(id).getJSONObject("word");
+		Word w=new Word();
+		w.setText(id);
+		Wordtype wt= new Wordtype();
+		wt.setId(toUpdate.getInt("wType"));
+		w.setWordtype(wt);
+		
 
 		// Update Object in DAO
-		if (json.getJSONObject(id).getJSONArray("active").length() == 0)
-			wDao.changeWordActive(id, false);
+		if (toUpdate.getJSONArray("active").length() == 0)
+			w.setActive(false);
 		else
-			wDao.changeWordActive(id, true);
+			w.setActive(true);
+		
+		wDao.updateWord(w);
 
 		JSONObject output = new JSONObject();
 		output.put("data", new JSONArray().put(wDao.findSingleWordWithAmount(id)));

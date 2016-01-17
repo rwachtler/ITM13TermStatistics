@@ -164,7 +164,7 @@ function generateWordsTable() {
 				//Not implemented
 			}
 			else if ( d.action === 'edit' ) {
-				console.log(JSON.stringify(d.data))
+				console.log(JSON.stringify(d.data));
 				var data = d.data;
 				$.ajax({
 					type: "PUT", 
@@ -181,17 +181,17 @@ function generateWordsTable() {
 
 
 		},
-		idSrc: "word",
+		idSrc: "word.word",
 		table: "#word-list-table",
 		fields: [
 		{
 			label: "Wordtype",
-			name: "wType",
+			name: "word.wType",
 			type: "select",
 			placeholder: "Select Wordtype"
 		},{
 			label: "Active",
-			name: "active",
+			name: "word.active",
 			type: "checkbox",
 			options:   [
 			            { label: '', value: 1 }
@@ -209,10 +209,10 @@ function generateWordsTable() {
 		ajax: "./rest/word", 
 		order: [[ 1, "desc" ]],
 		columns: [
-		          { data: "word" },
-		          { data: "amount" },
-		          { data: "wType"},
-		          { data: "active" },
+		          { data: "word.word" },
+		          { data: "word.amount" },
+		          { data: "wTypes.name"},
+		          { data: "word.active" },
 		          { data: null}
 		          //Render Function below
 		          ],
@@ -221,7 +221,7 @@ function generateWordsTable() {
 		        	   {	render: function ( data, type, row ) {
 		        		   				return "<a class='btn btn-primary' href='./WordOverview/"+row.word+"'>Details</a>"
 		        	   },
-		        	   targets: 34},
+		        	   targets: 4},
 		        	   { orderable: false, targets: 4 },
 		        	   { searchable: false, targets: 4 }
 		        	   ],
@@ -230,8 +230,4 @@ function generateWordsTable() {
 
 	} );
 	
-	
-	wordListEditor
-	.on( 'initEdit', function () {  } )
-	.on( 'initCreate', function () { siteListEditor.enable( "address" ); siteListEditor.hide( "active" ); } );
 }

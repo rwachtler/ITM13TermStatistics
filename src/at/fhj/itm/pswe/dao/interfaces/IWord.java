@@ -3,6 +3,8 @@ package at.fhj.itm.pswe.dao.interfaces;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import at.fhj.itm.pswe.model.Word;
+
 public interface IWord {
 
 	/**
@@ -23,15 +25,12 @@ public interface IWord {
 	 */
 	JSONArray sitesOfWord(String word);
 
-	/**
-	 * Toggle active/inactive state of one specific word
+	/**change active/inactive and type of one specific word
 	 * 
-	 * @param word
-	 *            String of word
-	 * @param active
-	 *            boolean
+	 * @param Word w
+	
 	 */
-	void changeWordActive(String word, boolean active);
+	void updateWord(Word w);
 
 	/**
 	 * Helper method for "editWord" to get all informations of a desired word

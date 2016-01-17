@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import at.fhj.itm.pswe.dao.interfaces.IWord;
 import at.fhj.itm.pswe.model.Word;
+import at.fhj.itm.pswe.model.Wordtype;
 
 @Stateless
 public class WordDao implements IWord {
@@ -56,7 +57,7 @@ public class WordDao implements IWord {
 	@Override
 	public JSONArray wordTypeAsOption() {
 		List<Object[]> queryResult = em
-				.createQuery("SELECT w.wordtype.id, w.wordtype.texttype FROM Word w GROUP BY w.text, w.active")
+				.createQuery("SELECT w.id, w.texttype FROM Wordtype w")
 				.getResultList();
 
 		JSONArray result = new JSONArray();
@@ -98,10 +99,12 @@ public class WordDao implements IWord {
 	}
 
 	@Override
-	public void changeWordActive(String word, boolean active) {
-		Word wo = em.find(Word.class, word);
+	public void updateWord(Word w) {
+		Word wo = em.find(Word.class, w.getText());
+		Wordtype wt= em.find(Wordtype.class, w.getWordtype().getId());
 		if (wo != null) {
-			wo.setActive(active);
+			wo.setActive(w.getActive());
+			wo.setWordtype(wt);
 			// save changes to db
 			em.flush();
 		}
@@ -113,16 +116,25 @@ public class WordDao implements IWord {
 	public JSONObject findSingleWordWithAmount(String word) {
 		List<Object[]> queryResult = em
 				.createQuery(
-						"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active")
+						"SELECT w.text, w.active, sum(c.amount), w.wordtype.id, w.wordtype.texttype  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active")
 				.setParameter("word", word).getResultList();
-		JSONObject result = new JSONObject();
+		JSONObject complete = new JSONObject();
 
 		if (!queryResult.isEmpty()) {
-			result.put("word", queryResult.get(0)[0]);
-			result.put("amount", queryResult.get(0)[2]);
-			result.put("active", queryResult.get(0)[1]);
+			JSONObject wo = new JSONObject();
+			wo.put("word", queryResult.get(0)[0]);
+			wo.put("amount", queryResult.get(0)[2]);
+			wo.put("active", queryResult.get(0)[1]);
+			wo.put("wType", queryResult.get(0)[3]);
+
+			JSONObject wordType = new JSONObject();
+			wordType.put("name", queryResult.get(0)[4]);
+
+			complete.put("word", wo);
+			complete.put("wTypes", wordType);
+			
 		}
-		return result;
+		return complete;
 	}
 
 	@Override

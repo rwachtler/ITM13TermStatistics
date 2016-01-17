@@ -19,6 +19,7 @@ import org.junit.Test;
 
 import at.fhj.itm.pswe.dao.WordDao;
 import at.fhj.itm.pswe.model.Word;
+import at.fhj.itm.pswe.model.Wordtype;
 
 public class WordMockTest {
 
@@ -66,7 +67,7 @@ public class WordMockTest {
 		// EM Mock
 		EntityManager mockEm = createMock(EntityManager.class);
 		expect(mockEm.createQuery(
-				"SELECT w.text, w.active, sum(c.amount), w.wordType.id, w.wordType.texttype  FROM Container c JOIN c.word w  GROUP BY w.text, w.active"))
+				"SELECT w.text, w.active, sum(c.amount), w.wordtype.id, w.wordtype.texttype  FROM Container c JOIN c.word w  GROUP BY w.text, w.active"))
 						.andReturn(mockedQuery);
 		replay(mockEm);
 		WordDao wDAO = new WordDao();
@@ -88,24 +89,29 @@ public class WordMockTest {
 	public void testChangeWord() {
 
 		// Setup
+		Wordtype wt = new Wordtype();
+		wt.setId(1);
+		wt.setTexttype("unkown");
+		
 		Word w = new Word();
 		w.setText("test");
 		w.setActive(false);
+		w.setWordtype(wt);
 
 		WordDao wDAO = new WordDao();
 
 		EntityManager mockEm = createMock(EntityManager.class);
 		// Expect one single call to find
 		expect(mockEm.find(Word.class, "test")).andReturn(w);
+		expect(mockEm.find(Wordtype.class, 1)).andReturn(wt);
 		mockEm.flush();
-		EasyMock.expectLastCall();
 		// set to replay state
 		replay(mockEm);
 		// Set Mock Object
 		wDAO.setEntityManager(mockEm);
 
 		// TEST
-		wDAO.changeWordActive("test", true);
+		wDAO.updateWord(w);
 
 		// Verify
 		verify(mockEm);
@@ -121,22 +127,29 @@ public class WordMockTest {
 	public void testChangeWordNoWordFound() {
 
 		// Setup
+		// Setup
+		Wordtype wt = new Wordtype();
+		wt.setId(1);
+		wt.setTexttype("unkown");
+		
 		Word w = new Word();
 		w.setText("test");
 		w.setActive(false);
+		w.setWordtype(wt);
 
 		WordDao wDAO = new WordDao();
 
 		EntityManager mockEm = createMock(EntityManager.class);
 		// Expect one single call to find
 		expect(mockEm.find(Word.class, "test")).andReturn(null);
+		expect(mockEm.find(Wordtype.class, 1)).andReturn(wt);
 		// set to replay state
 		replay(mockEm);
 		// Set Mock Object
 		wDAO.setEntityManager(mockEm);
 
 		// TEST
-		wDAO.changeWordActive("test", true);
+		wDAO.updateWord(w);
 
 		// Verify
 		verify(mockEm);
@@ -163,19 +176,31 @@ public class WordMockTest {
 		String testWord = "test";
 		boolean testActive = true;
 		int testNum = 10;
+		int wtID=1;
+		String wtType="unknown";
 		List<Object[]> returnList = new ArrayList<Object[]>();
 
-		Object[] retArr = new Object[3];
+		Object[] retArr = new Object[5];
 		retArr[0] = testWord;
 		retArr[1] = testActive;
 		retArr[2] = testNum;
+		retArr[3] = wtID;
+		retArr[4] = wtType;
 
 		returnList.add(retArr);
 		// Compare to
-		JSONObject validator = new JSONObject();
-		validator.put("amount", testNum);
-		validator.put("word", testWord);
-		validator.put("active", testActive);
+		JSONObject word = new JSONObject();
+		word.put("amount", testNum);
+		word.put("word", testWord);
+		word.put("active", testActive);
+		word.put("wType", wtID);
+		
+		JSONObject wt= new JSONObject();
+		wt.put("name", wtType);
+	
+		JSONObject validator= new JSONObject();
+		validator.put("wTypes", wt);
+		validator.put("word", word);
 
 		// Init Mock For Query
 		Query qMock = mockQuery("word", testWord, returnList);
@@ -185,7 +210,7 @@ public class WordMockTest {
 		EntityManager mockEm = createMock(EntityManager.class);
 		// Expect one single call to find
 		expect(mockEm.createQuery(
-				"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active"))
+				"SELECT w.text, w.active, sum(c.amount), w.wordtype.id, w.wordtype.texttype  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active"))
 						.andReturn(qMock);
 		// set to replay state
 		replay(mockEm);
@@ -225,7 +250,7 @@ public class WordMockTest {
 		EntityManager mockEm = createMock(EntityManager.class);
 		// Expect one single call to find
 		expect(mockEm.createQuery(
-				"SELECT w.text, w.active, sum(c.amount)  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active"))
+				"SELECT w.text, w.active, sum(c.amount), w.wordtype.id, w.wordtype.texttype  FROM Container c JOIN c.word w WHERE w.text = :word  GROUP BY w.text, w.active"))
 						.andReturn(qMock);
 		// set to replay state
 		replay(mockEm);
@@ -358,7 +383,7 @@ public class WordMockTest {
 		replay(mockedQuery);
 
 		EntityManager mockEm = createMock(EntityManager.class);
-		expect(mockEm.createQuery("SELECT wt.id, wt.texttype FROM WordType wt GROUP BY w.text, w.active"))
+		expect(mockEm.createQuery("SELECT w.id, w.texttype FROM Wordtype w"))
 				.andReturn(mockedQuery);
 		replay(mockEm);
 
