@@ -98,7 +98,7 @@ function generateSiteListTable() {
                 url: url.val(),
                 async: false
             }).done(function (data) {
-                console.log(success);
+                console.log("success");
             }).fail(function (jqXHR, textStatus) {
                url.error("Invalid URL: Maybe add slash at the end");
             });
