@@ -110,6 +110,7 @@
 				</configuration>
 				<executions>
 					<!-- Add a data source -->
+					<!--  
 					<execution>
 						<id>add_datasource</id>
 						<phase>install</phase>
@@ -138,6 +139,7 @@
 							<goal>deploy</goal>
 						</goals>
 					</execution>
+					-->
 					<execution>
 						<id>undeploy_application</id>
 						<phase>clean</phase>
