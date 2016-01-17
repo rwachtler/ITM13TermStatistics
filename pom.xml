@@ -110,13 +110,9 @@
 				</configuration>
 				<executions>
 					<!-- Add a data source -->
-					
 					<execution>
-						<!--  
 						<id>add_datasource</id>
-						-->
 						<phase>install</phase>
-						<!--
 						<configuration>
 							<address>subsystem=datasources,data-source=mysql</address>
 							<resources>
@@ -130,20 +126,20 @@
 										<password>iTm!3DbMySqL</password>
 										<driver-name>mysql-connector-java-5.1.38-bin.jar_com.mysql.jdbc.Driver_5_1</driver-name>
 										<use-ccm>false</use-ccm>
+										<!--
 										<background-validation>true</background-validation> 
 										<background-validation-minutes>1</background-validation-minutes>
 										<check-valid-connection-sql>SELECT 1 FROM dual</check-valid-connection-sql>
+										  -->
 									</properties>
 								</resource>
 							</resources>
 						</configuration>
-						-->
 						<goals>
-							<!-- <goal>add-resource</goal>  -->
+							<goal>add-resource</goal>
 							<goal>deploy</goal>
 						</goals>
 					</execution>
-					
 					<execution>
 						<id>undeploy_application</id>
 						<phase>clean</phase>
