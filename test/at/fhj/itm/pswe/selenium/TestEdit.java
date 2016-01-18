@@ -23,7 +23,7 @@ public class TestEdit {
 
 	public void addSite() {
 		url = "http://koeckman.at/";
-		selenium.get("http://localhost:8080/TermStatistics/");
+		selenium.get("http://itm13jenkins.redirectme.net:8080/TermStatistics/");
 		selenium.findElementByLinkText("New").click();
 		selenium.findElement(By.id("DTE_Field_address")).sendKeys(url);
 		selenium.findElement(By.id("DTE_Field_description")).sendKeys("Testseite");
@@ -36,7 +36,7 @@ public class TestEdit {
 	@Test
 	public void testEditSite() {
 		addSite();
-		selenium.get("http://localhost:8080/TermStatistics/");
+		selenium.get("http://itm13jenkins.redirectme.net:8080/TermStatistics/");
 		selenium.findElementByXPath("//table[@id='site-list-table']/tbody/tr/td[2]").click();
 		selenium.findElementByLinkText("Edit").click();
 		selenium.findElement(By.id("DTE_Field_active_0")).click();
@@ -61,7 +61,7 @@ public class TestEdit {
 
 	@AfterClass
 	public static void tearDown() throws Exception {
-		selenium.get("http://localhost:8080/TermStatistics/rest/website/koeckman.at/delete");
+		selenium.get("http://itm13jenkins.redirectme.net:8080/TermStatistics/rest/website/koeckman.at/delete");
 		selenium.quit();
 	}
 

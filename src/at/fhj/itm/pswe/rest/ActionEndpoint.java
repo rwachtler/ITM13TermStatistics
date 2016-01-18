@@ -35,7 +35,6 @@ public class ActionEndpoint {
 	@Inject
 	Analyzer analyzer;
 
-
 	MainCrawler mc;
 
 	// TODO Rewrite to post, add depth param
@@ -49,16 +48,15 @@ public class ActionEndpoint {
 
 		Calendar cal = Calendar.getInstance();
 		SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		
+
 		try {
-			Date current=df.parse(df.format(cal.getTime()));
-			System.out.println("Current "+current.toString());
-			System.out.println("ws: "+df.parse(ws.getLast_crawldate()).toString());
-		
-			
-			if(df.parse(ws.getLast_crawldate()).before(current)){
-				
-				mc=new MainCrawler();
+			Date current = df.parse(df.format(cal.getTime()));
+			System.out.println("Current " + current.toString());
+			System.out.println("ws: " + df.parse(ws.getLast_crawldate()).toString());
+
+			if (df.parse(ws.getLast_crawldate()).before(current)) {
+
+				mc = new MainCrawler();
 				mc.setDepth(2);
 				mc.setUrl(ws.getDomain());
 				mc.setAnalyzer(analyzer);
@@ -71,9 +69,6 @@ public class ActionEndpoint {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
-
-
 
 		return Response.ok().build();
 	}

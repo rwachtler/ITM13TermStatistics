@@ -44,7 +44,7 @@ public class Init_LinkCrawler {
 				deleteFolder(directory);
 			}
 		}
-		
+
 		System.out.println("Deleted old result directories matching '" + url_replaced + "'");
 
 		// Add to Project Root folders result/crawl where our result.txt is

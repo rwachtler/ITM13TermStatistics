@@ -21,7 +21,7 @@ public class TestDetails {
 
 	@Test
 	public void testDetailsSite() {
-		selenium.get("http://localhost:8080/TermStatistics/");
+		selenium.get("http://itm13jenkins.redirectme.net:8080/TermStatistics/");
 		// clicks always the detail button of the first website
 		// (http://pfiff.me/pswengi)
 		selenium.findElementByLinkText("Details").click();
@@ -42,7 +42,7 @@ public class TestDetails {
 
 	@Test
 	public void testDetailsWord() {
-		selenium.get("http://localhost:8080/TermStatistics/");
+		selenium.get("http://itm13jenkins.redirectme.net:8080/TermStatistics/");
 		// that the test always starts with the right element in the word tabel
 		int startnumber;
 		String checkamount = selenium.findElement(By.id("site-list-table")).getText();

@@ -56,9 +56,7 @@ public class WordDao implements IWord {
 
 	@Override
 	public JSONArray wordTypeAsOption() {
-		List<Object[]> queryResult = em
-				.createQuery("SELECT w.id, w.texttype FROM Wordtype w")
-				.getResultList();
+		List<Object[]> queryResult = em.createQuery("SELECT w.id, w.texttype FROM Wordtype w").getResultList();
 
 		JSONArray result = new JSONArray();
 
@@ -101,7 +99,7 @@ public class WordDao implements IWord {
 	@Override
 	public void updateWord(Word w) {
 		Word wo = em.find(Word.class, w.getText());
-		Wordtype wt= em.find(Wordtype.class, w.getWordtype().getId());
+		Wordtype wt = em.find(Wordtype.class, w.getWordtype().getId());
 		if (wo != null) {
 			wo.setActive(w.getActive());
 			wo.setWordtype(wt);
@@ -132,7 +130,7 @@ public class WordDao implements IWord {
 
 			complete.put("word", wo);
 			complete.put("wTypes", wordType);
-			
+
 		}
 		return complete;
 	}

@@ -11,7 +11,6 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
 
-import org.easymock.EasyMock;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.Assert;
@@ -92,7 +91,7 @@ public class WordMockTest {
 		Wordtype wt = new Wordtype();
 		wt.setId(1);
 		wt.setTexttype("unkown");
-		
+
 		Word w = new Word();
 		w.setText("test");
 		w.setActive(false);
@@ -131,7 +130,7 @@ public class WordMockTest {
 		Wordtype wt = new Wordtype();
 		wt.setId(1);
 		wt.setTexttype("unkown");
-		
+
 		Word w = new Word();
 		w.setText("test");
 		w.setActive(false);
@@ -176,8 +175,8 @@ public class WordMockTest {
 		String testWord = "test";
 		boolean testActive = true;
 		int testNum = 10;
-		int wtID=1;
-		String wtType="unknown";
+		int wtID = 1;
+		String wtType = "unknown";
 		List<Object[]> returnList = new ArrayList<Object[]>();
 
 		Object[] retArr = new Object[5];
@@ -194,11 +193,11 @@ public class WordMockTest {
 		word.put("word", testWord);
 		word.put("active", testActive);
 		word.put("wType", wtID);
-		
-		JSONObject wt= new JSONObject();
+
+		JSONObject wt = new JSONObject();
 		wt.put("name", wtType);
-	
-		JSONObject validator= new JSONObject();
+
+		JSONObject validator = new JSONObject();
 		validator.put("wTypes", wt);
 		validator.put("word", word);
 
@@ -383,8 +382,7 @@ public class WordMockTest {
 		replay(mockedQuery);
 
 		EntityManager mockEm = createMock(EntityManager.class);
-		expect(mockEm.createQuery("SELECT w.id, w.texttype FROM Wordtype w"))
-				.andReturn(mockedQuery);
+		expect(mockEm.createQuery("SELECT w.id, w.texttype FROM Wordtype w")).andReturn(mockedQuery);
 		replay(mockEm);
 
 		WordDao wDAO = new WordDao();

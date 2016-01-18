@@ -91,21 +91,20 @@ public class WordEndpoint {
 		if (keys.hasNext()) {
 			id = keys.next(); // First key in your json object
 		}
-		JSONObject toUpdate=new JSONObject();
-		toUpdate=json.getJSONObject(id).getJSONObject("word");
-		Word w=new Word();
+		JSONObject toUpdate = new JSONObject();
+		toUpdate = json.getJSONObject(id).getJSONObject("word");
+		Word w = new Word();
 		w.setText(id);
-		Wordtype wt= new Wordtype();
+		Wordtype wt = new Wordtype();
 		wt.setId(toUpdate.getInt("wType"));
 		w.setWordtype(wt);
-		
 
 		// Update Object in DAO
 		if (toUpdate.getJSONArray("active").length() == 0)
 			w.setActive(false);
 		else
 			w.setActive(true);
-		
+
 		wDao.updateWord(w);
 
 		JSONObject output = new JSONObject();

@@ -25,10 +25,12 @@ public interface IWord {
 	 */
 	JSONArray sitesOfWord(String word);
 
-	/**change active/inactive and type of one specific word
+	/**
+	 * change active/inactive and type of one specific word
 	 * 
-	 * @param Word w
-	
+	 * @param Word
+	 *            w
+	 * 
 	 */
 	void updateWord(Word w);
 

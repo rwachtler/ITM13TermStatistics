@@ -25,12 +25,12 @@ public class TestAddNewPage {
 
 	public void addSite() {
 		url = "http://rehcu.at";
-		selenium.get("http://localhost:8080/TermStatistics/");
+		selenium.get("http://itm13jenkins.redirectme.net:8080/TermStatistics/");
 		selenium.findElementByLinkText("New").click();
 		selenium.findElement(By.id("DTE_Field_address")).sendKeys(url);
 		selenium.findElement(By.id("DTE_Field_description")).sendKeys("Testseite");
 		selenium.findElement(By.id("DTE_Field_depth")).sendKeys("1");
-		WebElement web = selenium.findElementByCssSelector("button.btn");
+		WebElement web = selenium.findElementByCssSelector("div.DTE_Form_Buttons > button.btn");
 		web.click();
 	}
 
@@ -59,7 +59,7 @@ public class TestAddNewPage {
 
 	@After
 	public void tearDown() throws Exception {
-		selenium.get("http://localhost:8080/TermStatistics/rest/website/rehcu.at/delete");
+		selenium.get("http://itm13jenkins.redirectme.net:8080/TermStatistics/rest/website/rehcu.at/delete");
 		selenium.quit();
 	}
 }
