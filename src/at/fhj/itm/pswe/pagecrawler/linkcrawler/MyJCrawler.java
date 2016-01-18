@@ -70,7 +70,7 @@ public class MyJCrawler extends WebCrawler {
 		try {
 			out = new PrintWriter(new BufferedWriter(new FileWriter(path_to_file, true)));
 			// Falls kein HTML gelesen werden kann (Bsp.: XML)
-			if (doc.body() != null && !(doc.body().equals(""))) {
+			if (doc.body() != null && !(doc.body().text().trim().equals(""))) {
 				out.println(url);
 				out.println(doc.body().text());
 				// System.out.println("Write to file");

@@ -2,7 +2,9 @@ package at.fhj.itm.pswe.pagecrawler;
 
 import javax.ejb.LocalBean;
 import javax.ejb.Stateful;
+import javax.enterprise.context.RequestScoped;
 import javax.inject.Inject;
+import javax.transaction.TransactionScoped;
 
 import org.jboss.ejb3.annotation.TransactionTimeout;
 
@@ -16,9 +18,8 @@ public class MainCrawler implements Runnable {
 	private String url;
 	private int depth;
 	private Init_LinkCrawler linkCrawler;
-
-	@Inject
-	Analyzer analyzer;
+	private Analyzer analyzer;
+	
 
 	public MainCrawler() {
 	}
@@ -70,6 +71,14 @@ public class MainCrawler implements Runnable {
 
 	public void setDepth(int depth) {
 		this.depth = depth;
+	}
+
+	public Analyzer getAnalyzer() {
+		return analyzer;
+	}
+
+	public void setAnalyzer(Analyzer analyzer) {
+		this.analyzer = analyzer;
 	}
 
 }

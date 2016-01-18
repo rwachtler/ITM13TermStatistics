@@ -27,7 +27,7 @@ function generateSiteListTable() {
 			if ( d.action === 'create' ) {
 				//console.log(JSON.stringify(d.data[0]));
 				var data = d.data[0];
-				ajax({
+				$.ajax({
 					type: "POST",
 					url: "./rest/website",
 					data: JSON.stringify(data),
@@ -98,7 +98,7 @@ function generateSiteListTable() {
                 url: url.val(),
                 async: false
             }).done(function (data) {
-                console.log(success);
+                console.log("success");
             }).fail(function (jqXHR, textStatus) {
                url.error("Invalid URL: Maybe add slash at the end");
             });

@@ -3,7 +3,9 @@ package at.fhj.itm.pswe.rest;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.ejb.Stateless;
+import javax.enterprise.concurrent.ManagedThreadFactory;
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -24,6 +26,7 @@ import org.json.JSONObject;
 import at.fhj.itm.pswe.dao.interfaces.IWebsite;
 import at.fhj.itm.pswe.model.Website;
 import at.fhj.itm.pswe.pagecrawler.MainCrawler;
+import at.fhj.itm.pswe.pagecrawler.wordanalyzer.Analyzer;
 
 @Stateless
 @Path("/website")
@@ -32,7 +35,12 @@ public class WebsiteEndpoint {
 	private EntityManager em;
 
 	@Inject
+	Analyzer analyzer;
+	
 	MainCrawler mc;
+	
+	@Resource
+	private ManagedThreadFactory mtf;
 
 	private IWebsite wDao;
 
@@ -78,16 +86,14 @@ public class WebsiteEndpoint {
 		json.put("active", ws.getActive());
 		json.put("lCrawled", ws.getLast_crawldate());
 
-		// TODO: Inject new maincrawler object and start a crawl
-		/*
-		 * Depcrecated---Thread t = new Thread(new MainCrawler(ws.getDomain(),
-		 * 1)); t.start();
-		 */
-
-		/*
-		 * mc.setDepth(ws.getCrawldepth()); mc.setUrl(ws.getDomain());
-		 * mc.crawl();
-		 */
+		// TODO: Inject new maincrawler object and start a crawl with depth of 2
+		mc=new MainCrawler();
+		mc.setDepth(2);
+		mc.setUrl(ws.getDomain());
+		mc.setAnalyzer(analyzer);
+		
+		Thread t = mtf.newThread(mc);
+		t.start();
 
 		return Response.ok(new JSONObject().put("data", new JSONArray().put(json)).toString()).build();
 	}
