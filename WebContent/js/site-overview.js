@@ -337,5 +337,6 @@ var generateLineChart = function(data){
 
     var $ctx = $("#line-chart").get(0).getContext("2d");
     lineChart = new Chart($ctx).Line(cData, options);
+    $(".line-legend").remove();
     $("#line-chart-container").append(lineChart.generateLegend());
 }
