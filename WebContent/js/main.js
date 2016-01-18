@@ -94,14 +94,14 @@ function generateSiteListTable() {
             console.log(url.val());
  
             //Beware of CORS ;)
-            $.ajax({ cache: false,
+           /* $.ajax({ cache: false,
                 url: url.val(),
                 async: false
             }).done(function (data) {
                 console.log("success");
             }).fail(function (jqXHR, textStatus) {
                url.error("Invalid URL: Maybe add slash at the end");
-            });
+            });*/
             
             if(depth.val()<1){
             	depth.error("Depth must be at least 1");
