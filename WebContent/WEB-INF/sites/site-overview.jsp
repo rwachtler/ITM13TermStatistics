@@ -46,7 +46,7 @@
             <h2>Site crawl statistics</h2>
             <p>Crawl duration in seconds - <span id="crawl-duration">no data available</span></p>
             <p>Average article amount - <span id="avg-article-amount">no data available</span></p>
-            <p>Analyze duration in seconds - <span id="analyze-duration">no data available</span></p>
+            <p>Analyze duration in minutes - <span id="analyze-duration">no data available</span></p>
             <h2>Subsite crawl statistics</h2>
             <p>Average word amount - <span id="avg-word-amount">no data available</span></p>
             <p>Average word length - <span id="avg-word-length">no data available</span></p>
@@ -103,6 +103,7 @@
     <script src="../bower_components/datatables-editor/js/dataTables.editor.min.js"></script>
     <script src="../datatables-select/js/dataTables.select.min.js"></script>
     <script src="../datatables-buttons/js/dataTables.buttons.min.js"></script>
+    <script src="../js/helper.min.js"></script>
     <script src="../js/ui-helper.min.js"></script>
     <script src="../js/site-overview.min.js"></script>
 </body>

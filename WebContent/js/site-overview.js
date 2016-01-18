@@ -20,13 +20,13 @@ var getSiteCrawlingStats = function(){
         var avgStats = response.data[0];
         if(typeof avgStats !== 'undefined'){
             if(typeof avgStats.crawlDuration !== 'undefined'){
-                $('#crawl-duration').text(avgStats.crawlDuration/1000 + " s");
+                $('#crawl-duration').text(toSeconds(avgStats.crawlDuration) + " s");
             }
             if(typeof avgStats.avg_article !== 'undefined'){
-                $('#avg-article-amount').text(avgStats.avg_article);
+                $('#avg-article-amount').text(avgStats.avg_article > 0 ? avgStats.avg_article + " articles" : avgStats.avg_article + " article");
             }
             if(typeof avgStats.analyzeDuration !== 'undefined'){
-                $('#analyze-duration').text(avgStats.analyzeDuration/1000 + " s");
+                $('#analyze-duration').text(round2(toMinutes(avgStats.analyzeDuration)) + " min");
             }
         }
     });
@@ -40,13 +40,12 @@ var getSubsiteCrawlingStats = function(){
         var avgStats = response.data[0];
         if(typeof avgStats !== 'undefined'){
             if(typeof avgStats.avgwordlength !== 'undefined'){
-                $('#avg-word-length').text(Math.round(avgStats.avgwordlength*100)/100 + ' chars');
+                $('#avg-word-length').text(round2(avgStats.avgwordlength) > 0 ? round2(avgStats.avgwordlength) + ' chars' : round2(avgStats.avgwordlength) + ' char');
             }
             if(typeof avgStats.avgwords !== 'undefined'){
-                $('#avg-word-amount').text(avgStats.avgwords);
+                $('#avg-word-amount').text(round2(avgStats.avgwords) > 0 ? round2(avgStats.avgwords) + ' words' : round2(avgStats.avgwords) + 'word');
             }
         }
-
     });
 }
 
