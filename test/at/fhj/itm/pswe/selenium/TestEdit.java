@@ -33,6 +33,7 @@ public class TestEdit {
 		web.click();
 	}
 
+
 	@Test
 	public void testEditSite() {
 		addSite();
@@ -54,7 +55,7 @@ public class TestEdit {
 		if (output.contains("true")) {
 			Assert.assertTrue(true);
 		} else {
-			Assert.assertFalse("The rigth details were not found!", true);
+			Assert.assertFalse("The site was not changed", true);
 		}
 
 	}
